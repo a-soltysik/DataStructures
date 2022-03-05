@@ -1,6 +1,5 @@
 ﻿#include "DynamicArray/DynamicArray.h"
-#include <iostream>
-#include "Utils/Timer.h"
+
 #include <cstring>
 
 DynamicArray::DynamicArray(size_t size) : size(size)
@@ -86,34 +85,13 @@ const DynamicArray::DataType& DynamicArray::operator[](size_t position) const
 void DynamicArray::PushBack(DataType value)
 {
 	DataType* newData = new DataType[size + 1];
-	//DataType* newData = static_cast<DataType*>(::operator new((size + 1) * sizeof(DataType)));
 
-	//std::memcpy(newData, data, size * sizeof(DataType));
-	std::copy(data, data + size, newData);
+	std::memcpy(newData, data, size * sizeof(DataType));
 
 	newData[size] = value;
 
 	delete[] data;
 	data = newData;
-
-	/*size_t sizeInBytes = size * sizeof(DataType);
-	size_t newSizeInBytes = (size + 1) * sizeof(DataType);
-
-	DataType* newData = static_cast<DataType*>(std::realloc(data, newSizeInBytes));
-
-	if (newData == nullptr)
-	{
-		free(data);
-		newData = static_cast<DataType*>(std::malloc(newSizeInBytes));
-
-		if (newData == nullptr)
-		{
-			throw std::bad_alloc();
-		}
-	}
-
-	newData[size] = value;
-	data = newData;*/
 
 	size++;
 }
@@ -127,42 +105,12 @@ void DynamicArray::PushFront(DataType value)
 
 	delete[] data;
 	data = newData;
-	/*size_t sizeInBytes = size * sizeof(DataType);
-	size_t newSizeInBytes = (size + 1) * sizeof(DataType);
-
-	DataType* newData = static_cast<DataType*>(std::realloc(data, newSizeInBytes));
-
-	if (newData == nullptr)
-	{
-		free(data);
-		newData = static_cast<DataType*>(std::malloc(newSizeInBytes));
-
-		if (newData == nullptr)
-		{
-			throw std::bad_alloc();
-		}
-	}
-	std::memmove(newData + 1, data, size * sizeof(DataType));
-	newData[0] = value;
-	data = newData;*/
 
 	size++;
 }
 
-void DynamicArray::Insert(size_t position, DataType value)
+DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
 {
-	//DataType* newData = new DataType[size + 1];
-	/*DataType* newData = (DataType*)std::malloc((size + 1) * sizeof(DataType));
-
-	std::memcpy(newData, data, position * sizeof(DataType));
-	std::memcpy(newData + position + 1, data + position, (size - position) * sizeof(DataType));
-	newData[position] = value;
-
-	delete[] data;
-	data = newData;
-
-	size++;*/
-
 	if (position > size)
 	{
 		throw std::out_of_range("Position is beyond the size of list");
@@ -170,38 +118,13 @@ void DynamicArray::Insert(size_t position, DataType value)
 	if (position == size)
 	{
 		PushBack(value);
-		return;
+		return Iterator(data + size - 1u);
 	}
 	if (position == 0u)
 	{
 		PushFront(value);
-		return;
+		return Iterator(data);
 	}
-
-	/*size_t sizeInBytes = size * sizeof(DataType);
-	size_t newSizeInBytes = (size + 1) * sizeof(DataType);
-
-	DataType* newData = static_cast<DataType*>(std::realloc(data, newSizeInBytes));
-
-	if (newData == nullptr)
-	{
-		std::cout << "aa";
-		free(data);
-		newData = static_cast<DataType*>(std::malloc(newSizeInBytes));
-
-		if (newData == nullptr)
-		{
-			throw std::bad_alloc();
-		}
-
-		std::memcpy(newData, data, position * sizeof(DataType));
-	}
-
-	
-	
-	std::memmove(newData + position + 1, data + position, (size - position) * sizeof(DataType));
-	newData[position] = value;
-	data = newData;*/
 
 	DataType* newData = new DataType[size + 1];
 
@@ -213,45 +136,25 @@ void DynamicArray::Insert(size_t position, DataType value)
 	data = newData;
 
 	size++;
+	return Iterator(data + position);
+}
+
+DynamicArray::Iterator DynamicArray::Insert(ConstIterator iterator, DataType value)
+{
+	return Insert(iterator - cbegin(), value);
 }
 
 bool DynamicArray::Remove(DataType value)
 {
-	size_t positionToRemove = Find(value);
+	auto positionToRemove = Find(value);
 
-	if (positionToRemove == INVALID_INDEX)
+	if (positionToRemove == end())
 	{
 		return false;
 	}
 
 	RemoveAt(positionToRemove);
 	return true;
-}
-
-bool DynamicArray::RemoveAll(DataType value)
-{
-	size_t numberOfValues = 0u;
-	size_t currenPosition = 0u;
-	size_t positionToRemove;
-
-	while ((positionToRemove = Find(value, currenPosition)) != INVALID_INDEX)
-	{
-		numberOfValues++;
-		std::memcpy(data + positionToRemove, data + positionToRemove + 1, (size - numberOfValues) * sizeof(DataType));
-	}
-	if (numberOfValues > 0u)
-	{
-		DataType* newData = new DataType[size - numberOfValues];
-		std::memcpy(newData, data, (size - numberOfValues) * sizeof(DataType));
-
-		delete[] data;
-		data = newData;
-
-		size -= numberOfValues;
-
-		return true;
-	}
-	return false;
 }
 
 void DynamicArray::RemoveBack()
@@ -296,6 +199,11 @@ void DynamicArray::RemoveAt(size_t positionToRemove)
 	size--;
 }
 
+void DynamicArray::RemoveAt(ConstIterator iterator)
+{
+	RemoveAt(iterator - cbegin());
+}
+
 void DynamicArray::Clear()
 {
 	delete[] data;
@@ -303,16 +211,28 @@ void DynamicArray::Clear()
 	size = 0u;
 }
 
-size_t DynamicArray::Find(DataType value, size_t start) const noexcept
+DynamicArray::ConstIterator DynamicArray::Find(DataType value) const noexcept
 {
-	for (size_t i = 0u; i < size; i++)
+	for (auto it = cbegin(); it != cend(); it++)
 	{
-		if (value == data[i])
+		if (value == *it)
 		{
-			return i;
+			return it;
 		}
 	}
-	return INVALID_INDEX;
+	return cend();
+}
+
+DynamicArray::Iterator DynamicArray::Find(DataType value) noexcept
+{
+	for (auto it = begin(); it != end(); it++)
+	{
+		if (value == *it)
+		{
+			return it;
+		}
+	}
+	return end();
 }
 
 size_t DynamicArray::Size() const noexcept
@@ -328,6 +248,16 @@ DynamicArray::Iterator DynamicArray::begin() noexcept
 DynamicArray::Iterator DynamicArray::end() noexcept
 {
 	return Iterator(data + size);
+}
+
+DynamicArray::ConstIterator DynamicArray::cbegin() const noexcept
+{
+	return ConstIterator(data);
+}
+
+DynamicArray::ConstIterator DynamicArray::cend() const noexcept
+{
+	return ConstIterator(data + size);
 }
 
 bool DynamicArray::Serialize(std::ostream& os, const DynamicArray& array)
@@ -374,4 +304,209 @@ std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
 	}
 	os << "]";
 	return os;
+}
+
+DynamicArrayConstIterator::DynamicArrayConstIterator(pointer ptr) noexcept
+	: ptr(ptr)
+{}
+
+DynamicArrayConstIterator::reference DynamicArrayConstIterator::operator*() const noexcept
+{
+	return *ptr;
+}
+
+DynamicArrayConstIterator::pointer DynamicArrayConstIterator::operator->() const noexcept
+{
+	return ptr;
+}
+
+DynamicArrayConstIterator& DynamicArrayConstIterator::operator++() noexcept
+{
+	ptr++;
+	return *this;
+}
+
+DynamicArrayConstIterator DynamicArrayConstIterator::operator++(int) noexcept
+{
+	DynamicArrayConstIterator tmp = *this;
+	++(*this);
+	return tmp;
+}
+
+DynamicArrayConstIterator& DynamicArrayConstIterator::operator--() noexcept
+{
+	ptr--;
+	return *this;
+}
+
+DynamicArrayConstIterator DynamicArrayConstIterator::operator--(int) noexcept
+{
+	DynamicArrayConstIterator tmp = *this;
+	--(*this);
+	return tmp;
+}
+
+DynamicArrayConstIterator& DynamicArrayConstIterator::operator+=(const difference_type offset) noexcept
+{
+	ptr += offset;
+	return *this;
+}
+
+DynamicArrayConstIterator DynamicArrayConstIterator::operator+(const difference_type offset) const noexcept
+{
+	DynamicArrayConstIterator tmp = *this;
+	tmp += offset;
+	return tmp;
+}
+
+DynamicArrayConstIterator& DynamicArrayConstIterator::operator-=(const difference_type offset) noexcept
+{
+	return *this += -offset;
+}
+
+DynamicArrayConstIterator DynamicArrayConstIterator::operator-(const difference_type offset) const noexcept
+{
+	DynamicArrayConstIterator tmp = *this;
+	tmp -= offset;
+	return tmp;
+}
+
+DynamicArrayConstIterator::difference_type DynamicArrayConstIterator::operator-(const DynamicArrayConstIterator rhs) const noexcept
+{
+	return ptr - rhs.ptr;
+}
+
+DynamicArrayConstIterator::reference DynamicArrayConstIterator::operator[](const difference_type offset) const noexcept
+{
+	return *(*this + offset);
+}
+
+bool DynamicArrayConstIterator::operator==(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return ptr == rhs.ptr;
+}
+
+bool DynamicArrayConstIterator::operator!=(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return !(*this == rhs);
+}
+
+bool DynamicArrayConstIterator::operator<(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return ptr < rhs.ptr;
+}
+
+bool DynamicArrayConstIterator::operator>(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return rhs < *this;
+}
+
+bool DynamicArrayConstIterator::operator<=(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return !(rhs < *this);
+}
+bool DynamicArrayConstIterator::operator>=(const DynamicArrayConstIterator& rhs) const noexcept
+{
+	return !(*this < rhs);
+}
+
+
+DynamicArrayIterator::reference DynamicArrayIterator::operator*() const noexcept
+{
+	return const_cast<reference>(*ptr);
+}
+
+DynamicArrayIterator::pointer DynamicArrayIterator::operator->() const noexcept
+{
+	return const_cast<pointer>(ptr);
+}
+
+DynamicArrayIterator& DynamicArrayIterator::operator++() noexcept
+{
+	ptr++;
+	return *this;
+}
+
+DynamicArrayIterator DynamicArrayIterator::operator++(int) noexcept
+{
+	DynamicArrayIterator tmp = *this;
+	++(*this);
+	return tmp;
+}
+
+DynamicArrayIterator& DynamicArrayIterator::operator--() noexcept
+{
+	ptr--;
+	return *this;
+}
+
+DynamicArrayIterator DynamicArrayIterator::operator--(int) noexcept
+{
+	DynamicArrayIterator tmp = *this;
+	--(*this);
+	return tmp;
+}
+
+DynamicArrayIterator& DynamicArrayIterator::operator+=(const difference_type offset) noexcept
+{
+	ptr += offset;
+	return *this;
+}
+
+DynamicArrayIterator DynamicArrayIterator::operator+(const difference_type offset) const noexcept
+{
+	DynamicArrayIterator tmp = *this;
+	tmp += offset;
+	return tmp;
+}
+
+DynamicArrayIterator& DynamicArrayIterator::operator-=(const difference_type offset) noexcept
+{
+	return *this += -offset;
+}
+
+DynamicArrayIterator DynamicArrayIterator::operator-(const difference_type offset) const noexcept
+{
+	DynamicArrayIterator tmp = *this;
+	tmp -= offset;
+	return tmp;
+}
+
+DynamicArrayIterator::difference_type DynamicArrayIterator::operator-(const DynamicArrayIterator rhs) const noexcept
+{
+	return ptr - rhs.ptr;
+}
+
+DynamicArrayIterator::reference DynamicArrayIterator::operator[](const difference_type offset) const noexcept
+{
+	return *(*this + offset);
+}
+
+bool DynamicArrayIterator::operator==(const DynamicArrayIterator& rhs) const noexcept
+{
+	return ptr == rhs.ptr;
+}
+
+bool DynamicArrayIterator::operator!=(const DynamicArrayIterator& rhs) const noexcept
+{
+	return !(*this == rhs);
+}
+
+bool DynamicArrayIterator::operator<(const DynamicArrayIterator& rhs) const noexcept
+{
+	return ptr < rhs.ptr;
+}
+
+bool DynamicArrayIterator::operator>(const DynamicArrayIterator& rhs) const noexcept
+{
+	return rhs < *this;
+}
+
+bool DynamicArrayIterator::operator<=(const DynamicArrayIterator& rhs) const noexcept
+{
+	return !(rhs < *this);
+}
+bool DynamicArrayIterator::operator>=(const DynamicArrayIterator& rhs) const noexcept
+{
+	return !(*this < rhs);
 }

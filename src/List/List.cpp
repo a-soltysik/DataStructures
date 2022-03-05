@@ -125,7 +125,7 @@ void List::PushFront(DataType value)
     size++;
 }
 
-void List::Insert(size_t position, DataType value)
+List::Iterator List::Insert(size_t position, DataType value)
 {
     if (position > size)
     {
@@ -134,17 +134,17 @@ void List::Insert(size_t position, DataType value)
     if (position == 0u && size == 0u)
     {
         AddFirstElement(value);
-        return;
+        return Iterator(*this, front);
     }
     if (position == size)
     {
         PushBack(value);
-        return;
+        return Iterator(*this, back);
     }
     if (position == 0u)
     {
         PushFront(value);
-        return;
+        return Iterator(*this, front);
     }
 
     size_t counter = 0u;
@@ -163,6 +163,32 @@ void List::Insert(size_t position, DataType value)
     iterator->previous->next = newNode;
     iterator->previous = newNode;
     size++;
+
+    return Iterator(*this, newNode);
+}
+
+List::Iterator List::Insert(ConstIterator iterator, DataType value)
+{
+    if (size == 0u)
+    {
+        AddFirstElement(value);
+        return Iterator(*this, front);
+    }
+    if (iterator == cend())
+    {
+        PushBack(value);
+        return Iterator(*this, back);
+    }
+
+    Node* newNode = new Node(value);
+    newNode->next = iterator.node;
+    newNode->previous = iterator.node->previous;
+
+    iterator.node->previous->next = newNode;
+    iterator.node->previous = newNode;
+
+    size++;
+    return Iterator(*this, newNode);
 }
 
 bool List::Remove(DataType value)
@@ -186,34 +212,6 @@ bool List::Remove(DataType value)
     }
 
     return false;
-}
-
-bool List::RemoveAll(DataType value)
-{
-    Node* toDelete = front;
-    bool deleted = false;
-
-    while (toDelete != nullptr)
-    {
-        if (toDelete->value == value)
-        {
-            Node* next = toDelete->next;
-            toDelete->previous->next = toDelete->next;
-            toDelete->next->previous = toDelete->previous;
-
-            delete toDelete;
-            deleted = true;
-
-            toDelete = next;
-            size--;
-        }
-        else
-        {
-            toDelete = toDelete->next;
-        }
-    }
-
-    return deleted;
 }
 
 void List::RemoveBack()
@@ -297,6 +295,17 @@ void List::RemoveAt(size_t positionToRemove)
     size--;
 }
 
+void List::RemoveAt(ConstIterator iterator)
+{
+    Node* toDelete = iterator.node;
+
+    toDelete->previous->next = toDelete->next;
+    toDelete->next->previous = toDelete->previous;
+
+    delete toDelete;
+    size--;
+}
+
 void List::Clear()
 {
     Node* node = front;
@@ -310,20 +319,28 @@ void List::Clear()
     size = 0u;
 }
 
-size_t List::Find(DataType value, size_t start) const noexcept
+List::ConstIterator List::Find(DataType value) const noexcept
 {
-    Node* iterator = front;
-    size_t position = 0u;
-    while (iterator != nullptr)
+    for (auto it = cbegin(); it != cend(); it++)
     {
-        if (iterator->value == value && position >= start)
+        if (value == *it)
         {
-            return position;
+            return it;
         }
-        position++;
-        iterator = iterator->next;
     }
-    return INVALID_INDEX;
+    return cend();
+}
+
+List::Iterator List::Find(DataType value) noexcept
+{
+    for (auto it = begin(); it != end(); it++)
+    {
+        if (value == *it)
+        {
+            return it;
+        }
+    }
+    return end();
 }
 
 size_t List::Size() const noexcept
@@ -339,6 +356,16 @@ List::Iterator List::begin() noexcept
 List::Iterator List::end() noexcept
 {
     return Iterator(*this, back->next);
+}
+
+List::ConstIterator List::cbegin() const noexcept
+{
+    return ConstIterator(*this, front);
+}
+
+List::ConstIterator List::cend() const noexcept
+{
+    return ConstIterator(*this, back->next);
 }
 
 void List::AddFirstElement(DataType value)
@@ -399,4 +426,105 @@ std::ostream& operator<<(std::ostream& os, List& list)
     }
     os << "]";
     return os;
+}
+
+
+ListConstIterator::ListConstIterator(const List& parent, List::Node* node) noexcept
+    : parent(parent)
+    , node(node)
+{}
+
+ListConstIterator::reference ListConstIterator::operator*() const noexcept
+{
+    return node->value;
+}
+
+ListConstIterator::pointer ListConstIterator::operator->() const noexcept
+{
+    return &(**this);
+}
+
+ListConstIterator& ListConstIterator::operator++() noexcept
+{
+    node = node->next;
+    return *this;
+}
+
+ListConstIterator ListConstIterator::operator++(int) noexcept
+{
+    ListConstIterator tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+ListConstIterator& ListConstIterator::operator--() noexcept
+{
+    node = node ? node->previous : parent.back;
+    return *this;
+}
+
+ListConstIterator ListConstIterator::operator--(int) noexcept
+{
+    ListConstIterator tmp = *this;
+    --(*this);
+    return tmp;
+}
+
+bool ListConstIterator::operator==(const ListConstIterator& rhs) const noexcept
+{
+    return node == rhs.node;
+}
+
+bool ListConstIterator::operator!=(const ListConstIterator& rhs) const noexcept
+{
+    return !(*this == rhs);
+}
+
+ListIterator::ListIterator(const List& parent, List::Node* node) noexcept : ListConstIterator(parent, node)
+{}
+
+ListIterator::reference ListIterator::operator*() const noexcept
+{
+    return node->value;
+}
+
+ListIterator::pointer ListIterator::operator->() const noexcept
+{
+    return &(**this);
+}
+
+ListIterator& ListIterator::operator++() noexcept
+{
+    node = node->next;
+    return *this;
+}
+
+ListIterator ListIterator::operator++(int) noexcept
+{
+    ListIterator tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+ListIterator& ListIterator::operator--() noexcept
+{
+    node = node ? node->previous : parent.back;
+    return *this;
+}
+
+ListIterator ListIterator::operator--(int) noexcept
+{
+    ListIterator tmp = *this;
+    --(*this);
+    return tmp;
+}
+
+bool ListIterator::operator==(const ListIterator& rhs) const noexcept
+{
+    return node == rhs.node;
+}
+
+bool ListIterator::operator!=(const ListIterator& rhs) const noexcept
+{
+    return !(*this == rhs);
 }

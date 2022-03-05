@@ -1,67 +1,21 @@
 #pragma once
+
 #include <istream>
 #include <optional>
-#include <list>
+#include <iterator>
+
+struct ListIterator;
+struct ListConstIterator;
 
 class List
 {
 public:
+    friend struct ListIterator;
+    friend struct ListConstIterator;
+
     using DataType = int32_t;
-private:
-    struct Node
-    {
-        Node() = default;
-        Node(const DataType& value) : value(value) {}
-
-        DataType value;
-        Node* previous = nullptr;
-        Node* next = nullptr;
-    };
-public:
-    struct Iterator
-    {
-        using iterator_category = std::bidirectional_iterator_tag;
-        using value_type = DataType;
-        using pointer = DataType*;
-        using reference = DataType&;
-
-        Iterator(const List& parent) : parent(parent), node() {};
-
-        Iterator(const List& parent, Node* node) noexcept : parent(parent), node(node) {}
-
-        [[nodiscard]] reference operator*() const noexcept { return node->value; }
-
-        [[nodiscard]] pointer operator->() const noexcept { return &(**this); }
-
-        Iterator& operator++() noexcept 
-        { 
-            node = node->next; 
-            return *this; 
-        }
-        Iterator operator++(int) noexcept 
-        { 
-            Iterator tmp = *this; 
-            ++(*this); 
-            return tmp; 
-        }
-        Iterator& operator--() noexcept 
-        { 
-            node = node ? node->previous : parent.back; 
-            return *this; 
-        }
-        Iterator operator--(int) noexcept 
-        { 
-            Iterator tmp = *this;
-            --(*this); 
-            return tmp; 
-        }
-
-        [[nodiscard]] bool operator==(const Iterator & rhs) const noexcept { return node == rhs.node; }
-        [[nodiscard]] bool operator!=(const Iterator & rhs) const noexcept { return !(*this == rhs); }
-    private:
-        Node* node;
-        const List& parent;
-    };
+    using Iterator = ListIterator;
+    using ConstIterator = ListConstIterator;
 
     List() = default;
     List(const List& rhs);
@@ -75,32 +29,42 @@ public:
 
     void PushBack(DataType value);
     void PushFront(DataType value);
-    void Insert(size_t position, DataType value);
+    Iterator Insert(size_t position, DataType value);
+    Iterator Insert(ConstIterator iterator, DataType value);
 
     bool Remove(DataType value);
-    bool RemoveAll(DataType value);
-
     void RemoveBack();
     void RemoveFront();
     void RemoveAt(size_t positionToRemove);
+    void RemoveAt(ConstIterator iterator);
 
     void Clear();
 
-    size_t Find(DataType value, size_t start = 0u) const noexcept;
+    ConstIterator Find(DataType value) const noexcept;
+    Iterator Find(DataType value) noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
 
+    [[nodiscard]] ConstIterator cbegin() const noexcept;
+    [[nodiscard]] ConstIterator cend() const noexcept;
+
     static bool Serialize(std::ostream& os, const List& array);
     static std::optional<List> Deserialize(std::istream& is);
     friend std::ostream& operator<<(std::ostream& os, List& array);
 
-    static constexpr size_t INVALID_INDEX = SIZE_MAX;
-
 private:
+    struct Node
+    {
+        Node() = default;
+        Node(const DataType& value) : value(value) {}
 
+        DataType value;
+        Node* previous = nullptr;
+        Node* next = nullptr;
+    };
     void AddFirstElement(DataType value);
 
     size_t size = 0u;
@@ -108,3 +72,50 @@ private:
     Node* back = nullptr;
 };
 
+struct ListConstIterator
+{
+    friend class List;
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type = List::DataType;
+    using pointer = const List::DataType*;
+    using reference = const List::DataType&;
+
+    ListConstIterator(const List& parent, List::Node* node) noexcept;
+
+    [[nodiscard]] reference operator*() const noexcept;
+
+    [[nodiscard]] pointer operator->() const noexcept;
+
+    ListConstIterator& operator++() noexcept;
+    ListConstIterator operator++(int) noexcept;
+    ListConstIterator& operator--() noexcept;
+    ListConstIterator operator--(int) noexcept;
+
+    [[nodiscard]] bool operator==(const ListConstIterator& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const ListConstIterator& rhs) const noexcept;
+
+    List::Node* node;
+    const List& parent;
+};
+
+struct ListIterator : public ListConstIterator
+{
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type = List::DataType;
+    using pointer = List::DataType*;
+    using reference = List::DataType&;
+
+    ListIterator(const List& parent, List::Node* node) noexcept;
+
+    [[nodiscard]] reference operator*() const noexcept;
+
+    [[nodiscard]] pointer operator->() const noexcept;
+
+    ListIterator& operator++() noexcept;
+    ListIterator operator++(int) noexcept;
+    ListIterator& operator--() noexcept;
+    ListIterator operator--(int) noexcept;
+
+    [[nodiscard]] bool operator==(const ListIterator& rhs) const noexcept;
+    [[nodiscard]] bool operator!=(const ListIterator& rhs) const noexcept;
+};

@@ -38,8 +38,8 @@ public:
 
     void Clear();
 
-    Iterator Find(DataType value) noexcept;
-    ConstIterator Find(DataType value) const noexcept;
+    [[nodiscard]] Iterator Find(DataType value) noexcept;
+    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 

@@ -41,6 +41,7 @@ List& List::operator=(List&& rhs) noexcept
     rhs.front = nullptr;
     rhs.back = nullptr;
     rhs.size = 0u;
+    return *this;
 }
 
 List::~List()
@@ -161,6 +162,7 @@ void List::Insert(size_t position, DataType value)
 
     iterator->previous->next = newNode;
     iterator->previous = newNode;
+    size++;
 }
 
 bool List::Remove(DataType value)
@@ -176,6 +178,7 @@ bool List::Remove(DataType value)
 
             delete toDelete;
             toDelete = nullptr;
+            size--;
 
             return true;
         }
@@ -202,6 +205,7 @@ bool List::RemoveAll(DataType value)
             deleted = true;
 
             toDelete = next;
+            size--;
         }
         else
         {
@@ -223,6 +227,7 @@ void List::RemoveBack()
         delete front;
         back = nullptr;
         front = nullptr;
+        size--;
         return;
     }
 
@@ -232,6 +237,7 @@ void List::RemoveBack()
     back->next = nullptr;
 
     delete toDelete;
+    size--;
 }
 
 void List::RemoveFront()
@@ -245,6 +251,7 @@ void List::RemoveFront()
         delete front;
         back = nullptr;
         front = nullptr;
+        size--;
         return;
     }
 
@@ -254,6 +261,7 @@ void List::RemoveFront()
     front->previous = nullptr;
 
     delete toDelete;
+    size--;
 }
 
 void List::RemoveAt(size_t positionToRemove)
@@ -286,6 +294,7 @@ void List::RemoveAt(size_t positionToRemove)
     toDelete->next->previous = toDelete->previous;
 
     delete toDelete;
+    size--;
 }
 
 void List::Clear()
@@ -317,29 +326,19 @@ size_t List::Find(DataType value, size_t start) const noexcept
     return INVALID_INDEX;
 }
 
-inline size_t List::Size() const noexcept
+size_t List::Size() const noexcept
 {
     return size;
 }
 
-List::Node* List::Front()
+List::Iterator List::begin() noexcept
 {
-    return front;
+    return Iterator(*this, front);
 }
 
-const List::Node* List::Front() const
+List::Iterator List::end() noexcept
 {
-    return front;
-}
-
-List::Node* List::Back()
-{
-    return back;
-}
-
-const List::Node* List::Back() const
-{
-    return back;
+    return Iterator(*this, back->next);
 }
 
 void List::AddFirstElement(DataType value)
@@ -347,6 +346,7 @@ void List::AddFirstElement(DataType value)
     Node* newNode = new Node(value);
     front = newNode;
     back = newNode;
+    size++;
 }
 
 bool List::Serialize(std::ostream& os, const List& list)
@@ -384,9 +384,9 @@ std::optional<List> List::Deserialize(std::istream& is)
     return {};
 }
 
-std::ostream& operator<<(std::ostream& os, const List& list)
+std::ostream& operator<<(std::ostream& os, List& list)
 {
-    const List::Node* iterator = list.Front();
+    const List::Node* iterator = list.front;
     os << "[";
     while (iterator != nullptr)
     {
@@ -395,6 +395,7 @@ std::ostream& operator<<(std::ostream& os, const List& list)
         {
             os << ", ";
         }
+        iterator = iterator->next;
     }
     os << "]";
     return os;

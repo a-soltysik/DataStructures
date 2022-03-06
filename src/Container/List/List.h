@@ -121,7 +121,4 @@ struct ListIterator : public ListConstIterator
     ListIterator operator++(int) noexcept;
     ListIterator& operator--() noexcept;
     ListIterator operator--(int) noexcept;
-
-    [[nodiscard]] bool operator==(const ListIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator!=(const ListIterator& rhs) const noexcept;
 };

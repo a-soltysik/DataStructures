@@ -69,7 +69,7 @@ struct DynamicArrayConstIterator
     using reference = const DynamicArray::DataType&;
 
     DynamicArrayConstIterator() = default;
-    DynamicArrayConstIterator(pointer ptr) noexcept;
+    DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -96,8 +96,11 @@ struct DynamicArrayConstIterator
     [[nodiscard]] bool operator<=(const DynamicArrayConstIterator& rhs) const noexcept;
     [[nodiscard]] bool operator>=(const DynamicArrayConstIterator& rhs) const noexcept;
 
-    pointer ptr;
+protected:
+    DynamicArray::DataType* ptr;
 };
+
+[[nodiscard]] DynamicArrayConstIterator operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept;
 
 struct DynamicArrayIterator : DynamicArrayConstIterator
 {
@@ -123,16 +126,7 @@ struct DynamicArrayIterator : DynamicArrayConstIterator
     DynamicArrayIterator& operator-=(const difference_type offset) noexcept;
     [[nodiscard]] DynamicArrayIterator operator-(const difference_type offset) const noexcept;
 
-    [[nodiscard]] difference_type operator-(const DynamicArrayIterator rhs) const noexcept;
-
     [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
-
-    [[nodiscard]] bool operator==(const DynamicArrayIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator!=(const DynamicArrayIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator<(const DynamicArrayIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator>(const DynamicArrayIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator<=(const DynamicArrayIterator& rhs) const noexcept;
-    [[nodiscard]] bool operator>=(const DynamicArrayIterator& rhs) const noexcept;
 };
 
-
+[[nodiscard]] DynamicArrayIterator operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept;

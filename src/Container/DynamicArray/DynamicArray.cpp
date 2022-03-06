@@ -316,7 +316,7 @@ std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
     return os;
 }
 
-DynamicArrayConstIterator::DynamicArrayConstIterator(pointer ptr) noexcept
+DynamicArrayConstIterator::DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept
     : ptr(ptr)
 {}
 
@@ -420,46 +420,52 @@ bool DynamicArrayConstIterator::operator>=(const DynamicArrayConstIterator& rhs)
     return !(*this < rhs);
 }
 
+DynamicArrayConstIterator operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept
+{
+    iterator += offset;
+    return iterator;
+}
+
 
 DynamicArrayIterator::reference DynamicArrayIterator::operator*() const noexcept
 {
-    return const_cast<reference>(*ptr);
+    return const_cast<reference>(DynamicArrayConstIterator::operator*());
 }
 
 DynamicArrayIterator::pointer DynamicArrayIterator::operator->() const noexcept
 {
-    return const_cast<pointer>(ptr);
+    return ptr;
 }
 
 DynamicArrayIterator& DynamicArrayIterator::operator++() noexcept
 {
-    ptr++;
+    DynamicArrayConstIterator::operator++();
     return *this;
 }
 
 DynamicArrayIterator DynamicArrayIterator::operator++(int) noexcept
 {
     DynamicArrayIterator tmp = *this;
-    ++(*this);
+    DynamicArrayConstIterator::operator++();
     return tmp;
 }
 
 DynamicArrayIterator& DynamicArrayIterator::operator--() noexcept
 {
-    ptr--;
+    DynamicArrayConstIterator::operator--();
     return *this;
 }
 
 DynamicArrayIterator DynamicArrayIterator::operator--(int) noexcept
 {
     DynamicArrayIterator tmp = *this;
-    --(*this);
+    DynamicArrayConstIterator::operator--();
     return tmp;
 }
 
 DynamicArrayIterator& DynamicArrayIterator::operator+=(const difference_type offset) noexcept
 {
-    ptr += offset;
+    DynamicArrayConstIterator::operator+=(offset);
     return *this;
 }
 
@@ -472,7 +478,8 @@ DynamicArrayIterator DynamicArrayIterator::operator+(const difference_type offse
 
 DynamicArrayIterator& DynamicArrayIterator::operator-=(const difference_type offset) noexcept
 {
-    return *this += -offset;
+    DynamicArrayConstIterator::operator-=(offset);
+    return *this;
 }
 
 DynamicArrayIterator DynamicArrayIterator::operator-(const difference_type offset) const noexcept
@@ -482,41 +489,13 @@ DynamicArrayIterator DynamicArrayIterator::operator-(const difference_type offse
     return tmp;
 }
 
-DynamicArrayIterator::difference_type DynamicArrayIterator::operator-(const DynamicArrayIterator rhs) const noexcept
-{
-    return ptr - rhs.ptr;
-}
-
 DynamicArrayIterator::reference DynamicArrayIterator::operator[](const difference_type offset) const noexcept
 {
-    return *(*this + offset);
+    return const_cast<reference>(DynamicArrayConstIterator::operator[](offset));
 }
 
-bool DynamicArrayIterator::operator==(const DynamicArrayIterator& rhs) const noexcept
+DynamicArrayIterator operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept
 {
-    return ptr == rhs.ptr;
-}
-
-bool DynamicArrayIterator::operator!=(const DynamicArrayIterator& rhs) const noexcept
-{
-    return !(*this == rhs);
-}
-
-bool DynamicArrayIterator::operator<(const DynamicArrayIterator& rhs) const noexcept
-{
-    return ptr < rhs.ptr;
-}
-
-bool DynamicArrayIterator::operator>(const DynamicArrayIterator& rhs) const noexcept
-{
-    return rhs < *this;
-}
-
-bool DynamicArrayIterator::operator<=(const DynamicArrayIterator& rhs) const noexcept
-{
-    return !(rhs < *this);
-}
-bool DynamicArrayIterator::operator>=(const DynamicArrayIterator& rhs) const noexcept
-{
-    return !(*this < rhs);
+    iterator += offset;
+    return iterator;
 }

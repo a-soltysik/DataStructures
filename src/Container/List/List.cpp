@@ -514,7 +514,7 @@ bool ListConstIterator::operator!=(const ListConstIterator& rhs) const noexcept
 
 ListIterator::reference ListIterator::operator*() const noexcept
 {
-    return node->value;
+    return const_cast<reference>(ListConstIterator::operator*());
 }
 
 ListIterator::pointer ListIterator::operator->() const noexcept
@@ -524,36 +524,26 @@ ListIterator::pointer ListIterator::operator->() const noexcept
 
 ListIterator& ListIterator::operator++() noexcept
 {
-    node = node->next;
+    ListConstIterator::operator++();
     return *this;
 }
 
 ListIterator ListIterator::operator++(int) noexcept
 {
     ListIterator tmp = *this;
-    ++(*this);
+    ListConstIterator::operator++();
     return tmp;
 }
 
 ListIterator& ListIterator::operator--() noexcept
 {
-    node = node ? node->previous : parent.back;
+    ListConstIterator::operator--();
     return *this;
 }
 
 ListIterator ListIterator::operator--(int) noexcept
 {
     ListIterator tmp = *this;
-    --(*this);
+    ListConstIterator::operator--();
     return tmp;
-}
-
-bool ListIterator::operator==(const ListIterator& rhs) const noexcept
-{
-    return node == rhs.node;
-}
-
-bool ListIterator::operator!=(const ListIterator& rhs) const noexcept
-{
-    return !(*this == rhs);
 }

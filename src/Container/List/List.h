@@ -18,6 +18,7 @@ public:
     using ConstIterator = ListConstIterator;
 
     List() = default;
+    List(std::initializer_list<DataType> initList);
     List(const List& rhs);
     List(List&& rhs) noexcept;
     List& operator=(const List& rhs);
@@ -65,7 +66,10 @@ private:
         Node* previous = nullptr;
         Node* next = nullptr;
     };
+
     void AddFirstElement(DataType value);
+    void RemoveLastElement();
+    Node* GetNodeAt(size_t position) const;
 
     size_t size = 0u;
     Node* front = nullptr;
@@ -80,6 +84,7 @@ struct ListConstIterator
     using pointer = const List::DataType*;
     using reference = const List::DataType&;
 
+    ListConstIterator() = default;
     ListConstIterator(const List& parent, List::Node* node) noexcept;
 
     [[nodiscard]] reference operator*() const noexcept;
@@ -94,6 +99,7 @@ struct ListConstIterator
     [[nodiscard]] bool operator==(const ListConstIterator& rhs) const noexcept;
     [[nodiscard]] bool operator!=(const ListConstIterator& rhs) const noexcept;
 
+protected:
     List::Node* node;
     const List& parent;
 };
@@ -105,7 +111,7 @@ struct ListIterator : public ListConstIterator
     using pointer = List::DataType*;
     using reference = List::DataType&;
 
-    ListIterator(const List& parent, List::Node* node) noexcept;
+    using ListConstIterator::ListConstIterator;
 
     [[nodiscard]] reference operator*() const noexcept;
 

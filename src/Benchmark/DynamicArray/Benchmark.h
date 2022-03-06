@@ -1,7 +1,5 @@
 #pragma once
 
-#include "DynamicArray/DynamicArray.h"
-
 #include <string>
 
 namespace DynamicArrayBenchmark

@@ -15,7 +15,8 @@ public:
     using ConstIterator = DynamicArrayConstIterator;
 
     DynamicArray() = default;
-    DynamicArray(size_t size);
+    explicit DynamicArray(size_t size);
+    DynamicArray(std::initializer_list<DataType> initList);
     DynamicArray(const DynamicArray& rhs);
     DynamicArray(DynamicArray&& rhs) noexcept;
     DynamicArray& operator=(const DynamicArray& rhs);
@@ -50,7 +51,7 @@ public:
     [[nodiscard]] ConstIterator cend() const noexcept;
 
     static bool Serialize(std::ostream& os, const DynamicArray& array);
-    static std::optional<DynamicArray> Deserialize(std::istream& is);
+    [[nodiscard]] static std::optional<DynamicArray> Deserialize(std::istream& is);
 
 private:
     DataType* data = nullptr;

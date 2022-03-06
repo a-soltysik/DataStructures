@@ -1,4 +1,5 @@
-#include "DynamicArray/Benchmark.h"
+#include "Benchmark/DynamicArray/Benchmark.h"
+#include "Container/DynamicArray/DynamicArray.h"
 #include "Utils/Utils.h"
 #include "Utils/Timer.h"
 #include "Settings.h"
@@ -89,11 +90,11 @@ namespace DynamicArrayBenchmark
     std::string PushBack()
     {
         std::string result = "Push back test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = PushBackCase(size);
-            result.append("Size: " + std::to_string(size) + 
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + 
+            result.append("Size: " + std::to_string(size) +
+                          ": DynamicArray: " + std::to_string(dynamicArrayTime) +
                           "ns; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
         }
         return result;
@@ -116,7 +117,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
             testedArray.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
-            timer.Stop();  
+            timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
         return averageTime / Settings::NUMBER_OF_TESTS;
@@ -140,7 +141,7 @@ namespace DynamicArrayBenchmark
     std::string PushFront()
     {
         std::string result = "Push front test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = PushFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -191,7 +192,7 @@ namespace DynamicArrayBenchmark
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -253,7 +254,7 @@ namespace DynamicArrayBenchmark
     std::string RemoveBack()
     {
         std::string result = "Remove back test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = RemoveBackCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -304,7 +305,7 @@ namespace DynamicArrayBenchmark
     std::string RemoveFront()
     {
         std::string result = "Remove front test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = RemoveFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -355,7 +356,7 @@ namespace DynamicArrayBenchmark
     std::string RemoveAt()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = RemoveAtCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -408,7 +409,7 @@ namespace DynamicArrayBenchmark
     std::string AccessElements()
     {
         std::string result = "Access test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = AccessCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -464,7 +465,7 @@ namespace DynamicArrayBenchmark
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size : Settings::ADD_TEST_SIZES)
+        for (const auto& size : Settings::TEST_SIZES)
         {
             auto [dynamicArrayTime, stdVectorTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +

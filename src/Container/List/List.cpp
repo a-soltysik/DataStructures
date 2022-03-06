@@ -1,4 +1,12 @@
-#include "List/List.h"
+#include "Container/List/List.h"
+
+List::List(std::initializer_list<DataType> initList)
+{
+    for (const auto& item : initList)
+    {
+        PushBack(item);
+    }
+}
 
 List::List(const List& rhs)
 {
@@ -6,6 +14,7 @@ List::List(const List& rhs)
     while (node != nullptr)
     {
         PushBack(node->value);
+        node = node->next;
     }
 }
 
@@ -27,6 +36,7 @@ List& List::operator=(const List& rhs)
     while (node != nullptr)
     {
         PushBack(node->value);
+        node = node->next;
     }
     return *this;
 }
@@ -64,35 +74,25 @@ List::DataType& List::operator[](size_t position)
         return back->value;
     }
 
-    if (position < size / 2)
-    {
-        size_t counter = 0u;
-        Node* iterator = front;
-
-        while (counter != position)
-        {
-            iterator = iterator->next;
-            counter++;
-        }
-        return iterator->value;
-    } 
-    else
-    {
-        size_t counter = size - 1u;
-        Node* iterator = back;
-
-        while (counter != position)
-        {
-            iterator = iterator->previous;
-            counter--;
-        }
-        return iterator->value;
-    }
+    return GetNodeAt(position)->value;
 }
 
 const List::DataType& List::operator[](size_t position) const
 {
-    return operator[](position);
+    if (position >= size)
+    {
+        throw std::out_of_range("Index is out of range");
+    }
+    if (position == 0u)
+    {
+        return front->value;
+    }
+    if (position == size - 1u)
+    {
+        return back->value;
+    }
+
+    return GetNodeAt(position)->value;
 }
 
 void List::PushBack(DataType value)
@@ -105,7 +105,7 @@ void List::PushBack(DataType value)
     Node* newNode = new Node(value);
     newNode->previous = back;
     back->next = newNode;
-    front = newNode;
+    back = newNode;
 
     size++;
 }
@@ -131,7 +131,7 @@ List::Iterator List::Insert(size_t position, DataType value)
     {
         throw std::out_of_range("Position is beyond the size of list");
     }
-    if (position == 0u && size == 0u)
+    if (size == 0u)
     {
         AddFirstElement(value);
         return Iterator(*this, front);
@@ -147,14 +147,7 @@ List::Iterator List::Insert(size_t position, DataType value)
         return Iterator(*this, front);
     }
 
-    size_t counter = 0u;
-    Node* iterator = front;
-
-    while (counter != position)
-    {
-        iterator = iterator->next;
-        counter++;
-    }
+    Node* iterator = GetNodeAt(position);
 
     Node* newNode = new Node(value);
     newNode->next = iterator;
@@ -179,6 +172,11 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
         PushBack(value);
         return Iterator(*this, back);
     }
+    if (iterator == cbegin())
+    {
+        PushFront(value);
+        return Iterator(*this, front);
+    }
 
     Node* newNode = new Node(value);
     newNode->next = iterator.node;
@@ -199,6 +197,11 @@ bool List::Remove(DataType value)
     {
         if (toDelete->value == value)
         {
+            if (size == 1u)
+            {
+                RemoveLastElement();
+                return true;
+            }
             toDelete->previous->next = toDelete->next;
             toDelete->next->previous = toDelete->previous;
 
@@ -222,10 +225,7 @@ void List::RemoveBack()
     }
     if (size == 1u)
     {
-        delete front;
-        back = nullptr;
-        front = nullptr;
-        size--;
+        RemoveLastElement();
         return;
     }
 
@@ -246,10 +246,7 @@ void List::RemoveFront()
     }
     if (size == 1u)
     {
-        delete front;
-        back = nullptr;
-        front = nullptr;
-        size--;
+        RemoveLastElement();
         return;
     }
 
@@ -264,29 +261,22 @@ void List::RemoveFront()
 
 void List::RemoveAt(size_t positionToRemove)
 {
-    Node* toDelete;
-    if (positionToRemove < size / 2)
+    if (positionToRemove == 0u && size == 1u)
     {
-        size_t counter = 0u;
-        toDelete = front;
-
-        while (counter != positionToRemove)
-        {
-            toDelete = toDelete->next;
-            counter++;
-        }
+        RemoveLastElement();
+        return;
     }
-    else
+    if (positionToRemove == size - 1)
     {
-        size_t counter = size - 1u;
-        toDelete = back;
-
-        while (counter != positionToRemove)
-        {
-            toDelete = toDelete->previous;
-            counter--;
-        }
+        RemoveBack();
+        return;
     }
+    if (positionToRemove == 0u)
+    {
+        RemoveFront();
+        return;
+    }
+    Node* toDelete = GetNodeAt(positionToRemove);
 
     toDelete->previous->next = toDelete->next;
     toDelete->next->previous = toDelete->previous;
@@ -297,6 +287,12 @@ void List::RemoveAt(size_t positionToRemove)
 
 void List::RemoveAt(ConstIterator iterator)
 {
+    if (size == 0u)
+    {
+        RemoveLastElement();
+        return;
+    }
+
     Node* toDelete = iterator.node;
 
     toDelete->previous->next = toDelete->next;
@@ -374,6 +370,42 @@ void List::AddFirstElement(DataType value)
     front = newNode;
     back = newNode;
     size++;
+}
+
+void List::RemoveLastElement()
+{
+    delete front;
+    back = nullptr;
+    front = nullptr;
+    size = 0u;
+}
+
+List::Node* List::GetNodeAt(size_t position) const
+{
+    if (position < size / 2)
+    {
+        size_t counter = 0u;
+        Node* iterator = front;
+
+        while (counter != position)
+        {
+            iterator = iterator->next;
+            counter++;
+        }
+        return iterator;
+    }
+    else
+    {
+        size_t counter = size - 1u;
+        Node* iterator = back;
+
+        while (counter != position)
+        {
+            iterator = iterator->previous;
+            counter--;
+        }
+        return iterator;
+    }
 }
 
 bool List::Serialize(std::ostream& os, const List& list)
@@ -479,9 +511,6 @@ bool ListConstIterator::operator!=(const ListConstIterator& rhs) const noexcept
 {
     return !(*this == rhs);
 }
-
-ListIterator::ListIterator(const List& parent, List::Node* node) noexcept : ListConstIterator(parent, node)
-{}
 
 ListIterator::reference ListIterator::operator*() const noexcept
 {

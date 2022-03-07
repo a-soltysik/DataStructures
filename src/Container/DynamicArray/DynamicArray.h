@@ -47,6 +47,9 @@ public:
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
 
+    [[nodiscard]] ConstIterator begin() const noexcept;
+    [[nodiscard]] ConstIterator end() const noexcept;
+
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
@@ -102,7 +105,7 @@ protected:
 
 [[nodiscard]] DynamicArrayConstIterator operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept;
 
-struct DynamicArrayIterator : DynamicArrayConstIterator
+struct DynamicArrayIterator : public DynamicArrayConstIterator
 {
     using iterator_category = std::random_access_iterator_tag;
     using difference_type = std::ptrdiff_t;

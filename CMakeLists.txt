@@ -3,15 +3,15 @@ cmake_minimum_required(VERSION 3.16)
 project(DataStructures)
 
 set (CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
-set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall -O2")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}" ${PROJECT_SOURCE_DIR}/CMake")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY )
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
+set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG}")
+set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
-file(GLOB_RECURSE SRC_LIST
-        "${PROJECT_SOURCE_DIR}/src/*.cpp"
-        )
+set (TEST "test")
+set (SOURCE "DataStructures")
 
-add_executable(DataStructures ${SRC_LIST})
+set (TEST_DIR "${PROJECT_SOURCE_DIR}/test")
+set (SRC_DIR  "${PROJECT_SOURCE_DIR}/src")
+
+add_subdirectory(src)
+add_subdirectory(test)

@@ -14,7 +14,9 @@ DynamicArray::DynamicArray(std::initializer_list<DataType> initList)
     for (const auto& item : initList)
     {
         data[counter] = item;
+        counter++;
     }
+    size = initList.size();
 }
 
 DynamicArray::DynamicArray(const DynamicArray& rhs)
@@ -123,7 +125,7 @@ DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
 {
     if (position > size)
     {
-        throw std::out_of_range("Position is beyond the size of list");
+        throw std::out_of_range("Index is out of range");
     }
     if (position == size)
     {
@@ -169,6 +171,15 @@ bool DynamicArray::Remove(DataType value)
 
 void DynamicArray::RemoveBack()
 {
+    if (size == 0u)
+    {
+        return;
+    }
+    if (size == 1u)
+    {
+        Clear();
+        return;
+    }
     DataType* newData = new DataType[size - 1];
 
     std::memcpy(newData, data, (size - 1) * sizeof(DataType));
@@ -181,6 +192,15 @@ void DynamicArray::RemoveBack()
 
 void DynamicArray::RemoveFront()
 {
+    if (size == 0u)
+    {
+        return;
+    }
+    if (size == 1u)
+    {
+        Clear();
+        return;
+    }
     DataType* newData = new DataType[size - 1];
 
     std::memcpy(newData, data + 1, (size - 1) * sizeof(DataType));
@@ -195,7 +215,16 @@ void DynamicArray::RemoveAt(size_t positionToRemove)
 {
     if (positionToRemove >= size)
     {
-        throw std::out_of_range("Index is out of range");
+        return;
+    }
+    if (size == 0u)
+    {
+        return;
+    }
+    if (size == 1u)
+    {
+        Clear();
+        return;
     }
 
     DataType* newData = new DataType[size - 1];
@@ -258,6 +287,16 @@ DynamicArray::Iterator DynamicArray::begin() noexcept
 DynamicArray::Iterator DynamicArray::end() noexcept
 {
     return Iterator(data + size);
+}
+
+DynamicArray::ConstIterator DynamicArray::begin() const noexcept
+{
+    return ConstIterator(data);
+}
+
+DynamicArray::ConstIterator DynamicArray::end() const noexcept
+{
+    return ConstIterator(data + size);
 }
 
 DynamicArray::ConstIterator DynamicArray::cbegin() const noexcept

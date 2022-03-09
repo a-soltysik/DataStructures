@@ -129,22 +129,22 @@ List::Iterator List::Insert(size_t position, DataType value)
 {
     if (position > size)
     {
-        throw std::out_of_range("Position is beyond the size of list");
+        throw std::out_of_range("Index is out of range");
     }
     if (size == 0u)
     {
         AddFirstElement(value);
-        return Iterator(*this, front);
+        return Iterator(this, front);
     }
     if (position == size)
     {
         PushBack(value);
-        return Iterator(*this, back);
+        return Iterator(this, back);
     }
     if (position == 0u)
     {
         PushFront(value);
-        return Iterator(*this, front);
+        return Iterator(this, front);
     }
 
     Node* iterator = GetNodeAt(position);
@@ -157,7 +157,7 @@ List::Iterator List::Insert(size_t position, DataType value)
     iterator->previous = newNode;
     size++;
 
-    return Iterator(*this, newNode);
+    return Iterator(this, newNode);
 }
 
 List::Iterator List::Insert(ConstIterator iterator, DataType value)
@@ -165,17 +165,17 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
     if (size == 0u)
     {
         AddFirstElement(value);
-        return Iterator(*this, front);
+        return Iterator(this, front);
     }
     if (iterator == cend())
     {
         PushBack(value);
-        return Iterator(*this, back);
+        return Iterator(this, back);
     }
     if (iterator == cbegin())
     {
         PushFront(value);
-        return Iterator(*this, front);
+        return Iterator(this, front);
     }
 
     Node* newNode = new Node(value);
@@ -186,7 +186,7 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
     iterator.node->previous = newNode;
 
     size++;
-    return Iterator(*this, newNode);
+    return Iterator(this, newNode);
 }
 
 bool List::Remove(DataType value)
@@ -200,6 +200,16 @@ bool List::Remove(DataType value)
             if (size == 1u)
             {
                 RemoveLastElement();
+                return true;
+            }
+            if (toDelete == front)
+            {
+                RemoveFront();
+                return true;
+            }
+            if (toDelete == back)
+            {
+                RemoveBack();
                 return true;
             }
             toDelete->previous->next = toDelete->next;
@@ -287,12 +297,21 @@ void List::RemoveAt(size_t positionToRemove)
 
 void List::RemoveAt(ConstIterator iterator)
 {
-    if (size == 0u)
+    if (size == 1u)
     {
         RemoveLastElement();
         return;
     }
-
+    if (iterator == --cend())
+    {
+        RemoveBack();
+        return;
+    }
+    if (iterator == cbegin())
+    {
+        RemoveFront();
+        return;
+    }
     Node* toDelete = iterator.node;
 
     toDelete->previous->next = toDelete->next;
@@ -304,11 +323,10 @@ void List::RemoveAt(ConstIterator iterator)
 
 void List::Clear()
 {
-    Node* node = front;
-    while (node != nullptr)
+    while (front != nullptr)
     {
-        Node* tmp = node;
-        node = node->next;
+        Node* tmp = front;
+        front = front->next;
         delete tmp;
         tmp = nullptr;
     }
@@ -346,22 +364,22 @@ size_t List::Size() const noexcept
 
 List::Iterator List::begin() noexcept
 {
-    return Iterator(*this, front);
+    return Iterator(this, front);
 }
 
 List::Iterator List::end() noexcept
 {
-    return Iterator(*this, back->next);
+    return Iterator(this, nullptr);
 }
 
 List::ConstIterator List::cbegin() const noexcept
 {
-    return ConstIterator(*this, front);
+    return ConstIterator(this, front);
 }
 
 List::ConstIterator List::cend() const noexcept
 {
-    return ConstIterator(*this, back->next);
+    return ConstIterator(this, nullptr);
 }
 
 void List::AddFirstElement(DataType value)
@@ -461,7 +479,7 @@ std::ostream& operator<<(std::ostream& os, List& list)
 }
 
 
-ListConstIterator::ListConstIterator(const List& parent, List::Node* node) noexcept
+ListConstIterator::ListConstIterator(const List* parent, List::Node* node) noexcept
     : parent(parent)
     , node(node)
 {}
@@ -491,7 +509,7 @@ ListConstIterator ListConstIterator::operator++(int) noexcept
 
 ListConstIterator& ListConstIterator::operator--() noexcept
 {
-    node = node ? node->previous : parent.back;
+    node = node ? node->previous : parent->back;
     return *this;
 }
 

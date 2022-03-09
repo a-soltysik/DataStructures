@@ -80,12 +80,13 @@ struct ListConstIterator
 {
     friend class List;
     using iterator_category = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
     using value_type = List::DataType;
     using pointer = const List::DataType*;
     using reference = const List::DataType&;
 
     ListConstIterator() = default;
-    ListConstIterator(const List& parent, List::Node* node) noexcept;
+    ListConstIterator(const List* parent, List::Node* node) noexcept;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -101,12 +102,13 @@ struct ListConstIterator
 
 protected:
     List::Node* node;
-    const List& parent;
+    const List* parent;
 };
 
 struct ListIterator : public ListConstIterator
 {
     using iterator_category = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
     using value_type = List::DataType;
     using pointer = List::DataType*;
     using reference = List::DataType&;

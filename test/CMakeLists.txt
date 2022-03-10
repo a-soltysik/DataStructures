@@ -11,11 +11,15 @@ set(CONTAINER_DIR ${SRC_DIR}/Container)
 
 set(FILES_TO_TEST
     ${CONTAINER_DIR}/DynamicArray/DynamicArray.cpp
+    ${CONTAINER_DIR}/List/List.cpp
+    ${CONTAINER_DIR}/RedBlackTree/RedBlackTree.cpp
 )
 
 set(TEST_SRC
     ${TEST_DIR}/main.cpp
     ${TEST_DIR}/Container/DynamicArrayTest.cpp
+    ${TEST_DIR}/Container/ListTest.cpp
+    ${TEST_DIR}/Container/RedBlackTreeTest.cpp
 )
 
 add_executable("Test" "${SRC_INCLUDES}" "${FILES_TO_TEST}" "${TEST_SRC}")

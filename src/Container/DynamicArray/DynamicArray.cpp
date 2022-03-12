@@ -309,12 +309,16 @@ DynamicArray::ConstIterator DynamicArray::cend() const noexcept
     return ConstIterator(data + size);
 }
 
-bool DynamicArray::Serialize(std::ostream& os, const DynamicArray& array)
+bool DynamicArray::Serialize(std::ostream& os) const
 {
-    os << array.Size() << "\n";
-    for (size_t i = 0u; i < array.Size(); i++)
+    if (!os.good())
     {
-        os << array[i] << " ";
+        return false;
+    }
+    os << size << "\n";
+    for (size_t i = 0u; i < size; i++)
+    {
+        os << data[i] << " ";
     }
     if (os.good())
     {
@@ -325,10 +329,14 @@ bool DynamicArray::Serialize(std::ostream& os, const DynamicArray& array)
 
 std::optional<DynamicArray> DynamicArray::Deserialize(std::istream& is)
 {
+    if (!is.good())
+    {
+        return {};
+    }
     size_t size;
     is >> size;
     DynamicArray array(size);
-    for (size_t i = 0u; i < size; i++)
+    for (size_t i = 0u; i < size && is.good(); i++)
     {
         is >> array[i];
     }

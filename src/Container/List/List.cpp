@@ -426,10 +426,14 @@ List::Node* List::GetNodeAt(size_t position) const
     }
 }
 
-bool List::Serialize(std::ostream& os, const List& list)
+bool List::Serialize(std::ostream& os) const
 {
-    os << list.Size() << "\n";
-    Node* iterator = list.front;
+    if (!os.good())
+    {
+        return false;
+    }
+    os << size << "\n";
+    Node* iterator = front;
     while (iterator != nullptr)
     {
         os << iterator->value << " ";
@@ -444,10 +448,14 @@ bool List::Serialize(std::ostream& os, const List& list)
 
 std::optional<List> List::Deserialize(std::istream& is)
 {
+    if (!is.good())
+    {
+        return {};
+    }
     size_t size;
     is >> size;
     List list;
-    for (size_t i = 0u; i < size; i++)
+    for (size_t i = 0u; i < size && is.good(); i++)
     {
         List::DataType value;
         is >> value;

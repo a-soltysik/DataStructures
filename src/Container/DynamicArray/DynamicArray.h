@@ -53,7 +53,7 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    static bool Serialize(std::ostream& os, const DynamicArray& array);
+    bool Serialize(std::ostream& os) const;
     [[nodiscard]] static std::optional<DynamicArray> Deserialize(std::istream& is);
 
 private:

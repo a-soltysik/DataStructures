@@ -52,7 +52,7 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    static bool Serialize(std::ostream& os, const List& array);
+    bool Serialize(std::ostream& os) const;
     static std::optional<List> Deserialize(std::istream& is);
     friend std::ostream& operator<<(std::ostream& os, List& array);
 

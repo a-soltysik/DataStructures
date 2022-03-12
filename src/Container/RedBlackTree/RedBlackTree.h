@@ -39,9 +39,15 @@ public:
 
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
-
+    [[nodiscard]] ConstIterator begin() const noexcept;
+    [[nodiscard]] ConstIterator end() const noexcept;
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
+
+    bool Serialize(std::ostream& os) const;
+    [[nodiscard]] static std::optional<RedBlackTree> Deserialize(std::istream& is);
+
+    friend std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree);
 
 public:
     struct Node
@@ -61,6 +67,10 @@ public:
         Node(const DataType& value) noexcept : value(value) {};
     };
 
+    inline static constexpr int64_t NIL_VALUE = -1;
+
+    [[nodiscard]] static Node* MakeNil();
+
     void SetRoot(Node* node) const;
     [[nodiscard]] Node* root() const;
     [[nodiscard]] Node* Min(Node* node) const;
@@ -76,9 +86,11 @@ public:
     void MoveSubtree(Node* from, Node* to) const;
     void RemoveSubtree(Node* root);
     [[nodiscard]] Node* CopySubtree(const RedBlackTree& tree, Node* root);
-
-    [[nodiscard]] static Node* MakeNil();
     [[nodiscard]] Node* MakeNode(const DataType& value) const;
+
+    void Print(std::ostream& os, const std::string& prefix, const Node* node, bool isLeft) const;
+    void Serialize(std::ostream& os, Node* node) const;
+    [[nodiscard]] Node* Deserialize(std::istream& is, Node* node);
 
     Node* NIL = MakeNil();
     size_t size = 0u;

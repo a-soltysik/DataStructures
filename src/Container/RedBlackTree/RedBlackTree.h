@@ -64,7 +64,7 @@ public:
         Node* right = nullptr;
         Node* left = nullptr;
 
-        Node(const DataType& value) noexcept : value(value) {};
+        explicit Node(const DataType& value) noexcept : value(value) {};
     };
 
     inline static constexpr int64_t NIL_VALUE = -1;
@@ -77,11 +77,11 @@ public:
     [[nodiscard]] Node* Max(Node* node)const;
     [[nodiscard]] Node* Find(const DataType& value, Node* root) const;
 
-    void LeftRotate(Node* node);
-    void RightRotate(Node* node);
+    void LeftRotate(Node* node) const;
+    void RightRotate(Node* node) const;
 
-    void InsertFix(Node* node);
-    void RemoveFix(Node* node);
+    void InsertFix(Node* node) const;
+    void RemoveFix(Node* node) const;
 
     void MoveSubtree(Node* from, Node* to) const;
     void RemoveSubtree(Node* root);
@@ -101,8 +101,8 @@ struct RedBlackTreeConstIterator
     friend class RedBlackTree;
     using iterator_category = std::bidirectional_iterator_tag;
     using value_type = RedBlackTree::DataType;
-    using pointer = const RedBlackTree::DataType*;
-    using reference = const RedBlackTree::DataType&;
+    using pointer = const value_type*;
+    using reference = const value_type&;
 
     RedBlackTreeConstIterator() = default;
     RedBlackTreeConstIterator(const RedBlackTree* redBlackTree, RedBlackTree::Node* node) noexcept;
@@ -128,8 +128,8 @@ struct RedBlackTreeIterator : public RedBlackTreeConstIterator
 {
     using iterator_category = std::bidirectional_iterator_tag;
     using value_type = RedBlackTree::DataType;
-    using pointer = RedBlackTree::DataType*;
-    using reference = RedBlackTree::DataType&;
+    using pointer = value_type*;
+    using reference = value_type&;
 
     using RedBlackTreeConstIterator::RedBlackTreeConstIterator;
 

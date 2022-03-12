@@ -15,8 +15,8 @@ namespace ListBenchmark
         uint64_t stdListTime;
     };
 
-    List MakeList(size_t size);
-    std::list<List::DataType> MakeStdList(size_t size);
+    void FillList(List& list, size_t size);
+    void FillStdList(std::list<List::DataType>& list, size_t size);
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
@@ -56,27 +56,23 @@ namespace ListBenchmark
     uint64_t FindListTest(size_t size);
     uint64_t FindStdListTest(size_t size);
 
-    List MakeList(size_t size)
+    void FillList(List& list, size_t size)
     {
-        List result;
         for (size_t i = 0u; i < size; i++)
         {
-            result.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
-        return result;
     }
 
-    std::list<List::DataType> MakeStdList(size_t size)
+    void FillStdList(std::list<List::DataType>& list, size_t size)
     {
-        std::list<List::DataType> result;
         for (size_t i = 0u; i < size; i++)
         {
-            result.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
-        return result;
     }
 
-    std::string RunBenchamark()
+    std::string RunBenchmark()
     {
         return "All benchmarks for List:\n" + AddElements() + RemoveElements() + AccessElements() + FindElements();
     }
@@ -93,8 +89,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = PushBackCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "ns; std::list: " + std::to_string(stdListTime) + "ns\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -109,13 +105,16 @@ namespace ListBenchmark
 
     uint64_t PushBackListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -124,13 +123,16 @@ namespace ListBenchmark
 
     uint64_t PushBackStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedStdList.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -144,8 +146,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = PushFrontCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -160,13 +162,16 @@ namespace ListBenchmark
 
     uint64_t PushFrontListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.PushFront(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -175,13 +180,16 @@ namespace ListBenchmark
 
     uint64_t PushFrontStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedStdList.push_front(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -195,8 +203,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -211,14 +219,17 @@ namespace ListBenchmark
 
     uint64_t InsertListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.Insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -227,15 +238,18 @@ namespace ListBenchmark
 
     uint64_t InsertStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
             testedStdList.insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -258,8 +272,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = RemoveBackCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "ns; std::list: " + std::to_string(stdListTime) + "ns\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -274,13 +288,16 @@ namespace ListBenchmark
 
     uint64_t RemoveBackListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.RemoveBack();
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -289,13 +306,16 @@ namespace ListBenchmark
 
     uint64_t RemoveBackStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedStdList.pop_back();
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -309,8 +329,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = RemoveFrontCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -325,13 +345,16 @@ namespace ListBenchmark
 
     uint64_t RemoveFrontListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.RemoveFront();
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -340,13 +363,16 @@ namespace ListBenchmark
 
     uint64_t RemoveFrontStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedStdList.pop_back();
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -360,8 +386,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = RemoveAtCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -376,14 +402,17 @@ namespace ListBenchmark
 
     uint64_t RemoveAtListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
+
             Utils::Timer timer;
             timer.Start();
+
             testedList.RemoveAt(middle);
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -392,15 +421,18 @@ namespace ListBenchmark
 
     uint64_t RemoveAtStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
             testedStdList.erase(middle);
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -414,8 +446,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = AccessCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -430,14 +462,17 @@ namespace ListBenchmark
 
     uint64_t AccessListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
+
             Utils::Timer timer;
             timer.Start();
-            auto tmp = testedList[middle];
+
+            [[maybe_unused]] auto tmp = testedList[middle];
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -446,15 +481,18 @@ namespace ListBenchmark
 
     uint64_t AccessStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
-            auto tmp = *middle;
+            [[maybe_unused]] auto tmp = *middle;
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -471,8 +509,8 @@ namespace ListBenchmark
         {
             auto [listTime, stdListTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": List: " + std::to_string(listTime) +
-                "; std::list: " + std::to_string(stdListTime) + "\n");
+                ": List: " + std::to_string(listTime) + "ns"
+                "; std::list: " + std::to_string(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -487,14 +525,16 @@ namespace ListBenchmark
 
     uint64_t FindListTest(size_t size)
     {
-        auto modelList = MakeList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            List testedList(modelList);
+            List testedList;
+            FillList(testedList, size);
+
             Utils::Timer timer;
             timer.Start();
-            auto tmp = testedList.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
-            timer.Stop();
+
+            [[maybe_unused]] auto tmp = testedList.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -503,13 +543,16 @@ namespace ListBenchmark
 
     uint64_t FindStdListTest(size_t size)
     {
-        auto modelStdList = MakeStdList(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::list<List::DataType> testedStdList(modelStdList);
+            std::list<List::DataType> testedStdList;
+            FillStdList(testedStdList, size);
+
             Utils::Timer timer;
             timer.Start();
+
             auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(), Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }

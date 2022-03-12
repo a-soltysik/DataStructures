@@ -50,7 +50,7 @@ namespace HeapBenchmark
         std::make_heap(vector.begin(), vector.end());
     }
 
-    std::string RunBenchamark()
+    std::string RunBenchmark()
     {
         return "All benchmarks for Heap:\n" + AddElements() + RemoveElements() + FindElements();
     }
@@ -68,8 +68,8 @@ namespace HeapBenchmark
         {
             auto [heapTime, vectorTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) +
-                "; std::vector: " + std::to_string(vectorTime) + "\n");
+                ": Heap: " + std::to_string(heapTime) + "ns"
+                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -137,8 +137,8 @@ namespace HeapBenchmark
         {
             auto [heapTime, vectorTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) +
-                "; std::vector: " + std::to_string(vectorTime) + "\n");
+                ": Heap: " + std::to_string(heapTime) + "ns"
+                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -197,8 +197,8 @@ namespace HeapBenchmark
         {
             auto [heapTime, vectorTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) +
-                "; std::vector: " + std::to_string(vectorTime) + "\n");
+                ": Heap: " + std::to_string(heapTime) + "ns"
+                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }

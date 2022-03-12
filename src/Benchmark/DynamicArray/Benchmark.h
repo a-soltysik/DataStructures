@@ -4,7 +4,7 @@
 
 namespace DynamicArrayBenchmark
 {
-    std::string RunBenchamark();
+    std::string RunBenchmark();
     std::string AddElements();
     std::string RemoveElements();
     std::string AccessElements();

@@ -15,8 +15,8 @@ namespace RedBlackTreeBenchmark
         uint64_t mapTime;
     };
 
-    RedBlackTree MakeRedBlackTree(size_t size);
-    std::map<RedBlackTree::DataType, bool> MakeMap(size_t size);
+    void FillRedBlackTree(RedBlackTree& tree, size_t size);
+    void FillMap(std::map<RedBlackTree::DataType, bool> map, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -33,27 +33,22 @@ namespace RedBlackTreeBenchmark
     uint64_t FindRedBlackTreeTest(size_t size);
     uint64_t FindMapTest(size_t size);
 
-    RedBlackTree MakeRedBlackTree(size_t size)
+    void FillRedBlackTree(RedBlackTree& tree, size_t size)
     {
-        RedBlackTree result;
         for (size_t i = 0u; i < size; i++)
         {
-            result.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            tree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
-        return result;
     }
-
-    std::map<RedBlackTree::DataType, bool> MakeMap(size_t size)
+    void FillMap(std::map<RedBlackTree::DataType, bool> map, size_t size)
     {
-        std::map<RedBlackTree::DataType, bool> result;
         for (size_t i = 0u; i < size; i++)
         {
-            result.insert({ Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true });
+            map.insert({ Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true });
         }
-        return result;
     }
 
-    std::string RunBenchamark()
+    std::string RunBenchmark()
     {
         return "All benchmarks for RedBlackTree:\n" + AddElements() + RemoveElements() + FindElements();
     }
@@ -71,8 +66,8 @@ namespace RedBlackTreeBenchmark
         {
             auto [treeTime, mapTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) +
-                "; std::map: " + std::to_string(mapTime) + "\n");
+                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
+                "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -87,14 +82,16 @@ namespace RedBlackTreeBenchmark
 
     uint64_t InsertRedBlackTreeTest(size_t size)
     {
-        auto modelRedBlackTree = MakeRedBlackTree(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            RedBlackTree testedRedBlackTree(modelRedBlackTree);
-            size_t middle = testedRedBlackTree.Size() / 2;
+            RedBlackTree testedRedBlackTree;
+            FillRedBlackTree(testedRedBlackTree, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedRedBlackTree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -103,13 +100,16 @@ namespace RedBlackTreeBenchmark
 
     uint64_t InsertMapTest(size_t size)
     {
-        auto modelMap = MakeMap(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::map<RedBlackTree::DataType, bool> testedMap(modelMap);
+            std::map<RedBlackTree::DataType, bool> testedMap;
+            FillMap(testedMap, size);
+
             Utils::Timer timer;
             timer.Start();
+
             testedMap.insert({ Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true });
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -134,8 +134,8 @@ namespace RedBlackTreeBenchmark
         {
             auto [treeTime, mapTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) +
-                "; std::map: " + std::to_string(mapTime) + "\n");
+                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
+                "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -150,16 +150,17 @@ namespace RedBlackTreeBenchmark
 
     uint64_t RemoveRedBlackTreeTest(size_t size)
     {
-        auto modelRedBlackTree = MakeRedBlackTree(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            RedBlackTree testedRedBlackTree(modelRedBlackTree);
-            //std::cout << std::equal(modelRedBlackTree.begin(), modelRedBlackTree.end(), testedRedBlackTree.begin());
+            RedBlackTree testedRedBlackTree;
+            FillRedBlackTree(testedRedBlackTree, size);
             auto min = *testedRedBlackTree.cbegin();
 
             Utils::Timer timer;
             timer.Start();
+
             testedRedBlackTree.Remove(min);
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -168,14 +169,17 @@ namespace RedBlackTreeBenchmark
 
     uint64_t RemoveMapTest(size_t size)
     {
-        auto modelMap = MakeMap(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::map<RedBlackTree::DataType, bool> testedMap(modelMap);
+            std::map<RedBlackTree::DataType, bool> testedMap;
+            FillMap(testedMap, size);
+            auto min = (*testedMap.cbegin()).first;
+
             Utils::Timer timer;
             timer.Start();
-            auto min = (* testedMap.cbegin()).first;
+            
             testedMap.erase(min);
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -191,8 +195,8 @@ namespace RedBlackTreeBenchmark
         {
             auto [treeTime, mapTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) +
-                "; std::map: " + std::to_string(mapTime) + "\n");
+                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
+                "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -207,13 +211,16 @@ namespace RedBlackTreeBenchmark
 
     uint64_t FindRedBlackTreeTest(size_t size)
     {
-        auto modelRedBlackTree = MakeRedBlackTree(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            RedBlackTree testedRedBlackTree(modelRedBlackTree);
+            RedBlackTree testedRedBlackTree;
+            FillRedBlackTree(testedRedBlackTree, size);
+
             Utils::Timer timer;
             timer.Start();
-            auto tmp = testedRedBlackTree.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
+            [[maybe_unused]] auto tmp = testedRedBlackTree.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
@@ -222,13 +229,16 @@ namespace RedBlackTreeBenchmark
 
     uint64_t FindMapTest(size_t size)
     {
-        auto modelMap = MakeMap(size);
         uint64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
-            std::map<RedBlackTree::DataType, bool> testedMap(modelMap);
+            std::map<RedBlackTree::DataType, bool> testedMap;
+            FillMap(testedMap, size);
+
             Utils::Timer timer;
             timer.Start();
+
             auto tmp = testedMap.find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }

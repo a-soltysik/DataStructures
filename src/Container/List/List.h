@@ -41,8 +41,8 @@ public:
 
     void Clear();
 
-    ConstIterator Find(DataType value) const noexcept;
-    Iterator Find(DataType value) noexcept;
+    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
+    [[nodiscard]] Iterator Find(DataType value) noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 
@@ -60,16 +60,16 @@ private:
     struct Node
     {
         Node() = default;
-        Node(const DataType& value) : value(value) {}
+        explicit Node(const DataType& value) : value(value) {}
 
-        DataType value;
+        DataType value = 0;
         Node* previous = nullptr;
         Node* next = nullptr;
     };
 
     void AddFirstElement(DataType value);
     void RemoveLastElement();
-    Node* GetNodeAt(size_t position) const;
+    [[nodiscard]] Node* GetNodeAt(size_t position) const;
 
     size_t size = 0u;
     Node* front = nullptr;
@@ -82,8 +82,8 @@ struct ListConstIterator
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
     using value_type = List::DataType;
-    using pointer = const List::DataType*;
-    using reference = const List::DataType&;
+    using pointer = const value_type*;
+    using reference = const value_type&;
 
     ListConstIterator() = default;
     ListConstIterator(const List* parent, List::Node* node) noexcept;
@@ -110,8 +110,8 @@ struct ListIterator : public ListConstIterator
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
     using value_type = List::DataType;
-    using pointer = List::DataType*;
-    using reference = List::DataType&;
+    using pointer = value_type*;
+    using reference = value_type&;
 
     using ListConstIterator::ListConstIterator;
 

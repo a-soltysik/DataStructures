@@ -31,6 +31,10 @@ List::List(List&& rhs) noexcept
 
 List& List::operator=(const List& rhs)
 {
+    if (this == &rhs)
+    {
+        return *this;
+    }
     Clear();
     Node* node = rhs.front;
     while (node != nullptr)
@@ -134,17 +138,17 @@ List::Iterator List::Insert(size_t position, DataType value)
     if (size == 0u)
     {
         AddFirstElement(value);
-        return Iterator(this, front);
+        return {this, front};
     }
     if (position == size)
     {
         PushBack(value);
-        return Iterator(this, back);
+        return {this, back};
     }
     if (position == 0u)
     {
         PushFront(value);
-        return Iterator(this, front);
+        return {this, front};
     }
 
     Node* iterator = GetNodeAt(position);
@@ -157,7 +161,7 @@ List::Iterator List::Insert(size_t position, DataType value)
     iterator->previous = newNode;
     size++;
 
-    return Iterator(this, newNode);
+    return {this, newNode};
 }
 
 List::Iterator List::Insert(ConstIterator iterator, DataType value)
@@ -165,17 +169,17 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
     if (size == 0u)
     {
         AddFirstElement(value);
-        return Iterator(this, front);
+        return {this, front};
     }
     if (iterator == cend())
     {
         PushBack(value);
-        return Iterator(this, back);
+        return {this, back};
     }
     if (iterator == cbegin())
     {
         PushFront(value);
-        return Iterator(this, front);
+        return {this, front};
     }
 
     Node* newNode = new Node(value);
@@ -186,7 +190,7 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
     iterator.node->previous = newNode;
 
     size++;
-    return Iterator(this, newNode);
+    return {this, newNode};
 }
 
 bool List::Remove(DataType value)
@@ -364,22 +368,22 @@ size_t List::Size() const noexcept
 
 List::Iterator List::begin() noexcept
 {
-    return Iterator(this, front);
+    return {this, front};
 }
 
 List::Iterator List::end() noexcept
 {
-    return Iterator(this, nullptr);
+    return {this, nullptr};
 }
 
 List::ConstIterator List::cbegin() const noexcept
 {
-    return ConstIterator(this, front);
+    return {this, front};
 }
 
 List::ConstIterator List::cend() const noexcept
 {
-    return ConstIterator(this, nullptr);
+    return {this, nullptr};
 }
 
 void List::AddFirstElement(DataType value)

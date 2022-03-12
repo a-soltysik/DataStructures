@@ -45,6 +45,10 @@ DynamicArray::DynamicArray(DynamicArray&& rhs) noexcept
 
 DynamicArray& DynamicArray::operator=(const DynamicArray& rhs)
 {
+    if (this == &rhs)
+    {
+        return *this;
+    }
     if (rhs.size != 0u) {
         DataType* newData = new DataType[rhs.size];
 
@@ -130,12 +134,12 @@ DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
     if (position == size)
     {
         PushBack(value);
-        return Iterator(data + size - 1u);
+        return {data + size - 1u};
     }
     if (position == 0u)
     {
         PushFront(value);
-        return Iterator(data);
+        return {data};
     }
 
     DataType* newData = new DataType[size + 1];
@@ -148,7 +152,7 @@ DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
     data = newData;
 
     size++;
-    return Iterator(data + position);
+    return {data + position};
 }
 
 DynamicArray::Iterator DynamicArray::Insert(ConstIterator iterator, DataType value)
@@ -281,32 +285,32 @@ size_t DynamicArray::Size() const noexcept
 
 DynamicArray::Iterator DynamicArray::begin() noexcept
 {
-    return Iterator(data);
+    return {data};
 }
 
 DynamicArray::Iterator DynamicArray::end() noexcept
 {
-    return Iterator(data + size);
+    return {data + size};
 }
 
 DynamicArray::ConstIterator DynamicArray::begin() const noexcept
 {
-    return ConstIterator(data);
+    return {data};
 }
 
 DynamicArray::ConstIterator DynamicArray::end() const noexcept
 {
-    return ConstIterator(data + size);
+    return {data + size};
 }
 
 DynamicArray::ConstIterator DynamicArray::cbegin() const noexcept
 {
-    return ConstIterator(data);
+    return {data};
 }
 
 DynamicArray::ConstIterator DynamicArray::cend() const noexcept
 {
-    return ConstIterator(data + size);
+    return {data + size};
 }
 
 bool DynamicArray::Serialize(std::ostream& os) const
@@ -346,6 +350,15 @@ std::optional<DynamicArray> DynamicArray::Deserialize(std::istream& is)
         return array;
     }
     return {};
+}
+
+void DynamicArray::Resize(size_t newSize)
+{
+    DataType* newData = new DataType[newSize];
+
+    std::memcpy(newData, data, size);
+    delete[] data;
+    data = newData;
 }
 
 std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
@@ -428,7 +441,7 @@ DynamicArrayConstIterator DynamicArrayConstIterator::operator-(const difference_
     return tmp;
 }
 
-DynamicArrayConstIterator::difference_type DynamicArrayConstIterator::operator-(const DynamicArrayConstIterator rhs) const noexcept
+DynamicArrayConstIterator::difference_type DynamicArrayConstIterator::operator-(const DynamicArrayConstIterator& rhs) const noexcept
 {
     return ptr - rhs.ptr;
 }

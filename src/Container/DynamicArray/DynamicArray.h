@@ -56,6 +56,8 @@ public:
     bool Serialize(std::ostream& os) const;
     [[nodiscard]] static std::optional<DynamicArray> Deserialize(std::istream& is);
 
+    void Resize(size_t i);
+
 private:
     DataType* data = nullptr;
     size_t size = 0u;
@@ -88,7 +90,7 @@ struct DynamicArrayConstIterator
     DynamicArrayConstIterator& operator-=(const difference_type offset) noexcept;
     [[nodiscard]] DynamicArrayConstIterator operator-(const difference_type offset) const noexcept;
 
-    [[nodiscard]] difference_type operator-(const DynamicArrayConstIterator rhs) const noexcept;
+    [[nodiscard]] difference_type operator-(const DynamicArrayConstIterator& rhs) const noexcept;
 
     [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
 
@@ -110,8 +112,8 @@ struct DynamicArrayIterator : public DynamicArrayConstIterator
     using iterator_category = std::random_access_iterator_tag;
     using difference_type = std::ptrdiff_t;
     using value_type = DynamicArray::DataType;
-    using pointer = DynamicArray::DataType*;
-    using reference = DynamicArray::DataType&;
+    using pointer = value_type*;
+    using reference = value_type&;
 
     using DynamicArrayConstIterator::DynamicArrayConstIterator;
 

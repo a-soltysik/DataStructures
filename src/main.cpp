@@ -1,15 +1,20 @@
-#include "Benchmark/List/Benchmark.h"
-#include "Container/List/List.h"
+#include "App/App.h"
 
-#include "Benchmark/DynamicArray/Benchmark.h"
-#include "Container/DynamicArray/DynamicArray.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
-#include <iostream>
+void SetUtf8()
+{
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+}
 
 int main()
 {
-    std::cout << ListBenchmark::RunBenchamark() << std::endl;
-    std::cout << DynamicArrayBenchmark::RunBenchamark() << std::endl;
+    SetUtf8();
+    App::Run();
 
     return 0;
 }

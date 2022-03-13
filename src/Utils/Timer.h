@@ -10,10 +10,10 @@ namespace Utils
         void Start() noexcept;
         void Stop() noexcept;
 
-        uint64_t GetTimeInNanos() const;
-        uint64_t GetTimeInMicros() const;
-        uint64_t GetTimeInMillis() const;
-        uint64_t GetTimeInSeconds() const;
+        [[nodiscard]] uint64_t GetTimeInNanos() const;
+        [[nodiscard]] uint64_t GetTimeInMicros() const;
+        [[nodiscard]] uint64_t GetTimeInMillis() const;
+        [[nodiscard]] uint64_t GetTimeInSeconds() const;
 
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> start;

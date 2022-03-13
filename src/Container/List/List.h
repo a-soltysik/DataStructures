@@ -101,8 +101,8 @@ struct ListConstIterator
     [[nodiscard]] bool operator!=(const ListConstIterator& rhs) const noexcept;
 
 protected:
-    List::Node* node;
     const List* parent;
+    List::Node* node;
 };
 
 struct ListIterator : public ListConstIterator

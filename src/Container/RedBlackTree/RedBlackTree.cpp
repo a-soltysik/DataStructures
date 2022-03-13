@@ -49,7 +49,7 @@ RedBlackTree& RedBlackTree::operator=(RedBlackTree&& rhs) noexcept
 }
 
 RedBlackTree::~RedBlackTree()
-{ 
+{
     Clear();
     delete NIL;
     NIL = nullptr;
@@ -144,7 +144,7 @@ bool RedBlackTree::Remove(const DataType& value)
     {
         RemoveFix(successor);
     }
-    
+
     size--;
     return true;
 }
@@ -165,7 +165,7 @@ void RedBlackTree::Clear()
         if (root() != nullptr)
         {
             RemoveSubtree(root());
-            
+
         }
         NIL->left = NIL;
     }
@@ -395,7 +395,7 @@ void RedBlackTree::InsertFix(Node* node) const
                 node->parent->parent->color = Node::Color::RED;
                 node = node->parent->parent;
             }
-            else 
+            else
             {
                 if (node == node->parent->right)
                 {
@@ -548,7 +548,7 @@ RedBlackTree::Node* RedBlackTree::CopySubtree(const RedBlackTree& tree, Node* ro
     newRoot->color = root->color;
     newRoot->left = CopySubtree(tree, root->left);
     newRoot->left->parent = newRoot;
-    
+
     newRoot->right = CopySubtree(tree, root->right);
     newRoot->right->parent = newRoot;
     return newRoot;
@@ -592,9 +592,9 @@ RedBlackTree::Node* RedBlackTree::Find(const DataType& value, Node* root) const
     return NIL;
 }
 
-RedBlackTreeConstIterator::RedBlackTreeConstIterator(const RedBlackTree* redBlackTree, RedBlackTree::Node* node) noexcept 
-    : node(node)
-    , redBlackTree(redBlackTree)
+RedBlackTreeConstIterator::RedBlackTreeConstIterator(const RedBlackTree* redBlackTree, RedBlackTree::Node* node) noexcept
+    : redBlackTree(redBlackTree)
+    , node(node)
 { }
 
 RedBlackTreeConstIterator::reference RedBlackTreeConstIterator::operator*() const noexcept

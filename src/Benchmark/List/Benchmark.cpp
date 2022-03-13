@@ -551,7 +551,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(), Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(), Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

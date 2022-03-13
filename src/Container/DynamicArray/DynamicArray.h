@@ -131,6 +131,8 @@ struct DynamicArrayIterator : public DynamicArrayConstIterator
     DynamicArrayIterator& operator-=(const difference_type offset) noexcept;
     [[nodiscard]] DynamicArrayIterator operator-(const difference_type offset) const noexcept;
 
+    [[nodiscard]] difference_type operator-(const DynamicArrayConstIterator& rhs) const noexcept;
+
     [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
 };
 

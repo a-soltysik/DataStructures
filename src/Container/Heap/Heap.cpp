@@ -92,7 +92,7 @@ size_t Heap::Find(const DataType& value, size_t root) const
 
     size_t leftFind = Find(value, Left(root));
     size_t rightFind = Find(value, Right(root));
-    
+
     return leftFind != data.Size() ? leftFind : rightFind;
 }
 
@@ -149,7 +149,7 @@ void Heap::RestoreDown(size_t node)
     size_t right = Right(current_position);
     bool isRight = right != data.Size();
 
-    while ((isLeft && data[current_position] < data[left]) || (isRight && data[current_position < data[right]]))
+    while ((isLeft && data[current_position] < data[left]) || (isRight && data[current_position] < data[right]))
     {
         size_t next_position;
         if (isLeft && isRight)

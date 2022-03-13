@@ -359,6 +359,7 @@ void DynamicArray::Resize(size_t newSize)
     std::memcpy(newData, data, size);
     delete[] data;
     data = newData;
+    size = newSize;
 }
 
 std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
@@ -552,6 +553,11 @@ DynamicArrayIterator DynamicArrayIterator::operator-(const difference_type offse
 DynamicArrayIterator::reference DynamicArrayIterator::operator[](const difference_type offset) const noexcept
 {
     return const_cast<reference>(DynamicArrayConstIterator::operator[](offset));
+}
+
+DynamicArrayIterator::difference_type DynamicArrayIterator::operator-(const DynamicArrayConstIterator& rhs) const noexcept
+{
+    return DynamicArrayConstIterator::operator-(rhs);
 }
 
 DynamicArrayIterator operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept

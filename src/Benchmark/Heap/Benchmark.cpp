@@ -16,7 +16,7 @@ namespace HeapBenchmark
     };
 
     void FillHeap(Heap& heap, size_t size);
-    void FillVectorHeap(std::vector<Heap::DataType> vector, size_t size);
+    void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -40,7 +40,7 @@ namespace HeapBenchmark
             heap.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
-    void FillVectorHeap(std::vector<Heap::DataType> vector, size_t size)
+    void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size)
     {
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)

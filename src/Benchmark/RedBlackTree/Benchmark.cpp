@@ -16,7 +16,7 @@ namespace RedBlackTreeBenchmark
     };
 
     void FillRedBlackTree(RedBlackTree& tree, size_t size);
-    void FillMap(std::map<RedBlackTree::DataType, bool> map, size_t size);
+    void FillMap(std::map<RedBlackTree::DataType, bool>& map, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -40,7 +40,7 @@ namespace RedBlackTreeBenchmark
             tree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
-    void FillMap(std::map<RedBlackTree::DataType, bool> map, size_t size)
+    void FillMap(std::map<RedBlackTree::DataType, bool>& map, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -125,7 +125,7 @@ namespace RedBlackTreeBenchmark
         return "Remove elements tests: \n" + Remove();
     }
 
- 
+
 
     std::string Remove()
     {
@@ -177,7 +177,7 @@ namespace RedBlackTreeBenchmark
 
             Utils::Timer timer;
             timer.Start();
-            
+
             testedMap.erase(min);
 
             timer.Stop();
@@ -237,7 +237,7 @@ namespace RedBlackTreeBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            auto tmp = testedMap.find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] auto tmp = testedMap.find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

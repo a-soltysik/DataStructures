@@ -31,6 +31,8 @@
 *.out
 *.app
 
+/cmake*/
+.idea/
 .vs/
 .vscode/
 out/

@@ -4,13 +4,16 @@ project(DataStructures)
 
 set (CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpessimizing-move -Wredundant-move -pedantic -Wconversion")
-set(COMPILER_REL_CXX_FLAGS "-O2")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /W4 /sdl /MP /permissive- /Zc:preprocessor /Zc:rvalueCast")
+    set(COMPILER_REL_CXX_FLAGS "/O2 /Ot")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpessimizing-move -Wredundant-move -pedantic -Wconversion")
+    set(COMPILER_REL_CXX_FLAGS "-O2")
+endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DNO_DEBUG=0 -D_MODE_DEBUG -DZE_NO_DEBUG=0 -D_ZE_MODE_DEBUG")
-set(COMPILER_REL_CXX_FLAGS "${COMPILER_REL_CXX_FLAGS} -DNO_DEBUG=1 -DZE_NO_DEBUG=1")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 set(CMAKE_CXX_FLAGS_RELEASE " ${CMAKE_CXX_FLAGS_RELEASE} ${COMPILER_REL_CXX_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${COMPILER_REL_CXX_FLAGS}")
 
 set (TEST "test")
 set (SOURCE "DataStructures")

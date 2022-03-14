@@ -12,22 +12,22 @@ namespace Utils
         stop = std::chrono::high_resolution_clock::now();
     }
 
-    uint64_t Timer::GetTimeInNanos() const
+    int64_t Timer::GetTimeInNanos() const
     {
         return std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
     }
 
-    uint64_t Timer::GetTimeInMicros() const
+    int64_t Timer::GetTimeInMicros() const
     {
         return std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     }
 
-    uint64_t Timer::GetTimeInMillis() const
+    int64_t Timer::GetTimeInMillis() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
     }
 
-    uint64_t Timer::GetTimeInSeconds() const
+    int64_t Timer::GetTimeInSeconds() const
     {
         return std::chrono::duration_cast<std::chrono::seconds>(stop - start).count();
     }

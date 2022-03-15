@@ -5,7 +5,7 @@ project(DataStructures)
 set (CMAKE_CXX_STANDARD 17)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /W4 /sdl /MP /permissive- /Zc:preprocessor /Zc:rvalueCast")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /W3 /sdl /MP /permissive- /Zc:preprocessor /Zc:rvalueCast")
     set(COMPILER_REL_CXX_FLAGS "/O2 /Ot")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpessimizing-move -Wredundant-move -pedantic -Wconversion")

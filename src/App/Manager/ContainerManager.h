@@ -65,7 +65,7 @@ uint8_t ContainerManager<T>::GetChoiceFromMenu(const char* menu)
     do
     {
         std::cout << menu;
-        auto choice = Utils::getInput<uint8_t>();
+        auto choice = Utils::getInput<uint8_t>(std::cin);
         goodChoice = choice.has_value();
         if (!choice.has_value())
         {
@@ -84,16 +84,15 @@ template<typename T>
 void ContainerManager<T>::SaveToFile()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>();
+    auto filename = Utils::getInput<std::string>(std::cin);
     if (!filename.has_value())
     {
         std::cout << "Błąd odczytu nazwy\n";
         return;
     }
     std::ofstream fout(filename.value());
-    bool result = container.Serialize(fout);
-
-    if (result)
+    fout << container << "\n";
+    if (fout.good())
     {
         std::cout << "Zapisano kontener do pliku\n";
     }
@@ -107,14 +106,14 @@ template<typename T>
 void ContainerManager<T>::CreateFromFile()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>();
+    auto filename = Utils::getInput<std::string>(std::cin);
     if (!filename.has_value())
     {
         std::cout << "Błąd odczytu nazwy\n";
         return;
     }
     std::ifstream fin(filename.value());
-    auto newContainer = T::Deserialize(fin);
+    auto newContainer = Utils::getInput<T>(fin);
 
     if (newContainer.has_value())
     {
@@ -130,5 +129,5 @@ void ContainerManager<T>::CreateFromFile()
 template<typename T>
 void ContainerManager<T>::Print()
 {
-    std::cout << container << "\n";
+    std::cout << container.ToString() << "\n";
 }

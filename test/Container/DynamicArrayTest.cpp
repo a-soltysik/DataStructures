@@ -220,7 +220,7 @@ TEST_F(DynamicArrayTest, RemoveAtIteratorTest)
 
 TEST_F(DynamicArrayTest, ClearTest)
 {
-    for (size_t i = 0; i < 34523; i++)
+    for (int32_t i = 0; i < 34523; i++)
     {
         array.PushBack(i);
     }

@@ -15,45 +15,42 @@ TEST_F(RedBlackTreeTest, InsertTest)
     tree.Insert(9);
     ASSERT_EQ(tree.Size(), 1);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(9, tree.root())->color, RedBlackTree::Node::Color::BLACK);
+    ASSERT_TRUE(tree.Find(9) != tree.end());
 
     tree.Insert(4);
     ASSERT_EQ(tree.Size(), 2);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(4, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(4) != tree.end());
 
     tree.Insert(11);
     ASSERT_EQ(tree.Size(), 3);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(11, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(11) != tree.end());
 
     tree.Insert(7);
     ASSERT_EQ(tree.Size(), 4);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(7, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(7) != tree.end());
 
     tree.Insert(8);
     ASSERT_EQ(tree.Size(), 5);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(8, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(8) != tree.end());
 
     tree.Insert(1);
     ASSERT_EQ(tree.Size(), 6);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(1, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(1) != tree.end());
 
     tree.Insert(5);
     ASSERT_EQ(tree.Size(), 7);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(5, tree.root())->color, RedBlackTree::Node::Color::RED);
+    ASSERT_TRUE(tree.Find(5) != tree.end());
 
     tree.Insert(2);
     ASSERT_EQ(tree.Size(), 8);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
-    ASSERT_EQ(tree.Find(2, tree.root())->color, RedBlackTree::Node::Color::RED);
-
-    ASSERT_EQ(tree.root()->left->right->color, RedBlackTree::Node::Color::BLACK);
-    ASSERT_EQ(tree.root()->right->right->color, RedBlackTree::Node::Color::BLACK);
+    ASSERT_TRUE(tree.Find(2) != tree.end());
 }
 
 TEST_F(RedBlackTreeTest, RemoveTest)
@@ -168,7 +165,7 @@ TEST_F(RedBlackTreeTest, FindTest)
 
 TEST_F(RedBlackTreeTest, ClearTest)
 {
-    for (size_t i = 0u; i < 23521u; i++)
+    for (int32_t i = 0u; i < 23521; i++)
     {
         tree.Insert(i);
     }

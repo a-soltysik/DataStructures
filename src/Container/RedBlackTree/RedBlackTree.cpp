@@ -1,4 +1,5 @@
 #include "Container/RedBlackTree/RedBlackTree.h"
+#include "Utils/Utils.h"
 
 RedBlackTree::RedBlackTree(std::initializer_list<DataType> initList)
 {
@@ -216,35 +217,6 @@ RedBlackTree::ConstIterator RedBlackTree::cend() const noexcept
     return {this, NIL};
 }
 
-bool RedBlackTree::Serialize(std::ostream& os) const
-{
-    if (!os.good())
-    {
-        return false;
-    }
-    Serialize(os, root());
-    if (os.good())
-    {
-        return true;
-    }
-    return false;
-}
-
-std::optional<RedBlackTree> RedBlackTree::Deserialize(std::istream& is)
-{
-    if (!is.good())
-    {
-        return {};
-    }
-    RedBlackTree tree;
-    tree.SetRoot(tree.Deserialize(is, tree.NIL));
-    if (is.good())
-    {
-        return tree;
-    }
-    return {};
-}
-
 void RedBlackTree::SetRoot(Node* node) const
 {
     NIL->left = node;
@@ -261,24 +233,54 @@ RedBlackTree::Node* RedBlackTree::MakeNode(const DataType& value) const
     return newNode;
 }
 
-void RedBlackTree::Print(std::ostream& os, const std::string& prefix, const Node* node, bool isLeft) const
+std::string RedBlackTree::ToString() const
+{
+    std::string result;
+    ToString(result, "", root(), false);
+    return result;
+}
+
+void RedBlackTree::ToString(std::string& result, const std::string& prefix, const Node* node, bool isLeft) const
 {
     if (node != NIL)
     {
-        os << prefix;
+        result += prefix;
 
-        os << (isLeft ? "\xC3\xC4" : "\xC0\xC4");
+        result += (isLeft ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += Utils::HORIZONTAL_BAR;
 
-        os << node->value << "\n";
+        result += Utils::Parser::number_to_string(node->value) + "\n";
 
-        Print(os, prefix + (isLeft ? "| " : "  "), node->left, true);
-        Print(os, prefix + (isLeft ? "| " : "  "), node->right, false);
+        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", node->left,  true);
+        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", node->right, false);
     }
+}
+std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
+{
+    if (!os.good())
+    {
+        return os;
+    }
+    tree.Serialize(os, tree.root());
+    return os;
+}
+std::istream& operator>>(std::istream& is, RedBlackTree& tree)
+{
+    if (!is.good())
+    {
+        return is;
+    }
+    tree.SetRoot(tree.Deserialize(is, tree.NIL));
+    return is;
 }
 
 void RedBlackTree::Serialize(std::ostream& os, Node* node) const
 {
-    if (node == NIL)
+    if (!os.good())
+    {
+        return;
+    }
+    if (node != NIL)
     {
         os << NIL_VALUE << " ";
     }
@@ -292,6 +294,10 @@ void RedBlackTree::Serialize(std::ostream& os, Node* node) const
 
 RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
 {
+    if (!is.good())
+    {
+        return NIL;
+    }
     int64_t value;
     is >> value;
     if (value == NIL_VALUE)
@@ -710,10 +716,4 @@ RedBlackTreeIterator RedBlackTreeIterator::operator--(int) noexcept
     RedBlackTreeIterator tmp = *this;
     RedBlackTreeConstIterator::operator--();
     return tmp;
-}
-
-std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
-{
-    tree.Print(os, "", tree.root(), false);
-    return os;
 }

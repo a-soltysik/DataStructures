@@ -1,4 +1,5 @@
 ﻿#include "Container/DynamicArray/DynamicArray.h"
+#include "Utils/Parser.h"
 
 #include <cstring>
 
@@ -313,45 +314,6 @@ DynamicArray::ConstIterator DynamicArray::cend() const noexcept
     return {data + size};
 }
 
-bool DynamicArray::Serialize(std::ostream& os) const
-{
-    if (!os.good())
-    {
-        return false;
-    }
-    os << size << "\n";
-    for (size_t i = 0u; i < size; i++)
-    {
-        os << data[i] << " ";
-    }
-    if (os.good())
-    {
-        return true;
-    }
-    return false;
-}
-
-std::optional<DynamicArray> DynamicArray::Deserialize(std::istream& is)
-{
-    if (!is.good())
-    {
-        return {};
-    }
-    size_t size;
-    is >> size;
-    DynamicArray array(size);
-    for (size_t i = 0u; i < size && is.good(); i++)
-    {
-        is >> array[i];
-    }
-
-    if (is.good())
-    {
-        return array;
-    }
-    return {};
-}
-
 void DynamicArray::Resize(size_t newSize)
 {
     DataType* newData = new DataType[newSize];
@@ -362,19 +324,49 @@ void DynamicArray::Resize(size_t newSize)
     size = newSize;
 }
 
-std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
+std::string DynamicArray::ToString() const
 {
-    os << "[";
-    for (size_t i = 0u; i < array.Size(); i++)
+    std::string result = "[";
+    for (size_t i = 0u; i < size; i++)
     {
-        os << array[i];
-        if (i != array.Size() - 1u)
+        result += Utils::Parser::number_to_string(data[i]);
+        if (i != size - 1u)
         {
-            os << ", ";
+            result += ", ";
         }
     }
-    os << "]";
+    return result + "]";
+}
+
+std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
+{
+    if (!os.good())
+    {
+        return os;
+    }
+    os << array.Size() << "\n";
+    for (size_t i = 0u; i < array.Size() && os.good(); i++)
+    {
+        os << array[i] << " ";
+    }
     return os;
+}
+
+std::istream& operator>>(std::istream& is, DynamicArray& array)
+{
+    if (!is.good())
+    {
+        return is;
+    }
+    size_t size;
+    is >> size;
+    array.Resize(size);
+    for (size_t i = 0u; i < size && is.good(); i++)
+    {
+        is >> array[i];
+    }
+
+    return is;
 }
 
 DynamicArrayConstIterator::DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept

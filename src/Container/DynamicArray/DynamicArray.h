@@ -53,17 +53,17 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    bool Serialize(std::ostream& os) const;
-    [[nodiscard]] static std::optional<DynamicArray> Deserialize(std::istream& is);
-
     void Resize(size_t i);
 
+    [[nodiscard]] std::string ToString() const;
+    friend std::ostream& operator<<(std::ostream& os, const DynamicArray& array);
+    friend std::istream& operator>>(std::istream& is, DynamicArray& array);
 private:
     DataType* data = nullptr;
     size_t size = 0u;
 };
 
-std::ostream& operator<<(std::ostream& os, const DynamicArray& array);
+
 
 struct DynamicArrayConstIterator
 {

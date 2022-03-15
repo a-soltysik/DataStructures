@@ -1,4 +1,5 @@
 #include "Container/List/List.h"
+#include "Utils/Parser.h"
 
 List::List(std::initializer_list<DataType> initList)
 {
@@ -430,35 +431,45 @@ List::Node* List::GetNodeAt(size_t position) const
     }
 }
 
-bool List::Serialize(std::ostream& os) const
+std::string List::ToString() const
+{
+    const List::Node* iterator = front;
+    std::string result = "[";
+    while (iterator != nullptr)
+    {
+        result += Utils::Parser::number_to_string(iterator->value);
+        if (iterator->next != nullptr)
+        {
+            result += ", ";
+        }
+        iterator = iterator->next;
+    }
+
+    return result + "]";
+}
+std::ostream& operator<<(std::ostream& os, const List& list)
 {
     if (!os.good())
     {
-        return false;
+        return os;
     }
-    os << size << "\n";
-    Node* iterator = front;
-    while (iterator != nullptr)
+    os << list.Size() << "\n";
+    List::Node* iterator = list.front;
+    while (iterator != nullptr && os.good())
     {
         os << iterator->value << " ";
         iterator = iterator->next;
     }
-    if (os.good())
-    {
-        return true;
-    }
-    return false;
+    return os;
 }
-
-std::optional<List> List::Deserialize(std::istream& is)
+std::istream& operator>>(std::istream& is, List& list)
 {
     if (!is.good())
     {
-        return {};
+        return is;
     }
     size_t size;
     is >> size;
-    List list;
     for (size_t i = 0u; i < size && is.good(); i++)
     {
         List::DataType value;
@@ -466,28 +477,7 @@ std::optional<List> List::Deserialize(std::istream& is)
         list.PushBack(value);
     }
 
-    if (is.good())
-    {
-        return list;
-    }
-    return {};
-}
-
-std::ostream& operator<<(std::ostream& os, List& list)
-{
-    const List::Node* iterator = list.front;
-    os << "[";
-    while (iterator != nullptr)
-    {
-        os << iterator->value;
-        if (iterator->next != nullptr)
-        {
-            os << ", ";
-        }
-        iterator = iterator->next;
-    }
-    os << "]";
-    return os;
+    return is;
 }
 
 

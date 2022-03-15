@@ -2,13 +2,17 @@
 
 #include "Utils/Parser.h"
 
-#include <iostream>
+#include <string>
+#include <istream>
 
 namespace Utils
 {
+    constexpr char HORIZONTAL_BAR[]          = "\xE2\x94\x80";
+    constexpr char VERTICAL_BAR[]            = "\xE2\x94\x82";
+    constexpr char VERTICAL_BAR_RIGHT[]      = "\xE2\x94\x9C";
+    constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
+
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
-
-
 
     /**
     *  Indicates that value T can be moved (own implementation of std::move)
@@ -22,11 +26,14 @@ namespace Utils
     template<typename T>
     [[nodiscard]] constexpr T&& Move(T& val) noexcept;
 
+    /**
+    *  Swaps to values (own implementation of std::swap)
+    */
     template<typename T>
     constexpr void Swap(T& val1, T& val2) noexcept;
 
     template<typename T>
-    std::optional<T> getInput();
+    std::optional<T> getInput(std::istream& is);
 
 
 
@@ -53,22 +60,40 @@ namespace Utils
     }
 
     template<typename T>
-    std::optional<T> getInput()
+    std::optional<T> getInput(std::istream& is)
     {
-        static_assert(std::is_same_v<T, std::string> ||std::is_same_v<T, char> || std::is_arithmetic_v<T>);
-        std::string input;
-        std::cin >> input;
-        if constexpr(std::is_same_v<T, std::string>)
+        static_assert(std::is_default_constructible_v<T>);
+
+        T value;
+
+        if constexpr(std::is_same_v<T, char>)
         {
-            return input;
+            std::string input;
+            is >> input;
+            value = input[0];
         }
-        else if (std::is_same_v<T, char>)
+        else if constexpr(std::is_arithmetic_v<T>)
         {
-            return input[0];
+            std::string input;
+            is >> input;
+            auto opt = Parser::string_to_number<T>(input);
+            if (opt.has_value())
+            {
+                value = opt.value();
+            }
+            else
+            {
+                return {};
+            }
         }
-        else if (std::is_arithmetic_v<T>)
+        else
         {
-            return Parser::string_to_number<T>(input);
+            is >> value;
         }
+        if (is.good())
+        {
+            return value;
+        }
+        return {};
     }
 }

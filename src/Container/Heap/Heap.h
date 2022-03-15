@@ -9,6 +9,7 @@ public:
 
     Heap() = default;
     Heap(std::initializer_list<DataType> initList);
+    explicit Heap(const DynamicArray& array);
 
     void Insert(const DataType& value);
     bool Remove(const DataType& value);
@@ -23,9 +24,15 @@ public:
     [[nodiscard]] const DynamicArray& Array() const;
     [[nodiscard]] size_t Size() const;
 
+    [[nodiscard]] std::string ToString() const;
+    friend std::ostream& operator<<(std::ostream& os, const Heap& heap);
+    friend std::istream& operator>>(std::istream& is, Heap& heap);
+
 private:
     void RemoveAt(size_t node);
     void RestoreDown(size_t node);
+
+    void ToString(std::string& result, const std::string& prefix, size_t node, bool isLeft) const;
 
     [[nodiscard]] size_t Find(const DataType& value, size_t root) const;
 

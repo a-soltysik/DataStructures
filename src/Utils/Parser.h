@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
 #include <optional>
 #include <charconv>
 #include <limits>
+#include <string>
 
 namespace Utils::Parser
 {
@@ -18,6 +18,15 @@ namespace Utils::Parser
 
     template<typename T>
     std::string number_to_string(T number);
+
+    template<>
+    std::string number_to_string<float>(float number);
+
+    template<>
+    std::string number_to_string<double>(double number);
+
+    template<>
+    std::string number_to_string<long double>(long double number);
 
 
     template<typename T>
@@ -46,11 +55,9 @@ namespace Utils::Parser
     std::string number_to_string(T number) {
         static_assert(std::is_arithmetic_v<T>);
         constexpr int size = max_length_of_number<T>();
-        constexpr char buffer[size] = {0};
+        char buffer[size] = {0};
         if (std::is_integral<T>::value) {
             std::to_chars(buffer, buffer + size, number);
-        } else {
-            std::to_chars(buffer, buffer + size, number, std::chars_format::fixed);
         }
         return {buffer};
     }

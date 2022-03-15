@@ -57,13 +57,13 @@ void DynamicArrayManager::RemoveMenu()
     switch (GetChoiceFromMenu(REMOVE_MENU))
     {
         case 1:
-            PushFront();
+            RemoveFront();
             break;
         case 2:
-            Insert();
+            RemoveAt();
             break;
         case 3:
-            PushBack();
+            RemoveBack();
             break;
         default:
             return;
@@ -73,7 +73,7 @@ void DynamicArrayManager::RemoveMenu()
 void DynamicArrayManager::PushFront()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać na początek ";
-    auto number = Utils::getInput<DynamicArray::DataType>();
+    auto number = Utils::getInput<DynamicArray::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -85,7 +85,7 @@ void DynamicArrayManager::PushFront()
 void DynamicArrayManager::Insert()
 {
     std::cout << "Podaj pozycję na którą chcesz dodać liczbę: ";
-    auto position = Utils::getInput<size_t>();
+    auto position = Utils::getInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -93,7 +93,7 @@ void DynamicArrayManager::Insert()
     }
 
     std::cout << "Podaj liczbę, którą chcesz dodać: ";
-    auto number = Utils::getInput<DynamicArray::DataType>();
+    auto number = Utils::getInput<DynamicArray::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -113,7 +113,7 @@ void DynamicArrayManager::Insert()
 void DynamicArrayManager::PushBack()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać na koniec: ";
-    auto number = Utils::getInput<DynamicArray::DataType>();
+    auto number = Utils::getInput<DynamicArray::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -131,7 +131,7 @@ void DynamicArrayManager::RemoveFront()
 void DynamicArrayManager::RemoveAt()
 {
     std::cout << "Podaj pozycję, z której chcesz usunąć liczbę: ";
-    auto position = Utils::getInput<size_t>();
+    auto position = Utils::getInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -158,7 +158,7 @@ void DynamicArrayManager::RemoveBack()
 void DynamicArrayManager::Access()
 {
     std::cout << "Podaj pozycję, z której chcesz uzyskać liczbę: ";
-    auto position = Utils::getInput<size_t>();
+    auto position = Utils::getInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -179,7 +179,7 @@ void DynamicArrayManager::Access()
 void DynamicArrayManager::Find()
 {
     std::cout << "Podaj liczbę, którą chcesz wyszukać: ";
-    auto number = Utils::getInput<DynamicArray::DataType>();
+    auto number = Utils::getInput<DynamicArray::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczbaa\n";

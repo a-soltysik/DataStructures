@@ -1,6 +1,6 @@
 #include "Container/Heap/Heap.h"
+#include "Utils/Parser.h"
 #include "Utils/Utils.h"
-#include <iostream>
 
 Heap::Heap(std::initializer_list<DataType> initList)
 {
@@ -8,6 +8,11 @@ Heap::Heap(std::initializer_list<DataType> initList)
     {
         Insert(element);
     }
+}
+
+Heap::Heap(const DynamicArray& array)
+{
+    data = array;
 }
 
 void Heap::Insert(const DataType& value)
@@ -170,3 +175,37 @@ void Heap::RestoreDown(size_t node)
         isRight = right != data.Size();
     }
 }
+
+void Heap::ToString(std::string& result, const std::string& prefix, size_t node, bool isLeft) const
+{
+    if (node != data.Size())
+    {
+        result += prefix;
+
+        result += (isLeft ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += Utils::HORIZONTAL_BAR;
+
+        result += Utils::Parser::number_to_string(data[node]) + "\n";
+
+        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Left(node), true);
+        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Right(node), false);
+    }
+}
+
+std::string Heap::ToString() const
+{
+    std::string result;
+    ToString(result, "", 0, false);
+    return result;
+}
+
+std::ostream& operator<<(std::ostream& os, const Heap& heap)
+{
+    return os << heap.data;
+}
+
+std::istream& operator>>(std::istream& is, Heap& array)
+{
+    return is >> array.data;
+}
+

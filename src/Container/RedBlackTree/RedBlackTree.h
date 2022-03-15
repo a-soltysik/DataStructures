@@ -3,7 +3,6 @@
 #include <istream>
 #include <optional>
 #include <iterator>
-#include <iostream>
 
 struct RedBlackTreeIterator;
 struct RedBlackTreeConstIterator;
@@ -34,7 +33,7 @@ public:
 
     [[nodiscard]] DataType Min() const;
     [[nodiscard]] DataType Max() const;
-    
+
     [[nodiscard]] size_t Size() const;
 
     [[nodiscard]] Iterator begin() noexcept;
@@ -44,12 +43,11 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    bool Serialize(std::ostream& os) const;
-    [[nodiscard]] static std::optional<RedBlackTree> Deserialize(std::istream& is);
-
+    [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree);
+    friend std::istream& operator>>(std::istream& is, RedBlackTree& tree);
 
-public:
+private:
     struct Node
     {
         enum class Color : uint8_t
@@ -88,7 +86,7 @@ public:
     [[nodiscard]] Node* CopySubtree(const RedBlackTree& tree, Node* root);
     [[nodiscard]] Node* MakeNode(const DataType& value) const;
 
-    void Print(std::ostream& os, const std::string& prefix, const Node* node, bool isLeft) const;
+    void ToString(std::string& result, const std::string& prefix, const Node* node, bool isLeft) const;
     void Serialize(std::ostream& os, Node* node) const;
     [[nodiscard]] Node* Deserialize(std::istream& is, Node* node);
 

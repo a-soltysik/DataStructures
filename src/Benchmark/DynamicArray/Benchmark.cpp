@@ -11,8 +11,8 @@ namespace DynamicArrayBenchmark
 {
     struct TestCaseResult
     {
-        uint64_t dynamicArrayTime;
-        uint64_t stdVectorTime;
+        int64_t dynamicArrayTime;
+        int64_t stdVectorTime;
     };
 
     void FillArray(DynamicArray& array, size_t size);
@@ -20,41 +20,41 @@ namespace DynamicArrayBenchmark
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
-    uint64_t PushBackDynamicArrayTest(size_t size);
-    uint64_t PushBackVectorTest(size_t size);
+    int64_t PushBackDynamicArrayTest(size_t size);
+    int64_t PushBackVectorTest(size_t size);
 
     std::string PushFront();
     TestCaseResult PushFrontCase(size_t size);
-    uint64_t PushFrontDynamicArrayTest(size_t size);
-    uint64_t PushFrontVectorTest(size_t size);
+    int64_t PushFrontDynamicArrayTest(size_t size);
+    int64_t PushFrontVectorTest(size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
-    uint64_t InsertDynamicArrayTest(size_t size);
-    uint64_t InsertVectorTest(size_t size);
+    int64_t InsertDynamicArrayTest(size_t size);
+    int64_t InsertVectorTest(size_t size);
 
     std::string RemoveBack();
     TestCaseResult RemoveBackCase(size_t size);
-    uint64_t RemoveBackDynamicArrayTest(size_t size);
-    uint64_t RemoveBackVectorTest(size_t size);
+    int64_t RemoveBackDynamicArrayTest(size_t size);
+    int64_t RemoveBackVectorTest(size_t size);
 
     std::string RemoveFront();
     TestCaseResult RemoveFrontCase(size_t size);
-    uint64_t RemoveFrontDynamicArrayTest(size_t size);
-    uint64_t RemoveFrontVectorTest(size_t size);
+    int64_t RemoveFrontDynamicArrayTest(size_t size);
+    int64_t RemoveFrontVectorTest(size_t size);
 
     std::string RemoveAt();
     TestCaseResult RemoveAtCase(size_t size);
-    uint64_t RemoveAtDynamicArrayTest(size_t size);
-    uint64_t RemoveAtVectorTest(size_t size);
+    int64_t RemoveAtDynamicArrayTest(size_t size);
+    int64_t RemoveAtVectorTest(size_t size);
 
     TestCaseResult AccessCase(size_t size);
-    uint64_t AccessDynamicArrayTest(size_t size);
-    uint64_t AccessVectorTest(size_t size);
+    int64_t AccessDynamicArrayTest(size_t size);
+    int64_t AccessVectorTest(size_t size);
 
     TestCaseResult FindCase(size_t size);
-    uint64_t FindDynamicArrayTest(size_t size);
-    uint64_t FindVectorTest(size_t size);
+    int64_t FindDynamicArrayTest(size_t size);
+    int64_t FindVectorTest(size_t size);
 
 
     void FillArray(DynamicArray& array, size_t size)
@@ -105,9 +105,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t PushBackDynamicArrayTest(size_t size)
+    int64_t PushBackDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -123,9 +123,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t PushBackVectorTest(size_t size)
+    int64_t PushBackVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -162,9 +162,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t PushFrontDynamicArrayTest(size_t size)
+    int64_t PushFrontDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -180,9 +180,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t PushFrontVectorTest(size_t size)
+    int64_t PushFrontVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -219,9 +219,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t InsertDynamicArrayTest(size_t size)
+    int64_t InsertDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -238,9 +238,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t InsertVectorTest(size_t size)
+    int64_t InsertVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -287,9 +287,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t RemoveBackDynamicArrayTest(size_t size)
+    int64_t RemoveBackDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -305,9 +305,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveBackVectorTest(size_t size)
+    int64_t RemoveBackVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -344,9 +344,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t RemoveFrontDynamicArrayTest(size_t size)
+    int64_t RemoveFrontDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -362,9 +362,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveFrontVectorTest(size_t size)
+    int64_t RemoveFrontVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -401,9 +401,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t RemoveAtDynamicArrayTest(size_t size)
+    int64_t RemoveAtDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -420,9 +420,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveAtVectorTest(size_t size)
+    int64_t RemoveAtVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -460,9 +460,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t AccessDynamicArrayTest(size_t size)
+    int64_t AccessDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -479,9 +479,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t AccessVectorTest(size_t size)
+    int64_t AccessVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);
@@ -522,9 +522,9 @@ namespace DynamicArrayBenchmark
         return TestCaseResult{ dynamicArrayTime, stdVectorTime };
     }
 
-    uint64_t FindDynamicArrayTest(size_t size)
+    int64_t FindDynamicArrayTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             DynamicArray testedArray;
             FillArray(testedArray, size);
@@ -540,9 +540,9 @@ namespace DynamicArrayBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t FindVectorTest(size_t size)
+    int64_t FindVectorTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<DynamicArray::DataType> testedVector;
             FillVector(testedVector, size);

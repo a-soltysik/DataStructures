@@ -11,8 +11,8 @@ namespace HeapBenchmark
 {
     struct TestCaseResult
     {
-        uint64_t heapTime;
-        uint64_t vectorTime;
+        int64_t heapTime;
+        int64_t vectorTime;
     };
 
     void FillHeap(Heap& heap, size_t size);
@@ -20,18 +20,18 @@ namespace HeapBenchmark
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
-    uint64_t InsertHeapTest(size_t size);
-    uint64_t InsertVectorHeapTest(size_t size);
+    int64_t InsertHeapTest(size_t size);
+    int64_t InsertVectorHeapTest(size_t size);
 
 
     std::string Remove();
     TestCaseResult RemoveCase(size_t size);
-    uint64_t RemoveHeapTest(size_t size);
-    uint64_t RemoveVectorHeapTest(size_t size);
+    int64_t RemoveHeapTest(size_t size);
+    int64_t RemoveVectorHeapTest(size_t size);
 
     TestCaseResult FindCase(size_t size);
-    uint64_t FindHeapTest(size_t size);
-    uint64_t FindVectorHeapTest(size_t size);
+    int64_t FindHeapTest(size_t size);
+    int64_t FindVectorHeapTest(size_t size);
 
     void FillHeap(Heap& heap, size_t size)
     {
@@ -82,9 +82,9 @@ namespace HeapBenchmark
         return TestCaseResult{ heapTime, vectorTime };
     }
 
-    uint64_t InsertHeapTest(size_t size)
+    int64_t InsertHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             Heap testedHeap;
             FillHeap(testedHeap, size);
@@ -100,9 +100,9 @@ namespace HeapBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t InsertVectorHeapTest(size_t size)
+    int64_t InsertVectorHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
@@ -151,9 +151,9 @@ namespace HeapBenchmark
         return TestCaseResult{ heapTime, vectorTime };
     }
 
-    uint64_t RemoveHeapTest(size_t size)
+    int64_t RemoveHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             Heap testedHeap;
             FillHeap(testedHeap, size);
@@ -169,9 +169,9 @@ namespace HeapBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveVectorHeapTest(size_t size)
+    int64_t RemoveVectorHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
@@ -211,9 +211,9 @@ namespace HeapBenchmark
         return TestCaseResult{ heapTime, vectorTime };
     }
 
-    uint64_t FindHeapTest(size_t size)
+    int64_t FindHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             Heap testedHeap;
             FillHeap(testedHeap, size);
@@ -229,9 +229,9 @@ namespace HeapBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t FindVectorHeapTest(size_t size)
+    int64_t FindVectorHeapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);

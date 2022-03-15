@@ -11,8 +11,8 @@ namespace RedBlackTreeBenchmark
 {
     struct TestCaseResult
     {
-        uint64_t treeTime;
-        uint64_t mapTime;
+        int64_t treeTime;
+        int64_t mapTime;
     };
 
     void FillRedBlackTree(RedBlackTree& tree, size_t size);
@@ -20,18 +20,18 @@ namespace RedBlackTreeBenchmark
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
-    uint64_t InsertRedBlackTreeTest(size_t size);
-    uint64_t InsertMapTest(size_t size);
+    int64_t InsertRedBlackTreeTest(size_t size);
+    int64_t InsertMapTest(size_t size);
 
 
     std::string Remove();
     TestCaseResult RemoveCase(size_t size);
-    uint64_t RemoveRedBlackTreeTest(size_t size);
-    uint64_t RemoveMapTest(size_t size);
+    int64_t RemoveRedBlackTreeTest(size_t size);
+    int64_t RemoveMapTest(size_t size);
 
     TestCaseResult FindCase(size_t size);
-    uint64_t FindRedBlackTreeTest(size_t size);
-    uint64_t FindMapTest(size_t size);
+    int64_t FindRedBlackTreeTest(size_t size);
+    int64_t FindMapTest(size_t size);
 
     void FillRedBlackTree(RedBlackTree& tree, size_t size)
     {
@@ -80,9 +80,9 @@ namespace RedBlackTreeBenchmark
         return TestCaseResult{ treeTime, mapTime };
     }
 
-    uint64_t InsertRedBlackTreeTest(size_t size)
+    int64_t InsertRedBlackTreeTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
@@ -98,9 +98,9 @@ namespace RedBlackTreeBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t InsertMapTest(size_t size)
+    int64_t InsertMapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);
@@ -148,9 +148,9 @@ namespace RedBlackTreeBenchmark
         return TestCaseResult{ treeTime, mapTime };
     }
 
-    uint64_t RemoveRedBlackTreeTest(size_t size)
+    int64_t RemoveRedBlackTreeTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
@@ -167,9 +167,9 @@ namespace RedBlackTreeBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveMapTest(size_t size)
+    int64_t RemoveMapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);
@@ -209,9 +209,9 @@ namespace RedBlackTreeBenchmark
         return TestCaseResult{ treeTime, mapTime };
     }
 
-    uint64_t FindRedBlackTreeTest(size_t size)
+    int64_t FindRedBlackTreeTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
@@ -227,9 +227,9 @@ namespace RedBlackTreeBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t FindMapTest(size_t size)
+    int64_t FindMapTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);

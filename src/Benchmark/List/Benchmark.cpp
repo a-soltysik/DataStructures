@@ -11,8 +11,8 @@ namespace ListBenchmark
 {
     struct TestCaseResult
     {
-        uint64_t listTime;
-        uint64_t stdListTime;
+        int64_t listTime;
+        int64_t stdListTime;
     };
 
     void FillList(List& list, size_t size);
@@ -20,41 +20,41 @@ namespace ListBenchmark
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
-    uint64_t PushBackListTest(size_t size);
-    uint64_t PushBackStdListTest(size_t size);
+    int64_t PushBackListTest(size_t size);
+    int64_t PushBackStdListTest(size_t size);
 
     std::string PushFront();
     TestCaseResult PushFrontCase(size_t size);
-    uint64_t PushFrontListTest(size_t size);
-    uint64_t PushFrontStdListTest(size_t size);
+    int64_t PushFrontListTest(size_t size);
+    int64_t PushFrontStdListTest(size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
-    uint64_t InsertListTest(size_t size);
-    uint64_t InsertStdListTest(size_t size);
+    int64_t InsertListTest(size_t size);
+    int64_t InsertStdListTest(size_t size);
 
     std::string RemoveBack();
     TestCaseResult RemoveBackCase(size_t size);
-    uint64_t RemoveBackListTest(size_t size);
-    uint64_t RemoveBackStdListTest(size_t size);
+    int64_t RemoveBackListTest(size_t size);
+    int64_t RemoveBackStdListTest(size_t size);
 
     std::string RemoveFront();
     TestCaseResult RemoveFrontCase(size_t size);
-    uint64_t RemoveFrontListTest(size_t size);
-    uint64_t RemoveFrontStdListTest(size_t size);
+    int64_t RemoveFrontListTest(size_t size);
+    int64_t RemoveFrontStdListTest(size_t size);
 
     std::string RemoveAt();
     TestCaseResult RemoveAtCase(size_t size);
-    uint64_t RemoveAtListTest(size_t size);
-    uint64_t RemoveAtStdListTest(size_t size);
+    int64_t RemoveAtListTest(size_t size);
+    int64_t RemoveAtStdListTest(size_t size);
 
     TestCaseResult AccessCase(size_t size);
-    uint64_t AccessListTest(size_t size);
-    uint64_t AccessStdListTest(size_t size);
+    int64_t AccessListTest(size_t size);
+    int64_t AccessStdListTest(size_t size);
 
     TestCaseResult FindCase(size_t size);
-    uint64_t FindListTest(size_t size);
-    uint64_t FindStdListTest(size_t size);
+    int64_t FindListTest(size_t size);
+    int64_t FindStdListTest(size_t size);
 
     void FillList(List& list, size_t size)
     {
@@ -103,9 +103,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t PushBackListTest(size_t size)
+    int64_t PushBackListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -121,9 +121,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t PushBackStdListTest(size_t size)
+    int64_t PushBackStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -160,9 +160,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t PushFrontListTest(size_t size)
+    int64_t PushFrontListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -178,9 +178,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t PushFrontStdListTest(size_t size)
+    int64_t PushFrontStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -217,9 +217,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t InsertListTest(size_t size)
+    int64_t InsertListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -236,9 +236,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t InsertStdListTest(size_t size)
+    int64_t InsertStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -286,9 +286,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t RemoveBackListTest(size_t size)
+    int64_t RemoveBackListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -304,9 +304,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveBackStdListTest(size_t size)
+    int64_t RemoveBackStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -343,9 +343,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t RemoveFrontListTest(size_t size)
+    int64_t RemoveFrontListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -361,9 +361,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveFrontStdListTest(size_t size)
+    int64_t RemoveFrontStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -400,9 +400,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t RemoveAtListTest(size_t size)
+    int64_t RemoveAtListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -419,9 +419,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t RemoveAtStdListTest(size_t size)
+    int64_t RemoveAtStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -460,9 +460,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t AccessListTest(size_t size)
+    int64_t AccessListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -479,9 +479,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t AccessStdListTest(size_t size)
+    int64_t AccessStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);
@@ -523,9 +523,9 @@ namespace ListBenchmark
         return TestCaseResult{ listTime, stdListTime };
     }
 
-    uint64_t FindListTest(size_t size)
+    int64_t FindListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             List testedList;
             FillList(testedList, size);
@@ -541,9 +541,9 @@ namespace ListBenchmark
         return averageTime / Settings::NUMBER_OF_TESTS;
     }
 
-    uint64_t FindStdListTest(size_t size)
+    int64_t FindStdListTest(size_t size)
     {
-        uint64_t averageTime = 0u;
+        int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
             std::list<List::DataType> testedStdList;
             FillStdList(testedStdList, size);

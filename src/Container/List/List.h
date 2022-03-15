@@ -59,12 +59,9 @@ public:
 private:
     struct Node
     {
-        Node() = default;
-        explicit Node(const DataType& value) : value(value) {}
-
-        DataType value = 0;
-        Node* previous = nullptr;
-        Node* next = nullptr;
+        DataType value;
+        Node* previous;
+        Node* next;
     };
 
     void AddFirstElement(DataType value);

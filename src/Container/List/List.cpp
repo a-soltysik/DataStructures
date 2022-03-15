@@ -107,7 +107,8 @@ void List::PushBack(DataType value)
         AddFirstElement(value);
         return;
     }
-    Node* newNode = new Node(value);
+    Node* newNode = new Node{};
+    newNode->value = value;
     newNode->previous = back;
     back->next = newNode;
     back = newNode;
@@ -122,7 +123,8 @@ void List::PushFront(DataType value)
         AddFirstElement(value);
         return;
     }
-    Node* newNode = new Node(value);
+    Node* newNode = new Node{};
+    newNode->value = value;
     newNode->next = front;
     front->previous = newNode;
     front = newNode;
@@ -154,7 +156,8 @@ List::Iterator List::Insert(size_t position, DataType value)
 
     Node* iterator = GetNodeAt(position);
 
-    Node* newNode = new Node(value);
+    Node* newNode = new Node{};
+    newNode->value = value;
     newNode->next = iterator;
     newNode->previous = iterator->previous;
 
@@ -183,7 +186,8 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
         return {this, front};
     }
 
-    Node* newNode = new Node(value);
+    Node* newNode = new Node{};
+    newNode->value = value;
     newNode->next = iterator.node;
     newNode->previous = iterator.node->previous;
 
@@ -389,7 +393,8 @@ List::ConstIterator List::cend() const noexcept
 
 void List::AddFirstElement(DataType value)
 {
-    Node* newNode = new Node(value);
+    Node* newNode = new Node{};
+    newNode->value = value;
     front = newNode;
     back = newNode;
     size++;

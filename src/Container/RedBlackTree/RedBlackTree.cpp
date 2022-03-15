@@ -225,8 +225,10 @@ void RedBlackTree::SetRoot(Node* node) const
 
 RedBlackTree::Node* RedBlackTree::MakeNode(const DataType& value) const
 {
-    Node* newNode = new Node(value);
+    Node* newNode = new Node;
 
+    newNode->color = Node::Color::BLACK;
+    newNode->value = value;
     newNode->left  = NIL;
     newNode->right = NIL;
 
@@ -315,8 +317,9 @@ RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
 
 RedBlackTree::Node* RedBlackTree::MakeNil()
 {
-    Node* nil = new Node(0);
+    Node* nil = new Node;
 
+    nil->color  = Node::Color::BLACK;
     nil->parent = nil;
     nil->left   = nil;
     nil->right  = nil;
@@ -550,7 +553,8 @@ RedBlackTree::Node* RedBlackTree::CopySubtree(const RedBlackTree& tree, Node* ro
         return NIL;
     }
 
-    Node* newRoot = new Node(root->value);
+    Node* newRoot = new Node;
+    newRoot->value = root->value;
     newRoot->color = root->color;
     newRoot->left = CopySubtree(tree, root->left);
     newRoot->left->parent = newRoot;

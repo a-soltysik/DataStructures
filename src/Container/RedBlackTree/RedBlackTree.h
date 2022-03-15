@@ -55,14 +55,12 @@ private:
             RED,
             BLACK
         };
-        Color color = Color::BLACK;
-        DataType value = DataType();
+        Color color;
+        DataType value;
 
-        Node* parent = nullptr;
-        Node* right = nullptr;
-        Node* left = nullptr;
-
-        explicit Node(const DataType& value) noexcept : value(value) {};
+        Node* parent;
+        Node* right;
+        Node* left;
     };
 
     inline static constexpr int64_t NIL_VALUE = -1;

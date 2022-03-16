@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/Utils.h"
+
 class Manager
 {
 public:
@@ -11,4 +13,7 @@ public:
     virtual ~Manager() = default;
 
     virtual void Menu() = 0;
+
+protected:
+    static uint8_t GetChoiceFromMenu(const std::string& menu);
 };

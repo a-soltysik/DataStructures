@@ -4,6 +4,7 @@
 #include <charconv>
 #include <limits>
 #include <string>
+#include <algorithm>
 
 namespace Utils::Parser
 {
@@ -18,16 +19,6 @@ namespace Utils::Parser
 
     template<typename T>
     std::string number_to_string(T number);
-
-    template<>
-    std::string number_to_string<float>(float number);
-
-    template<>
-    std::string number_to_string<double>(double number);
-
-    template<>
-    std::string number_to_string<long double>(long double number);
-
 
     template<typename T>
     constexpr uint32_t max_length_of_number() {
@@ -53,12 +44,14 @@ namespace Utils::Parser
 
     template<typename T>
     std::string number_to_string(T number) {
-        static_assert(std::is_arithmetic_v<T>);
+        static_assert(std::is_integral_v<T>);
         constexpr int size = max_length_of_number<T>();
         char buffer[size] = {0};
         if (std::is_integral<T>::value) {
             std::to_chars(buffer, buffer + size, number);
         }
-        return {buffer};
+        std::string result {buffer};
+        result.erase(std::find(result.begin(), result.end(), '\0'), result.end());
+        return result;
     }
 }

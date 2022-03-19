@@ -33,29 +33,29 @@ void TreeContainerManager<T>::Menu()
     {
         switch (Manager::GetChoiceFromMenu(MENU))
         {
-            case 1:
-                AddMenu();
-                break;
-            case 2:
-                RemoveMenu();
-                break;
-            case 3:
-                this->FindMenu();
-                break;
-            case 4:
-                this->PrintMenu();
-                break;
-            case 5:
-                this->SaveToFileMenu();
-                break;
-            case 6:
-                this->CreateFromFileMenu();
-                break;
-            case 7:
-                this->GetTestContainerMenu();
-                break;
-            default:
-                return;
+        case 1:
+            AddMenu();
+            break;
+        case 2:
+            RemoveMenu();
+            break;
+        case 3:
+            this->FindMenu();
+            break;
+        case 4:
+            this->PrintMenu();
+            break;
+        case 5:
+            this->SaveToFileMenu();
+            break;
+        case 6:
+            this->CreateFromFileMenu();
+            break;
+        case 7:
+            this->GetTestContainerMenu();
+            break;
+        default:
+            return;
         }
     }
 }
@@ -65,6 +65,7 @@ void TreeContainerManager<T>::AddMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać do kontenera: ";
     auto number = Utils::getInput<typename T::DataType>(std::cin);
+
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -78,6 +79,7 @@ void TreeContainerManager<T>::RemoveMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz usunąć z kontenera: ";
     auto number = Utils::getInput<typename T::DataType>(std::cin);
+
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";

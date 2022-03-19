@@ -5,7 +5,6 @@
 #include "Settings.h"
 
 #include <map>
-#include <algorithm>
 
 namespace RedBlackTreeBenchmark
 {
@@ -40,11 +39,12 @@ namespace RedBlackTreeBenchmark
             tree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
+
     void FillMap(std::map<RedBlackTree::DataType, bool>& map, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
-            map.insert({ Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true });
+            map.insert({Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
         }
     }
 
@@ -62,12 +62,12 @@ namespace RedBlackTreeBenchmark
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [treeTime, mapTime] = InsertCase(size);
+            auto[treeTime, mapTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
-                "; std::map: " + std::to_string(mapTime) + "ns\n");
+                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
+                          "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -77,13 +77,14 @@ namespace RedBlackTreeBenchmark
         auto treeTime = InsertRedBlackTreeTest(size);
         auto mapTime = InsertMapTest(size);
 
-        return TestCaseResult{ treeTime, mapTime };
+        return TestCaseResult {treeTime, mapTime};
     }
 
     int64_t InsertRedBlackTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
 
@@ -101,14 +102,15 @@ namespace RedBlackTreeBenchmark
     int64_t InsertMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedMap.insert({ Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true });
+            testedMap.insert({Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -117,25 +119,21 @@ namespace RedBlackTreeBenchmark
     }
 
 
-
-
-
     std::string RemoveElements()
     {
         return "Remove elements tests: \n" + Remove();
     }
 
 
-
     std::string Remove()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [treeTime, mapTime] = RemoveCase(size);
+            auto[treeTime, mapTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
-                "; std::map: " + std::to_string(mapTime) + "ns\n");
+                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
+                          "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -145,13 +143,14 @@ namespace RedBlackTreeBenchmark
         auto treeTime = RemoveRedBlackTreeTest(size);
         auto mapTime = RemoveMapTest(size);
 
-        return TestCaseResult{ treeTime, mapTime };
+        return TestCaseResult {treeTime, mapTime};
     }
 
     int64_t RemoveRedBlackTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
             auto min = *testedRedBlackTree.cbegin();
@@ -170,7 +169,8 @@ namespace RedBlackTreeBenchmark
     int64_t RemoveMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);
             auto min = (*testedMap.cbegin()).first;
@@ -187,16 +187,15 @@ namespace RedBlackTreeBenchmark
     }
 
 
-
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [treeTime, mapTime] = FindCase(size);
+            auto[treeTime, mapTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": RedBlackTree: " + std::to_string(treeTime) + "ns"
-                "; std::map: " + std::to_string(mapTime) + "ns\n");
+                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
+                          "; std::map: " + std::to_string(mapTime) + "ns\n");
         }
         return result;
     }
@@ -206,20 +205,22 @@ namespace RedBlackTreeBenchmark
         auto treeTime = FindRedBlackTreeTest(size);
         auto mapTime = FindMapTest(size);
 
-        return TestCaseResult{ treeTime, mapTime };
+        return TestCaseResult {treeTime, mapTime};
     }
 
     int64_t FindRedBlackTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             RedBlackTree testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedRedBlackTree.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] auto tmp = testedRedBlackTree.Find(
+                    Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -230,7 +231,8 @@ namespace RedBlackTreeBenchmark
     int64_t FindMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::map<RedBlackTree::DataType, bool> testedMap;
             FillMap(testedMap, size);
 

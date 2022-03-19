@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
+#include "App/Manager/Manager.h"
 
-class Manager;
+#include <memory>
 
 class App
 {

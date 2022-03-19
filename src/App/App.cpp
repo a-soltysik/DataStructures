@@ -32,7 +32,7 @@ int32_t App::Run()
     {
         std::cerr << e.what() << "\n";
     }
-    catch(...)
+    catch (...)
     {
         std::cerr << "Nieznany błąd\n";
     }
@@ -51,20 +51,20 @@ void App::ContainerMenu()
 
     switch (Manager::GetChoiceFromMenu(CONTAINER_MENU))
     {
-        case 1:
-            manager = std::make_unique<LinearContainerManager<DynamicArray>>();
-            break;
-        case 2:
-            manager = std::make_unique<LinearContainerManager<List>>();
-            break;
-        case 3:
-            manager = std::make_unique<TreeContainerManager<Heap>>();
-            break;
-        case 4:
-            manager = std::make_unique<TreeContainerManager<RedBlackTree>>();
-            break;
-        default:
-            return;
+    case 1:
+        manager = std::make_unique<LinearContainerManager<DynamicArray>>();
+        break;
+    case 2:
+        manager = std::make_unique<LinearContainerManager<List>>();
+        break;
+    case 3:
+        manager = std::make_unique<TreeContainerManager<Heap>>();
+        break;
+    case 4:
+        manager = std::make_unique<TreeContainerManager<RedBlackTree>>();
+        break;
+    default:
+        return;
     }
 }
 
@@ -80,20 +80,19 @@ void App::MainMenu()
     {
         switch (Manager::GetChoiceFromMenu(MAIN_MENU))
         {
-            case 1:
-                ContainerMenu();
-                manager->Menu();
-                break;
-            case 2:
-                manager = std::make_unique<BenchmarkManager>();
-                manager->Menu();
-                break;
-            case 3:
-                return;
-            default:
-                break;
+        case 1:
+            ContainerMenu();
+            manager->Menu();
+            break;
+        case 2:
+            manager = std::make_unique<BenchmarkManager>();
+            manager->Menu();
+            break;
+        case 3:
+            return;
+        default:
+            break;
 
         }
     }
 }
-

@@ -57,8 +57,8 @@ namespace Utils
     constexpr void Swap(T& val1, T& val2) noexcept
     {
         T tmp = Move(val1);
-        val1  = Move(val2);
-        val2  = Move(tmp);
+        val1 = Move(val2);
+        val2 = Move(tmp);
     }
 
     template<typename T>
@@ -78,7 +78,7 @@ namespace Utils
         {
             std::string input;
             is >> input;
-            auto opt = Parser::string_to_number<T>(input);
+            auto opt = Parser::StringToNumber<T>(input);
             if (opt.has_value())
             {
                 value = opt.value();

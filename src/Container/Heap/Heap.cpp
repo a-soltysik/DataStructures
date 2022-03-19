@@ -4,7 +4,7 @@
 
 Heap::Heap(std::initializer_list<DataType> initList)
 {
-    for (const auto& element : initList)
+    for (const auto& element: initList)
     {
         Insert(element);
     }
@@ -215,7 +215,7 @@ void Heap::ToString(std::string& result, const std::string& prefix, size_t node,
         result += (isLeft ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
-        result += Utils::Parser::number_to_string(data[node]) + "\n";
+        result += Utils::Parser::NumberToString(data[node]) + "\n";
 
         ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Left(node), true);
         ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Right(node), false);

@@ -77,6 +77,7 @@ private:
 struct ListConstIterator
 {
     friend class List;
+
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
     using value_type = List::DataType;

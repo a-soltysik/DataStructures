@@ -3,7 +3,7 @@
 
 List::List(std::initializer_list<DataType> initList)
 {
-    for (const auto& item : initList)
+    for (const auto& item: initList)
     {
         PushBack(item);
     }
@@ -107,7 +107,7 @@ void List::PushBack(DataType value)
         AddFirstElement(value);
         return;
     }
-    Node* newNode = new Node{};
+    Node* newNode = new Node {};
     newNode->value = value;
     newNode->previous = back;
     back->next = newNode;
@@ -123,7 +123,7 @@ void List::PushFront(DataType value)
         AddFirstElement(value);
         return;
     }
-    Node* newNode = new Node{};
+    Node* newNode = new Node {};
     newNode->value = value;
     newNode->next = front;
     front->previous = newNode;
@@ -156,7 +156,7 @@ List::Iterator List::Insert(size_t position, DataType value)
 
     Node* iterator = GetNodeAt(position);
 
-    Node* newNode = new Node{};
+    Node* newNode = new Node {};
     newNode->value = value;
     newNode->next = iterator;
     newNode->previous = iterator->previous;
@@ -186,7 +186,7 @@ List::Iterator List::Insert(ConstIterator iterator, DataType value)
         return {this, front};
     }
 
-    Node* newNode = new Node{};
+    Node* newNode = new Node {};
     newNode->value = value;
     newNode->next = iterator.node;
     newNode->previous = iterator.node->previous;
@@ -393,7 +393,7 @@ List::ConstIterator List::cend() const noexcept
 
 void List::AddFirstElement(DataType value)
 {
-    Node* newNode = new Node{};
+    Node* newNode = new Node {};
     newNode->value = value;
     front = newNode;
     back = newNode;
@@ -442,7 +442,7 @@ std::string List::ToString() const
     std::string result = "[";
     while (iterator != nullptr)
     {
-        result += Utils::Parser::number_to_string(iterator->value);
+        result += Utils::Parser::NumberToString(iterator->value);
         if (iterator->next != nullptr)
         {
             result += ", ";
@@ -452,6 +452,7 @@ std::string List::ToString() const
 
     return result + "]";
 }
+
 std::ostream& operator<<(std::ostream& os, const List& list)
 {
     if (!os.good())
@@ -467,6 +468,7 @@ std::ostream& operator<<(std::ostream& os, const List& list)
     }
     return os;
 }
+
 std::istream& operator>>(std::istream& is, List& list)
 {
     if (!is.good())
@@ -492,9 +494,9 @@ std::string List::ClassName()
 
 
 ListConstIterator::ListConstIterator(const List* parent, List::Node* node) noexcept
-    : parent(parent)
-    , node(node)
-{}
+        : parent(parent), node(node)
+{
+}
 
 ListConstIterator::reference ListConstIterator::operator*() const noexcept
 {

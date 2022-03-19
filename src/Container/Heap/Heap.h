@@ -51,7 +51,7 @@ private:
 
     [[nodiscard]] size_t Left(size_t parent) const;
     [[nodiscard]] size_t Right(size_t parent) const;
-    [[nodiscard]] static size_t Parent(size_t node) ;
+    [[nodiscard]] static size_t Parent(size_t node);
 
     DynamicArray data;
 };

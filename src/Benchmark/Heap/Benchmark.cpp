@@ -40,6 +40,7 @@ namespace HeapBenchmark
             heap.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
+
     void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size)
     {
         vector.resize(size);
@@ -63,12 +64,12 @@ namespace HeapBenchmark
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [heapTime, vectorTime] = InsertCase(size);
+            auto[heapTime, vectorTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) + "ns"
-                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+                          ": Heap: " + std::to_string(heapTime) + "ns" +
+                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -78,13 +79,14 @@ namespace HeapBenchmark
         auto heapTime = InsertHeapTest(size);
         auto vectorTime = InsertVectorHeapTest(size);
 
-        return TestCaseResult{ heapTime, vectorTime };
+        return TestCaseResult {heapTime, vectorTime};
     }
 
     int64_t InsertHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             Heap testedHeap;
             FillHeap(testedHeap, size);
 
@@ -102,14 +104,15 @@ namespace HeapBenchmark
     int64_t InsertVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedVectorHeap.push_back( Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVectorHeap.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
             std::push_heap(testedVectorHeap.begin(), testedVectorHeap.end());
 
             timer.Stop();
@@ -119,25 +122,21 @@ namespace HeapBenchmark
     }
 
 
-
-
-
     std::string RemoveElements()
     {
         return "Remove elements tests: \n" + Remove();
     }
 
 
-
     std::string Remove()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [heapTime, vectorTime] = RemoveCase(size);
+            auto[heapTime, vectorTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) + "ns"
-                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+                          ": Heap: " + std::to_string(heapTime) + "ns" +
+                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -147,13 +146,14 @@ namespace HeapBenchmark
         auto heapTime = RemoveHeapTest(size);
         auto vectorTime = RemoveVectorHeapTest(size);
 
-        return TestCaseResult{ heapTime, vectorTime };
+        return TestCaseResult {heapTime, vectorTime};
     }
 
     int64_t RemoveHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             Heap testedHeap;
             FillHeap(testedHeap, size);
 
@@ -171,7 +171,8 @@ namespace HeapBenchmark
     int64_t RemoveVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
@@ -188,16 +189,15 @@ namespace HeapBenchmark
     }
 
 
-
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size : Settings::TEST_SIZES)
+        for (const auto& size: Settings::TEST_SIZES)
         {
-            auto [heapTime, vectorTime] = FindCase(size);
+            auto[heapTime, vectorTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
-                ": Heap: " + std::to_string(heapTime) + "ns"
-                "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+                          ": Heap: " + std::to_string(heapTime) + "ns" +
+                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -207,13 +207,14 @@ namespace HeapBenchmark
         auto heapTime = FindHeapTest(size);
         auto vectorTime = FindVectorHeapTest(size);
 
-        return TestCaseResult{ heapTime, vectorTime };
+        return TestCaseResult {heapTime, vectorTime};
     }
 
     int64_t FindHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             Heap testedHeap;
             FillHeap(testedHeap, size);
 
@@ -231,14 +232,16 @@ namespace HeapBenchmark
     int64_t FindVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++) {
+        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        {
             std::vector<Heap::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = std::find(testedVectorHeap.cbegin(), testedVectorHeap.cend(), Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] auto tmp = std::find(testedVectorHeap.cbegin(), testedVectorHeap.cend(),
+                                                  Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

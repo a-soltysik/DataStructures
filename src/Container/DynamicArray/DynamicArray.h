@@ -65,7 +65,6 @@ private:
 };
 
 
-
 struct DynamicArrayConstIterator
 {
     using iterator_category = std::random_access_iterator_tag;
@@ -106,7 +105,8 @@ protected:
     DynamicArray::DataType* ptr;
 };
 
-[[nodiscard]] DynamicArrayConstIterator operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept;
+[[nodiscard]] DynamicArrayConstIterator
+operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept;
 
 struct DynamicArrayIterator : public DynamicArrayConstIterator
 {
@@ -137,4 +137,5 @@ struct DynamicArrayIterator : public DynamicArrayConstIterator
     [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
 };
 
-[[nodiscard]] DynamicArrayIterator operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept;
+[[nodiscard]] DynamicArrayIterator
+operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept;

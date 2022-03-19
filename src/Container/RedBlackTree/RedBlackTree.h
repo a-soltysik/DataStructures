@@ -71,7 +71,7 @@ private:
     void SetRoot(Node* node) const;
     [[nodiscard]] Node* root() const;
     [[nodiscard]] Node* Min(Node* node) const;
-    [[nodiscard]] Node* Max(Node* node)const;
+    [[nodiscard]] Node* Max(Node* node) const;
     [[nodiscard]] Node* Find(const DataType& value, Node* root) const;
 
     void LeftRotate(Node* node) const;
@@ -96,6 +96,7 @@ private:
 struct RedBlackTreeConstIterator
 {
     friend class RedBlackTree;
+
     using iterator_category = std::bidirectional_iterator_tag;
     using value_type = RedBlackTree::DataType;
     using pointer = const value_type*;

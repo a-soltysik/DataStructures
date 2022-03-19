@@ -6,10 +6,10 @@
 
 namespace Utils
 {
-    constexpr char HORIZONTAL_BAR[]          = "\xE2\x94\x80";
-    constexpr char VERTICAL_BAR[]            = "\xE2\x94\x82";
-    constexpr char VERTICAL_BAR_RIGHT[]      = "\xE2\x94\x9C";
-    constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
+    constexpr char HORIZONTAL_BAR[]          = u8"\xE2\x94\x80";
+    constexpr char VERTICAL_BAR[]            = u8"\xE2\x94\x82";
+    constexpr char VERTICAL_BAR_RIGHT[]      = u8"\xE2\x94\x9C";
+    constexpr char HALF_VERTICAL_BAR_RIGHT[] = u8"\xE2\x94\x94";
 
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
     [[nodiscard]] std::filesystem::path GetPathFromResources(const std::filesystem::path& path);
@@ -36,7 +36,9 @@ namespace Utils
     std::optional<T> getInput(std::istream& is);
 
 
-
+    /**
+     * DEFINITIONS
+     */
 
 
     template<typename T>

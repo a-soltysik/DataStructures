@@ -60,7 +60,6 @@ namespace HeapBenchmark
         return "Add elements tests: \n" + Insert();
     }
 
-
     std::string Insert()
     {
         std::string result = "Insert test: \n";

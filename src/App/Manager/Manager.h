@@ -14,6 +14,5 @@ public:
 
     virtual void Menu() = 0;
 
-protected:
     static uint8_t GetChoiceFromMenu(const std::string& menu);
 };

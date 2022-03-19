@@ -43,6 +43,7 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
+    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree);
     friend std::istream& operator>>(std::istream& is, RedBlackTree& tree);

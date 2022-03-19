@@ -170,7 +170,7 @@ TEST_F(HeapTest, PopTest)
 
 TEST_F(HeapTest, ClearTest)
 {
-    for (size_t i = 0; i < 23455; i++)
+    for (int32_t i = 0; i < 23455; i++)
     {
         heap.Insert(i);
     }

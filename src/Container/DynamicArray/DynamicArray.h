@@ -55,6 +55,7 @@ public:
 
     void Resize(size_t i);
 
+    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const DynamicArray& array);
     friend std::istream& operator>>(std::istream& is, DynamicArray& array);

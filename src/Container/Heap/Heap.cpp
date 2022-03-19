@@ -45,14 +45,14 @@ void Heap::Pop()
     RemoveAt(0);
 }
 
-const Heap::DataType* Heap::Find(const DataType& value) const
+Heap::ConstIterator Heap::Find(DataType value) const noexcept
 {
-    size_t position = Find(value, 0);
-    if (position == data.Size())
-    {
-        return nullptr;
-    }
-    return &data[position];
+    return data.Find(value);
+}
+
+Heap::Iterator Heap::Find(DataType value) noexcept
+{
+    return data.Find(value);
 }
 
 const DynamicArray& Heap::Array() const
@@ -176,6 +176,36 @@ void Heap::RestoreDown(size_t node)
     }
 }
 
+Heap::Iterator Heap::begin() noexcept
+{
+    return data.begin();
+}
+
+Heap::Iterator Heap::end() noexcept
+{
+    return data.end();
+}
+
+Heap::ConstIterator Heap::begin() const noexcept
+{
+    return data.begin();
+}
+
+Heap::ConstIterator Heap::end() const noexcept
+{
+    return data.end();
+}
+
+Heap::ConstIterator Heap::cbegin() const noexcept
+{
+    return data.cbegin();
+}
+
+Heap::ConstIterator Heap::cend() const noexcept
+{
+    return data.cend();
+}
+
 void Heap::ToString(std::string& result, const std::string& prefix, size_t node, bool isLeft) const
 {
     if (node != data.Size())
@@ -207,5 +237,10 @@ std::ostream& operator<<(std::ostream& os, const Heap& heap)
 std::istream& operator>>(std::istream& is, Heap& array)
 {
     return is >> array.data;
+}
+
+std::string Heap::ClassName()
+{
+    return "Heap";
 }
 

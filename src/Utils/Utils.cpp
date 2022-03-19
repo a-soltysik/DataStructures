@@ -12,4 +12,9 @@ namespace Utils
         std::uniform_int_distribution<int32_t> distribution(from, to);
         return distribution(rng);
     }
+
+    std::filesystem::path GetPathFromResources(const std::filesystem::path& path)
+    {
+        return std::filesystem::path("Resources") / path;
+    }
 }

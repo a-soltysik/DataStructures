@@ -282,7 +282,7 @@ void RedBlackTree::Serialize(std::ostream& os, Node* node) const
     {
         return;
     }
-    if (node != NIL)
+    if (node == NIL)
     {
         os << NIL_VALUE << " ";
     }
@@ -600,6 +600,11 @@ RedBlackTree::Node* RedBlackTree::Find(const DataType& value, Node* root) const
         }
     }
     return NIL;
+}
+
+std::string RedBlackTree::ClassName()
+{
+    return "RedBlackTree";
 }
 
 RedBlackTreeConstIterator::RedBlackTreeConstIterator(const RedBlackTree* redBlackTree, RedBlackTree::Node* node) noexcept

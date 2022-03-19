@@ -88,7 +88,7 @@ void ContainerManager<T>::FindMenu()
     auto position = container.Find(number.value());
     if (position != container.end())
     {
-        std::cout << "Znaleziono liczbę " << number.value() << " na pozycji " << std::distance(position, container.begin()) << "\n";
+        std::cout << "Znaleziono liczbę " << number.value() << "\n";
     }
     else
     {
@@ -99,7 +99,19 @@ void ContainerManager<T>::FindMenu()
 template<typename T>
 void ContainerManager<T>::GetTestContainerMenu()
 {
+    auto filename = T::ClassName() + ".txt";
+    std::ifstream fin(Utils::GetPathFromResources(std::filesystem::path("TestContainers") / filename));
+    auto newContainer = Utils::getInput<T>(fin);
 
+    if (newContainer.has_value())
+    {
+        std::cout << "Odczytano kontener z pliku\n";
+        container = newContainer.value();
+    }
+    else
+    {
+        std::cout << "Nie udało się odczytać kontenera z pliku\n";
+    }
 }
 
 

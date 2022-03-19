@@ -31,7 +31,7 @@ void TreeContainerManager<T>::Menu()
 {
     while (true)
     {
-        switch (GetChoiceFromMenu(MENU))
+        switch (Manager::GetChoiceFromMenu(MENU))
         {
             case 1:
                 AddMenu();
@@ -40,19 +40,19 @@ void TreeContainerManager<T>::Menu()
                 RemoveMenu();
                 break;
             case 3:
-                FindMenu();
+                this->FindMenu();
                 break;
             case 4:
-                PrintMenu();
+                this->PrintMenu();
                 break;
             case 5:
-                SaveToFileMenu();
+                this->SaveToFileMenu();
                 break;
             case 6:
-                CreateFromFileMenu();
+                this->CreateFromFileMenu();
                 break;
             case 7:
-                GetTestContainerMenu();
+                this->GetTestContainerMenu();
                 break;
             default:
                 return;
@@ -70,18 +70,18 @@ void TreeContainerManager<T>::AddMenu()
         std::cout << "Nieprawidłowa liczba\n";
         return;
     }
-    container.Insert(number.value());
+    this->container.Insert(number.value());
 }
 
 template<typename T>
 void TreeContainerManager<T>::RemoveMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz usunąć z kontenera: ";
-    auto number = Utils::getInput<T::DataType>(std::cin);
+    auto number = Utils::getInput<typename T::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
         return;
     }
-    container.Remove(number.value());
+    this->container.Remove(number.value());
 }

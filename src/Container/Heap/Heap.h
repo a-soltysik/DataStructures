@@ -6,6 +6,8 @@ class Heap
 {
 public:
     using DataType = DynamicArray::DataType;
+    using Iterator = DynamicArrayIterator;
+    using ConstIterator = DynamicArrayConstIterator;
 
     Heap() = default;
     Heap(std::initializer_list<DataType> initList);
@@ -16,7 +18,8 @@ public:
     void Pop();
     void Clear();
 
-    [[nodiscard]] const DataType* Find(const DataType& value) const;
+    [[nodiscard]] Iterator Find(DataType value) noexcept;
+    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
 
     [[nodiscard]] DataType& Max();
     [[nodiscard]] const DataType& Max() const;
@@ -24,6 +27,16 @@ public:
     [[nodiscard]] const DynamicArray& Array() const;
     [[nodiscard]] size_t Size() const;
 
+    [[nodiscard]] Iterator begin() noexcept;
+    [[nodiscard]] Iterator end() noexcept;
+
+    [[nodiscard]] ConstIterator begin() const noexcept;
+    [[nodiscard]] ConstIterator end() const noexcept;
+
+    [[nodiscard]] ConstIterator cbegin() const noexcept;
+    [[nodiscard]] ConstIterator cend() const noexcept;
+
+    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const Heap& heap);
     friend std::istream& operator>>(std::istream& is, Heap& heap);

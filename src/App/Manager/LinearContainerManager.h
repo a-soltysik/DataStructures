@@ -67,19 +67,19 @@ void LinearContainerManager<T>::Menu()
                 AccessMenu();
                 break;
             case 4:
-                ContainerManager<T>::FindMenu();
+                this->FindMenu();
                 break;
             case 5:
-                ContainerManager<T>::PrintMenu();
+                this->PrintMenu();
                 break;
             case 6:
-                ContainerManager<T>::SaveToFileMenu();
+                this->SaveToFileMenu();
                 break;
             case 7:
-                ContainerManager<T>::CreateFromFileMenu();
+                this->CreateFromFileMenu();
                 break;
             case 8:
-                ContainerManager<T>::GetTestContainerMenu();
+                this->GetTestContainerMenu();
                 break;
             default:
                 return;

@@ -485,6 +485,11 @@ std::istream& operator>>(std::istream& is, List& list)
     return is;
 }
 
+std::string List::ClassName()
+{
+    return "List";
+}
+
 
 ListConstIterator::ListConstIterator(const List* parent, List::Node* node) noexcept
     : parent(parent)

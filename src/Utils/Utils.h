@@ -2,8 +2,7 @@
 
 #include "Utils/Parser.h"
 
-#include <string>
-#include <istream>
+#include <filesystem>
 
 namespace Utils
 {
@@ -13,6 +12,7 @@ namespace Utils
     constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
 
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
+    [[nodiscard]] std::filesystem::path GetPathFromResources(const std::filesystem::path& path);
 
     /**
     *  Indicates that value T can be moved (own implementation of std::move)

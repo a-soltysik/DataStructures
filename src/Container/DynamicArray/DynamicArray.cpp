@@ -369,6 +369,11 @@ std::istream& operator>>(std::istream& is, DynamicArray& array)
     return is;
 }
 
+std::string DynamicArray::ClassName()
+{
+    return "DynamicArray";
+}
+
 DynamicArrayConstIterator::DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept
     : ptr(ptr)
 {}

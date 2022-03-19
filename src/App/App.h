@@ -1,6 +1,17 @@
 #pragma once
 
-namespace App
+#include <memory>
+
+class Manager;
+
+class App
 {
-    void Run();
-}
+public:
+    int32_t Run();
+
+private:
+    void MainMenu();
+    void ContainerMenu();
+
+    std::unique_ptr<Manager> manager;
+};

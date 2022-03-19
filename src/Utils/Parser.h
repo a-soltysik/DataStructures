@@ -20,6 +20,12 @@ namespace Utils::Parser
     template<typename T>
     std::string number_to_string(T number);
 
+
+    /**
+     * DEFINITONS
+     */
+
+
     template<typename T>
     constexpr uint32_t max_length_of_number() {
         static_assert(std::is_arithmetic_v<T>);
@@ -32,6 +38,8 @@ namespace Utils::Parser
 
     template<typename T>
     std::optional<T> string_to_number(const std::string& number) {
+        static_assert(std::is_arithmetic_v<T>);
+
         T result;
         auto const [ptr, code] { std::from_chars(number.data(), number.data() + number.length(), result) };
 

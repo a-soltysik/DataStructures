@@ -14,6 +14,7 @@ set(FILES_TO_TEST
     ${CONTAINER_DIR}/List/List.cpp
     ${CONTAINER_DIR}/RedBlackTree/RedBlackTree.cpp
     ${CONTAINER_DIR}/Heap/Heap.cpp
+    ${CONTAINER_DIR}/AvlTree/AvlTree.cpp
 )
 
 set(TEST_SRC
@@ -22,6 +23,7 @@ set(TEST_SRC
     ${TEST_DIR}/Container/ListTest.cpp
     ${TEST_DIR}/Container/RedBlackTreeTest.cpp
     ${TEST_DIR}/Container/HeapTest.cpp
+    ${TEST_DIR}/Container/AvlTreeTest.cpp
 )
 
 add_executable("Test" "${SRC_INCLUDES}" "${FILES_TO_TEST}" "${TEST_SRC}")

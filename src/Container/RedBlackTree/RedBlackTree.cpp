@@ -11,7 +11,7 @@ RedBlackTree::RedBlackTree(std::initializer_list<DataType> initList)
 
 RedBlackTree::RedBlackTree(const RedBlackTree& rhs)
 {
-    SetRoot(CopySubtree(rhs, rhs.root()));
+    SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
 }
 
@@ -31,7 +31,7 @@ RedBlackTree& RedBlackTree::operator=(const RedBlackTree& rhs)
         return *this;
     }
     Clear();
-    SetRoot(CopySubtree(rhs, rhs.root()));
+    SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
 
     return *this;
@@ -56,11 +56,11 @@ RedBlackTree::~RedBlackTree()
     NIL = nullptr;
 }
 
-RedBlackTree::Iterator RedBlackTree::Insert(const DataType& value)
+RedBlackTree::Iterator RedBlackTree::Insert(DataType value)
 {
     Node* newNode = MakeNode(value);
     Node* parent = NIL;
-    Node* iterator = root();
+    Node* iterator = Root();
 
     size++;
 
@@ -96,9 +96,9 @@ RedBlackTree::Iterator RedBlackTree::Insert(const DataType& value)
     return {this, newNode};
 }
 
-bool RedBlackTree::Remove(const DataType& value)
+bool RedBlackTree::Remove(DataType value)
 {
-    Node* nodeToRemove = Find(value, root());
+    Node* nodeToRemove = Find(value, Root());
     if (nodeToRemove == NIL)
     {
         return false;
@@ -150,37 +150,37 @@ bool RedBlackTree::Remove(const DataType& value)
     return true;
 }
 
-RedBlackTree::ConstIterator RedBlackTree::Find(const DataType& value) const
-{
-    return {this, Find(value, root())};
-}
-
-RedBlackTree::Iterator RedBlackTree::Find(const DataType& value)
-{
-    return {this, Find(value, root())};
-}
-
 void RedBlackTree::Clear()
 {
     if (NIL != nullptr)
     {
-        if (root() != nullptr)
+        if (Root() != nullptr)
         {
-            RemoveSubtree(root());
+            RemoveSubtree(Root());
 
         }
         NIL->left = NIL;
     }
 }
 
+RedBlackTree::ConstIterator RedBlackTree::Find(DataType value) const
+{
+    return {this, Find(value, Root())};
+}
+
+RedBlackTree::Iterator RedBlackTree::Find(DataType value)
+{
+    return {this, Find(value, Root())};
+}
+
 RedBlackTree::DataType RedBlackTree::Min() const
 {
-    return Min(root())->value;
+    return Min(Root())->value;
 }
 
 RedBlackTree::DataType RedBlackTree::Max() const
 {
-    return Max(root())->value;
+    return Max(Root())->value;
 }
 
 size_t RedBlackTree::Size() const
@@ -190,7 +190,7 @@ size_t RedBlackTree::Size() const
 
 RedBlackTree::Iterator RedBlackTree::begin() noexcept
 {
-    return {this, Min(root())};
+    return {this, Min(Root())};
 }
 
 RedBlackTree::Iterator RedBlackTree::end() noexcept
@@ -200,7 +200,7 @@ RedBlackTree::Iterator RedBlackTree::end() noexcept
 
 RedBlackTree::ConstIterator RedBlackTree::begin() const noexcept
 {
-    return {this, Min(root())};
+    return {this, Min(Root())};
 }
 
 RedBlackTree::ConstIterator RedBlackTree::end() const noexcept
@@ -210,7 +210,7 @@ RedBlackTree::ConstIterator RedBlackTree::end() const noexcept
 
 RedBlackTree::ConstIterator RedBlackTree::cbegin() const noexcept
 {
-    return {this, Min(root())};
+    return {this, Min(Root())};
 }
 
 RedBlackTree::ConstIterator RedBlackTree::cend() const noexcept
@@ -218,45 +218,11 @@ RedBlackTree::ConstIterator RedBlackTree::cend() const noexcept
     return {this, NIL};
 }
 
-void RedBlackTree::SetRoot(Node* node) const
-{
-    NIL->left = node;
-    node->parent = NIL;
-}
-
-RedBlackTree::Node* RedBlackTree::MakeNode(const DataType& value) const
-{
-    Node* newNode = new Node;
-
-    newNode->color = Node::Color::BLACK;
-    newNode->value = value;
-    newNode->left = NIL;
-    newNode->right = NIL;
-
-    return newNode;
-}
-
 std::string RedBlackTree::ToString() const
 {
     std::string result;
-    ToString(result, "", root(), false);
+    ToString(result, "", Root(), false);
     return result;
-}
-
-void RedBlackTree::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
-{
-    if (node != NIL)
-    {
-        result += prefix;
-
-        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
-        result += Utils::HORIZONTAL_BAR;
-
-        result += Utils::Parser::NumberToString(node->value) + "\n";
-
-        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->right, true);
-        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->left, false);
-    }
 }
 
 std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
@@ -265,7 +231,7 @@ std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
     {
         return os;
     }
-    tree.Serialize(os, tree.root());
+    tree.Serialize(os, tree.Root());
     return os;
 }
 
@@ -279,48 +245,9 @@ std::istream& operator>>(std::istream& is, RedBlackTree& tree)
     return is;
 }
 
-void RedBlackTree::Serialize(std::ostream& os, Node* node) const
-{
-    if (!os.good())
-    {
-        return;
-    }
-    if (node != NIL)
-    {
-        os << NIL_VALUE << " ";
-    }
-    else
-    {
-        os << node->value << " ";
-        Serialize(os, node->left);
-        Serialize(os, node->right);
-    }
-}
-
-RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
-{
-    if (!is.good())
-    {
-        return NIL;
-    }
-    int64_t value;
-    is >> value;
-    if (value == NIL_VALUE)
-    {
-        return NIL;
-    }
-    Node* newNode = MakeNode(static_cast<DataType>(value));
-
-    newNode->parent = node;
-    newNode->left = Deserialize(is, newNode);
-    newNode->right = Deserialize(is, newNode);
-
-    return newNode;
-}
-
 RedBlackTree::Node* RedBlackTree::MakeNil()
 {
-    Node* nil = new Node;
+    Node* nil = new Node {};
 
     nil->color = Node::Color::BLACK;
     nil->parent = nil;
@@ -330,12 +257,20 @@ RedBlackTree::Node* RedBlackTree::MakeNil()
     return nil;
 }
 
-RedBlackTree::Node* RedBlackTree::root() const
+
+RedBlackTree::Node* RedBlackTree::MakeNode(const DataType& value) const
 {
-    return NIL->left;
+    Node* newNode = new Node {};
+
+    newNode->color = Node::Color::BLACK;
+    newNode->value = value;
+    newNode->left = NIL;
+    newNode->right = NIL;
+
+    return newNode;
 }
 
-void RedBlackTree::LeftRotate(Node* node) const
+void RedBlackTree::LeftRotate(Node* node) const noexcept
 {
     Node* child = node->right;
     node->right = child->left;
@@ -364,7 +299,7 @@ void RedBlackTree::LeftRotate(Node* node) const
     node->parent = child;
 }
 
-void RedBlackTree::RightRotate(Node* node) const
+void RedBlackTree::RightRotate(Node* node) const noexcept
 {
     Node* child = node->left;
     node->left = child->right;
@@ -393,7 +328,56 @@ void RedBlackTree::RightRotate(Node* node) const
     node->parent = child;
 }
 
-void RedBlackTree::InsertFix(Node* node) const
+void RedBlackTree::SetRoot(Node* node) const noexcept
+{
+    NIL->left = node;
+    node->parent = NIL;
+}
+
+RedBlackTree::Node* RedBlackTree::Root() const noexcept
+{
+    return NIL->left;
+}
+
+RedBlackTree::Node* RedBlackTree::Min(Node* node) const noexcept
+{
+    while (node->left != NIL)
+    {
+        node = node->left;
+    }
+    return node;
+}
+
+RedBlackTree::Node* RedBlackTree::Max(Node* node) const noexcept
+{
+    while (node->right != NIL)
+    {
+        node = node->right;
+    }
+    return node;
+}
+
+RedBlackTree::Node* RedBlackTree::Find(const DataType& value, Node* root) const noexcept
+{
+    while (root != NIL)
+    {
+        if (value == root->value)
+        {
+            return root;
+        }
+        if (value > root->value)
+        {
+            root = root->right;
+        }
+        else
+        {
+            root = root->left;
+        }
+    }
+    return NIL;
+}
+
+void RedBlackTree::InsertFix(Node* node) const noexcept
 {
     while (node->parent->color == Node::Color::RED)
     {
@@ -442,29 +426,12 @@ void RedBlackTree::InsertFix(Node* node) const
             }
         }
     }
-    root()->color = Node::Color::BLACK;
+    Root()->color = Node::Color::BLACK;
 }
 
-void RedBlackTree::MoveSubtree(Node* from, Node* to) const
+void RedBlackTree::RemoveFix(Node* node) const noexcept
 {
-    if (from->parent == NIL)
-    {
-        SetRoot(to);
-    }
-    else if (from == from->parent->left)
-    {
-        from->parent->left = to;
-    }
-    else
-    {
-        from->parent->right = to;
-    }
-    to->parent = from->parent;
-}
-
-void RedBlackTree::RemoveFix(Node* node) const
-{
-    while (node != root() && node->color == Node::Color::BLACK)
+    while (node != Root() && node->color == Node::Color::BLACK)
     {
         if (node == node->parent->left)
         {
@@ -495,7 +462,7 @@ void RedBlackTree::RemoveFix(Node* node) const
                 node->parent->color = Node::Color::BLACK;
                 rightSibling->right->color = Node::Color::BLACK;
                 LeftRotate(node->parent);
-                node = root();
+                node = Root();
             }
         }
         else
@@ -527,11 +494,28 @@ void RedBlackTree::RemoveFix(Node* node) const
                 node->parent->color = Node::Color::BLACK;
                 leftSibling->left->color = Node::Color::BLACK;
                 RightRotate(node->parent);
-                node = root();
+                node = Root();
             }
         }
     }
     node->color = Node::Color::BLACK;
+}
+
+void RedBlackTree::MoveSubtree(Node* from, Node* to) const
+{
+    if (from->parent == NIL)
+    {
+        SetRoot(to);
+    }
+    else if (from == from->parent->left)
+    {
+        from->parent->left = to;
+    }
+    else
+    {
+        from->parent->right = to;
+    }
+    to->parent = from->parent;
 }
 
 void RedBlackTree::RemoveSubtree(Node* root)
@@ -567,54 +551,65 @@ RedBlackTree::Node* RedBlackTree::CopySubtree(const RedBlackTree& tree, Node* ro
     return newRoot;
 }
 
-RedBlackTree::Node* RedBlackTree::Min(Node* node) const
+void RedBlackTree::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
 {
-    while (node->left != NIL)
+    if (node != NIL)
     {
-        node = node->left;
+        result += prefix;
+
+        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += Utils::HORIZONTAL_BAR;
+
+        result += Utils::Parser::NumberToString(node->value) + "\n";
+
+        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->right, true);
+        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->left, false);
     }
-    return node;
 }
 
-RedBlackTree::Node* RedBlackTree::Max(Node* node) const
+void RedBlackTree::Serialize(std::ostream& os, Node* node) const
 {
-    while (node->right != NIL)
+    if (!os.good())
     {
-        node = node->right;
+        return;
     }
-    return node;
+    if (node != NIL)
+    {
+        os << NIL_VALUE << " ";
+    }
+    else
+    {
+        os << node->value << " ";
+        Serialize(os, node->left);
+        Serialize(os, node->right);
+    }
 }
 
-RedBlackTree::Node* RedBlackTree::Find(const DataType& value, Node* root) const
+RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
 {
-    while (root != NIL)
+    if (!is.good())
     {
-        if (value == root->value)
-        {
-            return root;
-        }
-        if (value > root->value)
-        {
-            root = root->right;
-        }
-        else
-        {
-            root = root->left;
-        }
+        return NIL;
     }
-    return NIL;
-}
+    int64_t value;
+    is >> value;
+    if (value == NIL_VALUE)
+    {
+        return NIL;
+    }
+    Node* newNode = MakeNode(static_cast<DataType>(value));
 
-std::string RedBlackTree::ClassName()
-{
-    return "RedBlackTree";
+    newNode->parent = node;
+    newNode->left = Deserialize(is, newNode);
+    newNode->right = Deserialize(is, newNode);
+
+    return newNode;
 }
 
 RedBlackTreeConstIterator::RedBlackTreeConstIterator(const RedBlackTree* redBlackTree,
                                                      RedBlackTree::Node* node) noexcept
-        : redBlackTree(redBlackTree), node(node)
-{
-}
+    : redBlackTree(redBlackTree)
+    , node(node) { }
 
 RedBlackTreeConstIterator::reference RedBlackTreeConstIterator::operator*() const noexcept
 {
@@ -656,7 +651,7 @@ RedBlackTreeConstIterator& RedBlackTreeConstIterator::operator--() noexcept
 {
     if (node == redBlackTree->NIL)
     {
-        node = redBlackTree->Max(redBlackTree->root());
+        node = redBlackTree->Max(redBlackTree->Root());
     }
     else if (node->left == redBlackTree->NIL)
     {

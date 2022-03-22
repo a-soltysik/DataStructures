@@ -12,14 +12,24 @@ Heap::Heap(std::initializer_list<DataType> initList)
 
 Heap::Heap(const DynamicArray& array)
 {
-    data = array;
+    Assign(array);
 }
 
-void Heap::Insert(const DataType& value)
+void Heap::Assign(const DynamicArray& array)
+{
+    data = array;
+    for (size_t i = array.Size() / 2 - 1; i-- > 0;)
+    {
+        RestoreDown(i);
+    }
+}
+
+void Heap::Insert(DataType value)
 {
     data.PushBack(value);
     size_t position = data.Size() - 1;
-    size_t nextPosition = (position - 1) / 2u;
+    size_t nextPosition = (position - 1) / 2;
+
     while (position != 0u && data[nextPosition] < value)
     {
         Utils::Swap(data[position], data[nextPosition]);
@@ -28,9 +38,10 @@ void Heap::Insert(const DataType& value)
     }
 }
 
-bool Heap::Remove(const DataType& value)
+bool Heap::Remove(DataType value)
 {
-    size_t position = Find(value, 0);
+    size_t position = Find(value, 0u);
+
     if (position == data.Size())
     {
         return false;
@@ -42,7 +53,7 @@ bool Heap::Remove(const DataType& value)
 
 void Heap::Pop()
 {
-    RemoveAt(0);
+    RemoveAt(0u);
 }
 
 Heap::ConstIterator Heap::Find(DataType value) const noexcept
@@ -75,7 +86,7 @@ void Heap::Clear()
     data.Clear();
 }
 
-size_t Heap::Size() const
+size_t Heap::Size() const noexcept
 {
     return data.Size();
 }
@@ -101,7 +112,7 @@ size_t Heap::Find(const DataType& value, size_t root) const
     return leftFind != data.Size() ? leftFind : rightFind;
 }
 
-size_t Heap::Left(size_t parent) const
+size_t Heap::Left(size_t parent) const noexcept
 {
     size_t left = 2u * parent + 1u;
     if (left >= data.Size())
@@ -111,7 +122,7 @@ size_t Heap::Left(size_t parent) const
     return left;
 }
 
-size_t Heap::Right(size_t parent) const
+size_t Heap::Right(size_t parent) const noexcept
 {
     size_t right = 2u * parent + 2u;
     if (right >= data.Size())
@@ -121,7 +132,7 @@ size_t Heap::Right(size_t parent) const
     return right;
 }
 
-size_t Heap::Parent(size_t node)
+size_t Heap::Parent(size_t node) noexcept
 {
     return (node - 1) / 2;
 }
@@ -206,19 +217,19 @@ Heap::ConstIterator Heap::cend() const noexcept
     return data.cend();
 }
 
-void Heap::ToString(std::string& result, const std::string& prefix, size_t node, bool isLeft) const
+void Heap::ToString(std::string& result, const std::string& prefix, size_t node, bool isRight) const
 {
     if (node != data.Size())
     {
         result += prefix;
 
-        result += (isLeft ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
         result += Utils::Parser::NumberToString(data[node]) + "\n";
 
-        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Left(node), true);
-        ToString(result, prefix + (isLeft ? Utils::VERTICAL_BAR : " ") + " ", Right(node), false);
+        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", Right(node), true);
+        ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", Left(node), false);
     }
 }
 
@@ -238,9 +249,3 @@ std::istream& operator>>(std::istream& is, Heap& array)
 {
     return is >> array.data;
 }
-
-std::string Heap::ClassName()
-{
-    return "Heap";
-}
-

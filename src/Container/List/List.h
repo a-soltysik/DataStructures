@@ -17,6 +17,8 @@ public:
     using Iterator = ListIterator;
     using ConstIterator = ListConstIterator;
 
+    [[nodiscard]] static constexpr const char* ClassName() { return "List"; }
+
     List() = default;
     List(std::initializer_list<DataType> initList);
     List(const List& rhs);
@@ -48,11 +50,11 @@ public:
 
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
-
+    [[nodiscard]] ConstIterator begin() const noexcept;
+    [[nodiscard]] ConstIterator end() const noexcept;
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const List& list);
     friend std::istream& operator>>(std::istream& is, List& list);
@@ -67,7 +69,7 @@ private:
 
     void AddFirstElement(DataType value);
     void RemoveLastElement();
-    [[nodiscard]] Node* GetNodeAt(size_t position) const;
+    [[nodiscard]] Node* GetNodeAt(size_t position) const noexcept;
 
     size_t size = 0u;
     Node* front = nullptr;

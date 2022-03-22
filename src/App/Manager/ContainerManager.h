@@ -110,7 +110,7 @@ void ContainerManager<T>::FindMenu()
 template<typename T>
 void ContainerManager<T>::GetTestContainerMenu()
 {
-    auto filename = T::ClassName() + ".txt";
+    auto filename = std::string{T::ClassName()} + ".txt";
     std::ifstream fin(Utils::GetPathFromResources(std::filesystem::path("TestContainers") / filename));
     auto newContainer = Utils::getInput<T>(fin);
 

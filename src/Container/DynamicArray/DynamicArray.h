@@ -14,6 +14,8 @@ public:
     using Iterator = DynamicArrayIterator;
     using ConstIterator = DynamicArrayConstIterator;
 
+    [[nodiscard]] static constexpr const char* ClassName() { return "DynamicArray"; }
+
     DynamicArray() = default;
     explicit DynamicArray(size_t size);
     DynamicArray(std::initializer_list<DataType> initList);
@@ -34,10 +36,11 @@ public:
     bool Remove(DataType value);
     void RemoveBack();
     void RemoveFront();
-    void RemoveAt(size_t positionToRemove);
+    void RemoveAt(size_t position);
     void RemoveAt(ConstIterator iterator);
 
     void Clear();
+    void Resize(size_t newSize);
 
     [[nodiscard]] Iterator Find(DataType value) noexcept;
     [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
@@ -53,17 +56,14 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    void Resize(size_t i);
-
-    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const DynamicArray& array);
     friend std::istream& operator>>(std::istream& is, DynamicArray& array);
+
 private:
     DataType* data = nullptr;
     size_t size = 0u;
 };
-
 
 struct DynamicArrayConstIterator
 {
@@ -85,14 +85,14 @@ struct DynamicArrayConstIterator
     DynamicArrayConstIterator& operator--() noexcept;
     DynamicArrayConstIterator operator--(int) noexcept;
 
-    DynamicArrayConstIterator& operator+=(const difference_type offset) noexcept;
-    [[nodiscard]] DynamicArrayConstIterator operator+(const difference_type offset) const noexcept;
-    DynamicArrayConstIterator& operator-=(const difference_type offset) noexcept;
-    [[nodiscard]] DynamicArrayConstIterator operator-(const difference_type offset) const noexcept;
+    DynamicArrayConstIterator& operator+=(difference_type offset) noexcept;
+    [[nodiscard]] DynamicArrayConstIterator operator+(difference_type offset) const noexcept;
+    DynamicArrayConstIterator& operator-=(difference_type offset) noexcept;
+    [[nodiscard]] DynamicArrayConstIterator operator-(difference_type offset) const noexcept;
 
     [[nodiscard]] difference_type operator-(const DynamicArrayConstIterator& rhs) const noexcept;
 
-    [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
+    [[nodiscard]] reference operator[](difference_type offset) const noexcept;
 
     [[nodiscard]] bool operator==(const DynamicArrayConstIterator& rhs) const noexcept;
     [[nodiscard]] bool operator!=(const DynamicArrayConstIterator& rhs) const noexcept;
@@ -105,8 +105,8 @@ protected:
     DynamicArray::DataType* ptr;
 };
 
-[[nodiscard]] DynamicArrayConstIterator
-operator+(DynamicArrayConstIterator::difference_type offset, DynamicArrayConstIterator iterator) noexcept;
+[[nodiscard]] DynamicArrayConstIterator operator+(DynamicArrayConstIterator::difference_type offset,
+                                                  DynamicArrayConstIterator iterator) noexcept;
 
 struct DynamicArrayIterator : public DynamicArrayConstIterator
 {
@@ -127,15 +127,15 @@ struct DynamicArrayIterator : public DynamicArrayConstIterator
     DynamicArrayIterator& operator--() noexcept;
     DynamicArrayIterator operator--(int) noexcept;
 
-    DynamicArrayIterator& operator+=(const difference_type offset) noexcept;
-    [[nodiscard]] DynamicArrayIterator operator+(const difference_type offset) const noexcept;
-    DynamicArrayIterator& operator-=(const difference_type offset) noexcept;
-    [[nodiscard]] DynamicArrayIterator operator-(const difference_type offset) const noexcept;
+    DynamicArrayIterator& operator+=(difference_type offset) noexcept;
+    [[nodiscard]] DynamicArrayIterator operator+(difference_type offset) const noexcept;
+    DynamicArrayIterator& operator-=(difference_type offset) noexcept;
+    [[nodiscard]] DynamicArrayIterator operator-(difference_type offset) const noexcept;
 
     [[nodiscard]] difference_type operator-(const DynamicArrayConstIterator& rhs) const noexcept;
 
     [[nodiscard]] reference operator[](const difference_type offset) const noexcept;
 };
 
-[[nodiscard]] DynamicArrayIterator
-operator+(DynamicArrayIterator::difference_type offset, DynamicArrayIterator iterator) noexcept;
+[[nodiscard]] DynamicArrayIterator operator+(DynamicArrayIterator::difference_type offset,
+                                             DynamicArrayIterator iterator) noexcept;

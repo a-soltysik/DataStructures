@@ -102,7 +102,7 @@ const DynamicArray::DataType& DynamicArray::operator[](size_t position) const
 
 void DynamicArray::PushBack(DataType value)
 {
-    DataType* newData = new DataType[size + 1];
+    DataType* newData = new DataType[size + 1u];
 
     std::memcpy(newData, data, size * sizeof(DataType));
 
@@ -116,7 +116,7 @@ void DynamicArray::PushBack(DataType value)
 
 void DynamicArray::PushFront(DataType value)
 {
-    DataType* newData = new DataType[size + 1];
+    DataType* newData = new DataType[size + 1u];
 
     std::memcpy(newData + 1, data, size * sizeof(DataType));
     newData[0] = value;
@@ -136,7 +136,7 @@ DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
     if (position == size)
     {
         PushBack(value);
-        return {data + size - 1u};
+        return {data + size - 1};
     }
     if (position == 0u)
     {
@@ -144,10 +144,10 @@ DynamicArray::Iterator DynamicArray::Insert(size_t position, DataType value)
         return {data};
     }
 
-    DataType* newData = new DataType[size + 1];
+    DataType* newData = new DataType[size + 1u];
 
     std::memcpy(newData, data, position * sizeof(DataType));
-    std::memcpy(newData + position + 1, data + position, (size - position) * sizeof(DataType));
+    std::memcpy(newData + position + 1u, data + position, (size - position) * sizeof(DataType));
     newData[position] = value;
 
     delete[] data;
@@ -209,7 +209,7 @@ void DynamicArray::RemoveFront()
     }
     DataType* newData = new DataType[size - 1];
 
-    std::memcpy(newData, data + 1, (size - 1) * sizeof(DataType));
+    std::memcpy(newData, data + 1u, (size - 1) * sizeof(DataType));
 
     delete[] data;
     data = newData;
@@ -217,9 +217,9 @@ void DynamicArray::RemoveFront()
     size--;
 }
 
-void DynamicArray::RemoveAt(size_t positionToRemove)
+void DynamicArray::RemoveAt(size_t position)
 {
-    if (positionToRemove >= size)
+    if (position >= size)
     {
         return;
     }
@@ -235,9 +235,8 @@ void DynamicArray::RemoveAt(size_t positionToRemove)
 
     DataType* newData = new DataType[size - 1];
 
-    std::memcpy(newData, data, positionToRemove * sizeof(DataType));
-    std::memcpy(newData + positionToRemove, data + positionToRemove + 1,
-                (size - positionToRemove - 1) * sizeof(DataType));
+    std::memcpy(newData, data, position * sizeof(DataType));
+    std::memcpy(newData + position, data + position + 1u, (size - position - 1) * sizeof(DataType));
 
     delete[] data;
     data = newData;
@@ -332,7 +331,7 @@ std::string DynamicArray::ToString() const
     for (size_t i = 0u; i < size; i++)
     {
         result += Utils::Parser::NumberToString(data[i]);
-        if (i != size - 1u)
+        if (i != size - 1)
         {
             result += ", ";
         }
@@ -371,15 +370,8 @@ std::istream& operator>>(std::istream& is, DynamicArray& array)
     return is;
 }
 
-std::string DynamicArray::ClassName()
-{
-    return "DynamicArray";
-}
-
 DynamicArrayConstIterator::DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept
-        : ptr(ptr)
-{
-}
+    : ptr(ptr) { }
 
 DynamicArrayConstIterator::reference DynamicArrayConstIterator::operator*() const noexcept
 {

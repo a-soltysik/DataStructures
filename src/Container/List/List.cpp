@@ -278,24 +278,24 @@ void List::RemoveFront()
     size--;
 }
 
-void List::RemoveAt(size_t positionToRemove)
+void List::RemoveAt(size_t position)
 {
-    if (positionToRemove == 0u && size == 1u)
+    if (position == 0u && size == 1u)
     {
         RemoveLastElement();
         return;
     }
-    if (positionToRemove == size - 1)
+    if (position == size - 1)
     {
         RemoveBack();
         return;
     }
-    if (positionToRemove == 0u)
+    if (position == 0u)
     {
         RemoveFront();
         return;
     }
-    Node* toDelete = GetNodeAt(positionToRemove);
+    Node* toDelete = GetNodeAt(position);
 
     toDelete->previous->next = toDelete->next;
     toDelete->next->previous = toDelete->previous;
@@ -381,6 +381,16 @@ List::Iterator List::end() noexcept
     return {this, nullptr};
 }
 
+List::ConstIterator List::begin() const noexcept
+{
+    return {this, front};
+}
+
+List::ConstIterator List::end() const noexcept
+{
+    return {this, nullptr};
+}
+
 List::ConstIterator List::cbegin() const noexcept
 {
     return {this, front};
@@ -408,7 +418,7 @@ void List::RemoveLastElement()
     size = 0u;
 }
 
-List::Node* List::GetNodeAt(size_t position) const
+List::Node* List::GetNodeAt(size_t position) const noexcept
 {
     if (position < size / 2)
     {
@@ -487,16 +497,9 @@ std::istream& operator>>(std::istream& is, List& list)
     return is;
 }
 
-std::string List::ClassName()
-{
-    return "List";
-}
-
-
 ListConstIterator::ListConstIterator(const List* parent, List::Node* node) noexcept
-        : parent(parent), node(node)
-{
-}
+    : parent(parent)
+    , node(node) { }
 
 ListConstIterator::reference ListConstIterator::operator*() const noexcept
 {

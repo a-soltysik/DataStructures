@@ -17,6 +17,8 @@ public:
     using Iterator = RedBlackTreeIterator;
     using ConstIterator = RedBlackTreeConstIterator;
 
+    [[nodiscard]] static constexpr const char* ClassName() { return "RedBlackTree"; }
+
     RedBlackTree() = default;
     RedBlackTree(std::initializer_list<DataType> initList);
     RedBlackTree(const RedBlackTree& rhs);
@@ -25,11 +27,12 @@ public:
     RedBlackTree& operator=(RedBlackTree&& rhs) noexcept;
     ~RedBlackTree();
 
-    Iterator Insert(const DataType& value);
-    bool Remove(const DataType& value);
-    [[nodiscard]] ConstIterator Find(const DataType& value) const;
-    [[nodiscard]] Iterator Find(const DataType& value);
+    Iterator Insert(DataType value);
+    bool Remove(DataType value);
     void Clear();
+
+    [[nodiscard]] ConstIterator Find(DataType value) const;
+    [[nodiscard]] Iterator Find(DataType value);
 
     [[nodiscard]] DataType Min() const;
     [[nodiscard]] DataType Max() const;
@@ -43,7 +46,6 @@ public:
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
-    [[nodiscard]] static std::string ClassName();
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree);
     friend std::istream& operator>>(std::istream& is, RedBlackTree& tree);
@@ -67,25 +69,26 @@ private:
     inline static constexpr int64_t NIL_VALUE = -1;
 
     [[nodiscard]] static Node* MakeNil();
+    [[nodiscard]] Node* MakeNode(const DataType& value) const;
 
-    void SetRoot(Node* node) const;
-    [[nodiscard]] Node* root() const;
-    [[nodiscard]] Node* Min(Node* node) const;
-    [[nodiscard]] Node* Max(Node* node) const;
-    [[nodiscard]] Node* Find(const DataType& value, Node* root) const;
+    void LeftRotate(Node* node) const noexcept;
+    void RightRotate(Node* node) const noexcept;
 
-    void LeftRotate(Node* node) const;
-    void RightRotate(Node* node) const;
+    void SetRoot(Node* node) const noexcept;
+    [[nodiscard]] Node* Root() const noexcept;
 
-    void InsertFix(Node* node) const;
-    void RemoveFix(Node* node) const;
+    [[nodiscard]] Node* Min(Node* node) const noexcept;
+    [[nodiscard]] Node* Max(Node* node) const noexcept;
+    [[nodiscard]] Node* Find(const DataType& value, Node* root) const noexcept;
+
+    void InsertFix(Node* node) const noexcept;
+    void RemoveFix(Node* node) const noexcept;
 
     void MoveSubtree(Node* from, Node* to) const;
     void RemoveSubtree(Node* root);
     [[nodiscard]] Node* CopySubtree(const RedBlackTree& tree, Node* root);
-    [[nodiscard]] Node* MakeNode(const DataType& value) const;
 
-    void ToString(std::string& result, const std::string& prefix, const Node* node, bool isLeft) const;
+    void ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const;
     void Serialize(std::ostream& os, Node* node) const;
     [[nodiscard]] Node* Deserialize(std::istream& is, Node* node);
 
@@ -95,8 +98,6 @@ private:
 
 struct RedBlackTreeConstIterator
 {
-    friend class RedBlackTree;
-
     using iterator_category = std::bidirectional_iterator_tag;
     using value_type = RedBlackTree::DataType;
     using pointer = const value_type*;

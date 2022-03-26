@@ -219,8 +219,8 @@ namespace RedBlackTreeBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedRedBlackTree.Find(
-                    Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = testedRedBlackTree.Find(
+                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -239,7 +239,8 @@ namespace RedBlackTreeBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedMap.find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = testedMap.find(
+                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

@@ -7,6 +7,8 @@
 #include <list>
 #include <algorithm>
 
+#include <iostream>
+
 namespace ListBenchmark
 {
     struct TestCaseResult
@@ -481,7 +483,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedList[middle];
+            [[maybe_unused]] volatile auto tmp = testedList[middle];
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -502,7 +504,7 @@ namespace ListBenchmark
 
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
-            [[maybe_unused]] auto tmp = *middle;
+            [[maybe_unused]] volatile auto tmp = *middle;
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -543,7 +545,8 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedList.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = testedList.Find(
+                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -562,8 +565,9 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(),
-                                                  Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(),
+                                                           Utils::GetRandomInt(Settings::MIN_VALUE,
+                                                                               Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

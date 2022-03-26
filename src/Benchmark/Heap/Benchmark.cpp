@@ -35,10 +35,13 @@ namespace HeapBenchmark
 
     void FillHeap(Heap& heap, size_t size)
     {
+        DynamicArray array;
+        array.Resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            heap.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            array[i] = Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE);
         }
+        heap.Assign(Utils::Move(array));
     }
 
     void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size)
@@ -221,7 +224,8 @@ namespace HeapBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedHeap.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = testedHeap.Find(
+                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -240,8 +244,9 @@ namespace HeapBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = std::find(testedVectorHeap.cbegin(), testedVectorHeap.cend(),
-                                                  Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = std::find(testedVectorHeap.cbegin(), testedVectorHeap.cend(),
+                                                           Utils::GetRandomInt(Settings::MIN_VALUE,
+                                                                               Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

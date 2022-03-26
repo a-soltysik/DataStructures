@@ -487,7 +487,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedArray[middle];
+            [[maybe_unused]] volatile auto tmp = testedArray[middle];
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -507,7 +507,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedVector[middle];
+            [[maybe_unused]] volatile auto tmp = testedVector[middle];
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -548,7 +548,8 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = testedArray.Find(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = testedArray.Find(
+                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -567,8 +568,9 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            [[maybe_unused]] auto tmp = std::find(testedVector.cbegin(), testedVector.cend(),
-                                                  Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            [[maybe_unused]] volatile auto tmp = std::find(testedVector.cbegin(), testedVector.cend(),
+                                                           Utils::GetRandomInt(Settings::MIN_VALUE,
+                                                                               Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

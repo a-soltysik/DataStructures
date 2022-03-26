@@ -4,6 +4,11 @@
 
 #include <filesystem>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+
 namespace Utils
 {
     constexpr char HORIZONTAL_BAR[]          = "\xE2\x94\x80";
@@ -11,7 +16,7 @@ namespace Utils
     constexpr char VERTICAL_BAR_RIGHT[]      = "\xE2\x94\x9C";
     constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
 
-
+    void SetUtf8();
 
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
     [[nodiscard]] std::filesystem::path GetPathFromResources(const std::filesystem::path& path);
@@ -33,6 +38,9 @@ namespace Utils
     */
     template<typename T>
     constexpr void Swap(T& val1, T& val2) noexcept;
+
+    template<typename T>
+    [[nodiscard]] constexpr T Max(const T& ...) noexcept;
 
     template<typename T>
     std::optional<T> getInput(std::istream& is);
@@ -61,6 +69,12 @@ namespace Utils
         T tmp = Move(val1);
         val1 = Move(val2);
         val2 = Move(tmp);
+    }
+
+    template<typename T>
+    [[nodiscard]] T Max(const T& val1, const T& val2) noexcept
+    {
+        return val1 > val2 ? val1 : val2;
     }
 
     template<typename T>

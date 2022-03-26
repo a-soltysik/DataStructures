@@ -15,6 +15,8 @@ set(FILES_TO_TEST
     ${CONTAINER_DIR}/RedBlackTree/RedBlackTree.cpp
     ${CONTAINER_DIR}/Heap/Heap.cpp
     ${CONTAINER_DIR}/AvlTree/AvlTree.cpp
+
+    ${SRC_DIR}/Utils/Utils.cpp
 )
 
 set(TEST_SRC

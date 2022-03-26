@@ -47,8 +47,10 @@ public:
     [[nodiscard]] std::string ToString() const;
     friend std::ostream& operator<<(std::ostream& os, const AvlTree& tree);
     friend std::istream& operator>>(std::istream& is, AvlTree& tree);
+
 private:
     using Height = int8_t;
+
     struct Node
     {
         Height height;
@@ -64,8 +66,8 @@ private:
 
     inline static constexpr int64_t NIL_VALUE = -1;
 
-    static Node* LeftRotate(Node* node) noexcept;
-    static Node* RightRotate(Node* node) noexcept;
+    Node* LeftRotate(Node* node) const noexcept;
+    Node* RightRotate(Node* node) const noexcept;
 
     [[nodiscard]] static Node* MakeNil();
     [[nodiscard]] Node* MakeNode(DataType value) const;

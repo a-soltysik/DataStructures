@@ -2,7 +2,7 @@
 
 #include "Utils/Utils.h"
 
-AvlTree::AvlTree(std::initializer_list<DataType> initList)
+AvlTree::AvlTree(std::initializer_list <DataType> initList)
 {
     for (const auto& item: initList)
     {
@@ -78,13 +78,13 @@ AvlTree::Iterator AvlTree::Insert(DataType value)
             iterator = iterator->right;
         }
     }
-    if (value > parent->value)
+    if (value < parent->value)
     {
-        parent->right = newNode;
+        parent->left = newNode;
     }
     else
     {
-        parent->left = newNode;
+        parent->right = newNode;
     }
     newNode->parent = parent;
 
@@ -128,11 +128,7 @@ void AvlTree::Clear()
 {
     if (NIL != nullptr)
     {
-        if (Root() != nullptr)
-        {
-            RemoveSubtree(Root());
-
-        }
+        RemoveSubtree(Root());
         NIL->left = NIL;
     }
 }
@@ -229,7 +225,7 @@ void AvlTree::Node::UpdateHeight() noexcept
     height = static_cast<Height>(1 + Utils::Max(left->height, right->height));
 }
 
-AvlTree::Node* AvlTree::LeftRotate(Node* node) noexcept
+AvlTree::Node* AvlTree::LeftRotate(Node* node) const noexcept
 {
     Node* child = node->right;
     Node* grandChild = child->left;
@@ -248,7 +244,11 @@ AvlTree::Node* AvlTree::LeftRotate(Node* node) noexcept
 
     node->right = grandChild;
     node->parent = child;
-    grandChild->parent = node;
+
+    if (grandChild != NIL)
+    {
+        grandChild->parent = node;
+    }
 
     node->UpdateHeight();
     child->UpdateHeight();
@@ -256,7 +256,7 @@ AvlTree::Node* AvlTree::LeftRotate(Node* node) noexcept
     return child;
 }
 
-AvlTree::Node* AvlTree::RightRotate(Node* node) noexcept
+AvlTree::Node* AvlTree::RightRotate(Node* node) const noexcept
 {
     Node* child = node->left;
     Node* grandChild = child->right;
@@ -272,8 +272,12 @@ AvlTree::Node* AvlTree::RightRotate(Node* node) noexcept
         child->parent->right = child;
     }
     node->left = grandChild;
-    grandChild->parent = node;
     node->parent = child;
+
+    if (grandChild != NIL)
+    {
+        grandChild->parent = node;
+    }
 
     node->UpdateHeight();
     child->UpdateHeight();
@@ -283,9 +287,9 @@ AvlTree::Node* AvlTree::RightRotate(Node* node) noexcept
 
 AvlTree::Node* AvlTree::MakeNil()
 {
-    Node* nil = new Node{};
+    Node* nil = new Node {};
 
-    nil->height = 0;
+    nil->height = -1;
     nil->parent = nil;
     nil->left = nil;
     nil->right = nil;
@@ -295,11 +299,12 @@ AvlTree::Node* AvlTree::MakeNil()
 
 AvlTree::Node* AvlTree::MakeNode(DataType value) const
 {
-    Node* node = new Node{};
+    Node* node = new Node {};
+
+    node->height = 0;
     node->value = value;
     node->left = NIL;
     node->right = NIL;
-    node->height = 1;
 
     return node;
 }
@@ -357,6 +362,7 @@ void AvlTree::InsertFix(Node* node) const noexcept
 {
     Node* parent = node->parent;
     Node* child = node;
+    DataType value = node->value;
 
     while (parent != NIL)
     {
@@ -365,22 +371,22 @@ void AvlTree::InsertFix(Node* node) const noexcept
 
         if (balance > 1)
         {
-            if (node->value < parent->left->value)
+            if (value <= parent->left->value)
             {
                 parent = RightRotate(parent);
             }
             else
             {
                 parent->left = LeftRotate(parent->left);
-                parent->left->parent = parent;
+                parent = RightRotate(parent);
             }
         }
         else if (balance < -1)
         {
-            if (node->value < parent->right->value)
+            if (value < parent->right->value)
             {
                 parent->right = RightRotate(parent->right);
-                parent->right->parent = parent;
+                parent = LeftRotate(parent);
             }
             else
             {
@@ -427,7 +433,6 @@ void AvlTree::RemoveFix(Node* node) const noexcept
                 node = LeftRotate(node);
             }
         }
-
         child = node;
         node = node->parent;
     }
@@ -456,14 +461,16 @@ AvlTree::Node* AvlTree::CopySubtree(const AvlTree& tree, AvlTree::Node* root)
         return NIL;
     }
 
-    Node* newRoot = new Node;
+    Node* newRoot = new Node {};
     newRoot->value = root->value;
     newRoot->height = root->height;
+
     newRoot->left = CopySubtree(tree, root->left);
     newRoot->left->parent = newRoot;
 
     newRoot->right = CopySubtree(tree, root->right);
     newRoot->right->parent = newRoot;
+
     return newRoot;
 }
 
@@ -532,7 +539,7 @@ void AvlTree::ToString(std::string& result, const std::string& prefix, const Nod
         result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
-        result += Utils::Parser::NumberToString(node->value) + "\n";
+        result += Utils::Parser::NumberToString(node->height) + Utils::Parser::NumberToString(node->value) + "\n";
 
         ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->right, true);
         ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->left, false);
@@ -580,8 +587,7 @@ AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node)
 
 AvlTreeConstIterator::AvlTreeConstIterator(const AvlTree* avlTree, AvlTree::Node* node) noexcept
     : avlTree(avlTree)
-    , node(node)
-{ }
+    , node(node) { }
 
 AvlTreeConstIterator::reference AvlTreeConstIterator::operator*() const noexcept
 {
@@ -697,5 +703,3 @@ AvlTreeIterator AvlTreeIterator::operator--(int) noexcept
     AvlTreeConstIterator::operator--();
     return tmp;
 }
-
-

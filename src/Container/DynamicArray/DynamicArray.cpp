@@ -258,11 +258,12 @@ void DynamicArray::Clear()
 
 DynamicArray::ConstIterator DynamicArray::Find(DataType value) const noexcept
 {
-    for (auto it = cbegin(); it != cend(); it++)
+    auto* end = data + size;
+    for (auto* it = data; it != end; it++)
     {
-        if (value == *it)
+        if (*it == value)
         {
-            return it;
+            return {it};
         }
     }
     return cend();
@@ -270,11 +271,12 @@ DynamicArray::ConstIterator DynamicArray::Find(DataType value) const noexcept
 
 DynamicArray::Iterator DynamicArray::Find(DataType value) noexcept
 {
-    for (auto it = begin(); it != end(); it++)
+    auto* last = data + size;
+    for (auto* it = data; it != last; it++)
     {
-        if (value == *it)
+        if (*it == value)
         {
-            return it;
+            return {it};
         }
     }
     return end();

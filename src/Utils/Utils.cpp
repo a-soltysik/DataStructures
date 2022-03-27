@@ -1,6 +1,7 @@
 #include "Utils.h"
 
 #include <random>
+#include <iostream>
 
 namespace Utils
 {
@@ -23,5 +24,28 @@ namespace Utils
     std::filesystem::path GetPathFromResources(const std::filesystem::path& path)
     {
         return std::filesystem::path("Resources") / path;
+    }
+
+    uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max)
+    {
+        bool wrongChoice;
+        uint8_t choiceValue;
+
+        do
+        {
+            std::cout << menu;
+            auto choice = Utils::getInput<uint8_t>(std::cin);
+            wrongChoice = !choice.has_value() || (choice.has_value() && (choice.value() < min || choice.value() > max));
+            if (wrongChoice)
+            {
+                std::cout << "Niepoprawny wybór!\n";
+            }
+            else
+            {
+                choiceValue = choice.value();
+            }
+        } while (wrongChoice);
+
+        return choiceValue;
     }
 }

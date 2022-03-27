@@ -13,6 +13,4 @@ public:
     virtual ~Manager() = default;
 
     virtual void Menu() = 0;
-
-    static uint8_t GetChoiceFromMenu(const std::string& menu);
 };

@@ -45,6 +45,8 @@ namespace Utils
     template<typename T>
     std::optional<T> getInput(std::istream& is);
 
+    uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+
 
     /**
      * DEFINITIONS

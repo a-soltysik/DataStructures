@@ -190,7 +190,7 @@ AvlTree::ConstIterator AvlTree::cend() const noexcept
 
 std::string AvlTree::ToString() const
 {
-    std::string result;
+    std::string result = "\n";
     ToString(result, "", Root(), false);
     return result;
 }
@@ -539,7 +539,7 @@ void AvlTree::ToString(std::string& result, const std::string& prefix, const Nod
         result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
-        result += Utils::Parser::NumberToString(node->height) + Utils::Parser::NumberToString(node->value) + "\n";
+        result += Utils::Parser::NumberToString(node->value) + "\n";
 
         ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->right, true);
         ToString(result, prefix + (isRight ? Utils::VERTICAL_BAR : " ") + " ", node->left, false);
@@ -552,7 +552,7 @@ void AvlTree::Serialize(std::ostream& os, AvlTree::Node* node) const
     {
         return;
     }
-    if (node != NIL)
+    if (node == NIL)
     {
         os << NIL_VALUE << " ";
     }

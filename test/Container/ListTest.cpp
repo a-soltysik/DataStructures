@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Container/List/List.h"
+#include "Utils/Utils.h"
 
 class ListTest : public testing::Test
 {
@@ -222,7 +223,7 @@ TEST_F(ListTest, ClearTest)
 {
     for (size_t i = 0; i < 34523; i++)
     {
-        list.PushBack(i);
+        list.PushBack(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
     }
     EXPECT_EQ(list.Size(), 34523);
     list.Clear();

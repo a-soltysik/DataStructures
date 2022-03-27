@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Container/RedBlackTree/RedBlackTree.h"
+#include "Utils/Utils.h"
 
 #include <algorithm>
 
@@ -167,7 +168,7 @@ TEST_F(RedBlackTreeTest, ClearTest)
 {
     for (int32_t i = 0u; i < 23521; i++)
     {
-        tree.Insert(i);
+        tree.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
     }
     ASSERT_EQ(tree.Size(), 23521);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));

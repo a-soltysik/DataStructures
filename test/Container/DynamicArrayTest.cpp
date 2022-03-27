@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Container/DynamicArray/DynamicArray.h"
+#include "Utils/Utils.h"
 
 class DynamicArrayTest : public testing::Test
 {
@@ -222,7 +223,7 @@ TEST_F(DynamicArrayTest, ClearTest)
 {
     for (int32_t i = 0; i < 34523; i++)
     {
-        array.PushBack(i);
+        array.PushBack(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
     }
     EXPECT_EQ(array.Size(), 34523);
     array.Clear();

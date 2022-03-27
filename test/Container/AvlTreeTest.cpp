@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Container/AvlTree/AvlTree.h"
+#include "Utils/Utils.h"
 
 #include <algorithm>
 
@@ -165,11 +166,13 @@ TEST_F(AvlTreeTest, FindTest)
 
 TEST_F(AvlTreeTest, ClearTest)
 {
-    for (int32_t i = 0u; i < 23521; i++)
+    for (int32_t i = 0; i < 12345; i++)
     {
-        tree.Insert(i);
+        tree.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
     }
-    ASSERT_EQ(tree.Size(), 23521);
+
+    ASSERT_EQ(tree.Size(), 12345);
     ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
 
     tree.Clear();

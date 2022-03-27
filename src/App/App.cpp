@@ -4,25 +4,18 @@
 #include "Container/List/List.h"
 #include "Container/RedBlackTree/RedBlackTree.h"
 #include "Container/Heap/Heap.h"
+#include "Container/AvlTree/AvlTree.h"
 
 #include "App/Manager/LinearContainerManager.h"
 #include "App/Manager/TreeContainerManager.h"
 #include "App/Manager/BenchmarkManager.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-void SetUtf8()
-{
-#ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);
-#endif
-}
+#include "Utils/Timer.h"
 
 int32_t App::Run()
 {
-    SetUtf8();
+    Utils::SetUtf8();
+
     try
     {
         MainMenu();
@@ -46,10 +39,13 @@ void App::ContainerMenu()
                                       "2. Lista dwukierunkowa\n"
                                       "3. Kopiec binarny\n"
                                       "4. Drzewo czerwono-czarne\n"
-                                      "5. Powrót\n"
+                                      "5. Drzewo AVL\n"
+                                      "6. Powrót\n"
                                       "> ";
 
-    switch (Manager::GetChoiceFromMenu(CONTAINER_MENU))
+    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 6);
+
+    switch (choice)
     {
     case 1:
         manager = std::make_unique<LinearContainerManager<DynamicArray>>();
@@ -63,9 +59,13 @@ void App::ContainerMenu()
     case 4:
         manager = std::make_unique<TreeContainerManager<RedBlackTree>>();
         break;
+    case 5:
+        manager = std::make_unique<TreeContainerManager<AvlTree>>();
+        break;
     default:
         return;
     }
+    manager->Menu();
 }
 
 void App::MainMenu()
@@ -78,11 +78,12 @@ void App::MainMenu()
 
     while (true)
     {
-        switch (Manager::GetChoiceFromMenu(MAIN_MENU))
+        auto choice = Utils::GetChoiceFromMenu(MAIN_MENU, 1, 3);
+
+        switch (choice)
         {
         case 1:
             ContainerMenu();
-            manager->Menu();
             break;
         case 2:
             manager = std::make_unique<BenchmarkManager>();
@@ -92,7 +93,6 @@ void App::MainMenu()
             return;
         default:
             break;
-
         }
     }
 }

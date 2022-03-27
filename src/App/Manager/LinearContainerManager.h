@@ -28,40 +28,27 @@ protected:
     void RemoveBackMenu();
 
     void AccessMenu();
-
-    static constexpr char MENU[] = "Wybierz operację:\n"
-                                   "1. Dodaj element\n"
-                                   "2. Usuń element\n"
-                                   "3. Pobierz element\n"
-                                   "4. Znajdź element\n"
-                                   "5. Wyświetl kontener\n"
-                                   "6. Zapisz kontener do pliku\n"
-                                   "7. Odczytaj kontener z pliku\n"
-                                   "8. Załaduj testowy kontener\n"
-                                   "9. Wróć\n"
-                                   "> ";
-
-    static constexpr char REMOVE_MENU[] = "Wybierz operację:\n"
-                                          "1. Usuń element z początku\n"
-                                          "2. Usuń element z wybranej pozycji\n"
-                                          "3. Usuń elemnt z końca\n"
-                                          "4. Wróć\n"
-                                          "> ";
-
-    static constexpr char ADD_MENU[] = "Wybierz operację:\n"
-                                       "1. Dodaj element na początek\n"
-                                       "2. Dodaj element na wybraną pozycję\n"
-                                       "3. Dodaj element na koniec\n"
-                                       "4. Wróć\n"
-                                       "> ";
 };
 
 template<typename T>
 void LinearContainerManager<T>::Menu()
 {
+    constexpr char MENU[] = "Wybierz operację:\n"
+                            "1. Dodaj element\n"
+                            "2. Usuń element\n"
+                            "3. Pobierz element\n"
+                            "4. Znajdź element\n"
+                            "5. Wyświetl kontener\n"
+                            "6. Zapisz kontener do pliku\n"
+                            "7. Odczytaj kontener z pliku\n"
+                            "8. Załaduj testowy kontener\n"
+                            "9. Wróć\n"
+                            "> ";
+
     while (true)
     {
-        switch (Manager::GetChoiceFromMenu(MENU))
+        auto choice = Utils::GetChoiceFromMenu(MENU, 1, 9);
+        switch (choice)
         {
         case 1:
             AddMenu();
@@ -96,7 +83,15 @@ void LinearContainerManager<T>::Menu()
 template<typename T>
 void LinearContainerManager<T>::AddMenu()
 {
-    switch (Manager::GetChoiceFromMenu(ADD_MENU))
+    constexpr char ADD_MENU[] = "Wybierz operację:\n"
+                                "1. Dodaj element na początek\n"
+                                "2. Dodaj element na wybraną pozycję\n"
+                                "3. Dodaj element na koniec\n"
+                                "4. Wróć\n"
+                                "> ";
+
+    auto choice = Utils::GetChoiceFromMenu(ADD_MENU, 1, 4);
+    switch (choice)
     {
     case 1:
         PushFrontMenu();
@@ -115,7 +110,15 @@ void LinearContainerManager<T>::AddMenu()
 template<typename T>
 void LinearContainerManager<T>::RemoveMenu()
 {
-    switch (Manager::GetChoiceFromMenu(REMOVE_MENU))
+    constexpr char REMOVE_MENU[] = "Wybierz operację:\n"
+                                   "1. Usuń element z początku\n"
+                                   "2. Usuń element z wybranej pozycji\n"
+                                   "3. Usuń elemnt z końca\n"
+                                   "4. Wróć\n"
+                                   "> ";
+
+    auto choice = Utils::GetChoiceFromMenu(REMOVE_MENU, 1, 4);
+    switch (choice)
     {
     case 1:
         RemoveFrontMenu();

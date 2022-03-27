@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Manager/Manager.h"
+#include "Settings.h"
 
 class BenchmarkManager : public Manager
 {
@@ -10,8 +11,7 @@ public:
     void Menu() override;
 
 protected:
-    static void Menu(std::ostream& os);
-
-private:
+    static void LocationMenu();
+    static void ContainerMenu(std::ostream& os);
     static void PrepareFileToSave();
 };

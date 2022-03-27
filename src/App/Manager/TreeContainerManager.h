@@ -14,24 +14,27 @@ protected:
     void AddMenu();
     void RemoveMenu();
 
-    static constexpr char MENU[] = "Wybierz operację:\n"
-                                   "1. Dodaj element\n"
-                                   "2. Usuń element\n"
-                                   "3. Znajdź element\n"
-                                   "4. Wyświetl kontener\n"
-                                   "5. Zapisz kontener do pliku\n"
-                                   "6. Odczytaj kontener z pliku\n"
-                                   "7. Załaduj testowy kontener\n"
-                                   "8. Wróć\n"
-                                   "> ";
+
 };
 
 template<typename T>
 void TreeContainerManager<T>::Menu()
 {
+    constexpr char MENU[] = "Wybierz operację:\n"
+                            "1. Dodaj element\n"
+                            "2. Usuń element\n"
+                            "3. Znajdź element\n"
+                            "4. Wyświetl kontener\n"
+                            "5. Zapisz kontener do pliku\n"
+                            "6. Odczytaj kontener z pliku\n"
+                            "7. Załaduj testowy kontener\n"
+                            "8. Wróć\n"
+                            "> ";
+
     while (true)
     {
-        switch (Manager::GetChoiceFromMenu(MENU))
+        auto choice = Utils::GetChoiceFromMenu(MENU, 1, 8);
+        switch (choice)
         {
         case 1:
             AddMenu();

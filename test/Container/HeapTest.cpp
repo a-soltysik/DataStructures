@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Container/Heap/Heap.h"
+#include "Utils/Utils.h"
 
 #include <algorithm>
 
@@ -42,16 +43,16 @@ TEST_F(HeapTest, FindTest)
     heap.Insert(0);
 
     ASSERT_EQ(heap.Size(), 7);
-    ASSERT_NE(heap.Find(1), nullptr);
-    ASSERT_NE(heap.Find(23), nullptr);
-    ASSERT_NE(heap.Find(15), nullptr);
-    ASSERT_NE(heap.Find(-34), nullptr);
-    ASSERT_NE(heap.Find(12), nullptr);
-    ASSERT_NE(heap.Find(10), nullptr);
-    ASSERT_NE(heap.Find(0), nullptr);
+    ASSERT_NE(heap.Find(1), heap.cend());
+    ASSERT_NE(heap.Find(23), heap.cend());
+    ASSERT_NE(heap.Find(15), heap.cend());
+    ASSERT_NE(heap.Find(-34), heap.cend());
+    ASSERT_NE(heap.Find(12), heap.cend());
+    ASSERT_NE(heap.Find(10), heap.cend());
+    ASSERT_NE(heap.Find(0), heap.cend());
 
-    ASSERT_EQ(heap.Find(345), nullptr);
-    ASSERT_EQ(heap.Find(-21345), nullptr);
+    ASSERT_EQ(heap.Find(345), heap.cend());
+    ASSERT_EQ(heap.Find(-21345), heap.cend());
 }
 
 TEST_F(HeapTest, RemoveTest)
@@ -69,37 +70,37 @@ TEST_F(HeapTest, RemoveTest)
 
     heap.Remove(1);
     ASSERT_EQ(heap.Size(), 6);
-    ASSERT_EQ(heap.Find(1), nullptr);
+    ASSERT_EQ(heap.Find(1), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(23);
     ASSERT_EQ(heap.Size(), 5);
-    ASSERT_EQ(heap.Find(23), nullptr);
+    ASSERT_EQ(heap.Find(23), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(15);
     ASSERT_EQ(heap.Size(), 4);
-    ASSERT_EQ(heap.Find(15), nullptr);
+    ASSERT_EQ(heap.Find(15), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(-34);
     ASSERT_EQ(heap.Size(), 3);
-    ASSERT_EQ(heap.Find(-34), nullptr);
+    ASSERT_EQ(heap.Find(-34), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(12);
     ASSERT_EQ(heap.Size(), 2);
-    ASSERT_EQ(heap.Find(12), nullptr);
+    ASSERT_EQ(heap.Find(12), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(10);
     ASSERT_EQ(heap.Size(), 1);
-    ASSERT_EQ(heap.Find(10), nullptr);
+    ASSERT_EQ(heap.Find(10), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(0);
     ASSERT_EQ(heap.Size(), 0);
-    ASSERT_EQ(heap.Find(0), nullptr);
+    ASSERT_EQ(heap.Find(0), heap.cend());
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Remove(453);
@@ -158,7 +159,7 @@ TEST_F(HeapTest, PopTest)
     {
         try
         {
-            auto tmp = heap.Max();
+            [[maybe_unused]] auto tmp = heap.Max();
         }
         catch (const std::out_of_range& e)
         {
@@ -172,7 +173,7 @@ TEST_F(HeapTest, ClearTest)
 {
     for (int32_t i = 0; i < 23455; i++)
     {
-        heap.Insert(i);
+        heap.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
     }
     ASSERT_EQ(heap.Size(), 23455);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));

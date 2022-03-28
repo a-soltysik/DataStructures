@@ -201,6 +201,7 @@ std::ostream& operator<<(std::ostream& os, const AvlTree& tree)
     {
         return os;
     }
+    os << tree.Size() << "\n";
     tree.Serialize(os, tree.Root());
     return os;
 }
@@ -211,7 +212,9 @@ std::istream& operator>>(std::istream& is, AvlTree& tree)
     {
         return is;
     }
-    tree.SetRoot(tree.Deserialize(is, tree.NIL));
+    size_t size;
+    is >> size;
+    tree.SetRoot(tree.Deserialize(is, tree.NIL, size));
     return is;
 }
 
@@ -564,7 +567,7 @@ void AvlTree::Serialize(std::ostream& os, AvlTree::Node* node) const
     }
 }
 
-AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node)
+AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node, size_t& size)
 {
     if (!is.good())
     {
@@ -577,10 +580,11 @@ AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node)
         return NIL;
     }
     Node* newNode = MakeNode(static_cast<DataType>(value));
+    size--;
 
     newNode->parent = node;
-    newNode->left = Deserialize(is, newNode);
-    newNode->right = Deserialize(is, newNode);
+    newNode->left   = Deserialize(is, newNode, size);
+    newNode->right  = Deserialize(is, newNode, size);
 
     return newNode;
 }

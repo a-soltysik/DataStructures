@@ -231,6 +231,7 @@ std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
     {
         return os;
     }
+    os << tree.Size() << "\n";
     tree.Serialize(os, tree.Root());
     return os;
 }
@@ -241,7 +242,10 @@ std::istream& operator>>(std::istream& is, RedBlackTree& tree)
     {
         return is;
     }
-    tree.SetRoot(tree.Deserialize(is, tree.NIL));
+    size_t size;
+    is >> size;
+
+    tree.SetRoot(tree.Deserialize(is, tree.NIL, size));
     return is;
 }
 
@@ -585,9 +589,9 @@ void RedBlackTree::Serialize(std::ostream& os, Node* node) const
     }
 }
 
-RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
+RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node, size_t& size)
 {
-    if (!is.good())
+    if (!is.good() || size == 0)
     {
         return NIL;
     }
@@ -598,10 +602,11 @@ RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node)
         return NIL;
     }
     Node* newNode = MakeNode(static_cast<DataType>(value));
+    size--;
 
     newNode->parent = node;
-    newNode->left = Deserialize(is, newNode);
-    newNode->right = Deserialize(is, newNode);
+    newNode->left   = Deserialize(is, newNode, size);
+    newNode->right  = Deserialize(is, newNode, size);
 
     return newNode;
 }

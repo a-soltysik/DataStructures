@@ -50,7 +50,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree);
     friend std::istream& operator>>(std::istream& is, RedBlackTree& tree);
 
-private:
+public:
     struct Node
     {
         enum class Color : uint8_t
@@ -90,7 +90,7 @@ private:
 
     void ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const;
     void Serialize(std::ostream& os, Node* node) const;
-    [[nodiscard]] Node* Deserialize(std::istream& is, Node* node);
+    [[nodiscard]] Node* Deserialize(std::istream& is, Node* node, size_t& size);
 
     Node* NIL = MakeNil();
     size_t size = 0u;

@@ -21,6 +21,8 @@ namespace Utils
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
     [[nodiscard]] std::filesystem::path GetPathFromResources(const std::filesystem::path& path);
 
+    [[nodiscard]] uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+
     /**
     *  Indicates that value T can be moved (own implementation of std::move)
     */
@@ -34,18 +36,19 @@ namespace Utils
     [[nodiscard]] constexpr T&& Move(T& val) noexcept;
 
     /**
-    *  Swaps to values (own implementation of std::swap)
+    *  Swaps two values (own implementation of std::swap)
     */
     template<typename T>
     constexpr void Swap(T& val1, T& val2) noexcept;
 
+    /**
+    *  Retuns maximum of two values (own implementation of std::max)
+    */
     template<typename T>
-    [[nodiscard]] constexpr T Max(const T& ...) noexcept;
+    [[nodiscard]] constexpr const T& Max(const T& val1, const T& val2) noexcept;
 
     template<typename T>
-    std::optional<T> getInput(std::istream& is);
-
-    uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+    [[nodiscard]] std::optional<T> getInput(std::istream& is);
 
 
     /**
@@ -54,13 +57,13 @@ namespace Utils
 
 
     template<typename T>
-    [[nodiscard]] constexpr T&& Move(T&& val) noexcept
+    constexpr T&& Move(T&& val) noexcept
     {
         return static_cast<T&&>(val);
     }
 
     template<typename T>
-    [[nodiscard]] constexpr T&& Move(T& val) noexcept
+    constexpr T&& Move(T& val) noexcept
     {
         return static_cast<T&&>(val);
     }
@@ -74,7 +77,7 @@ namespace Utils
     }
 
     template<typename T>
-    [[nodiscard]] T Max(const T& val1, const T& val2) noexcept
+    constexpr const T& Max(const T& val1, const T& val2) noexcept
     {
         return val1 > val2 ? val1 : val2;
     }

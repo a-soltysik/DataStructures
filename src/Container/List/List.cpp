@@ -344,26 +344,24 @@ void List::Clear()
 
 List::ConstIterator List::Find(DataType value) const noexcept
 {
-    for (auto it = cbegin(); it != cend(); it++)
+    Node* iterator = front;
+
+    while (iterator != nullptr && iterator->value != value)
     {
-        if (value == *it)
-        {
-            return it;
-        }
+        iterator = iterator->next;
     }
-    return cend();
+    return {this, iterator};
 }
 
 List::Iterator List::Find(DataType value) noexcept
 {
-    for (auto it = begin(); it != end(); it++)
+    Node* iterator = front;
+
+    while (iterator != nullptr && iterator->value != value)
     {
-        if (value == *it)
-        {
-            return it;
-        }
+        iterator = iterator->next;
     }
-    return end();
+    return {this, iterator};
 }
 
 size_t List::Size() const noexcept

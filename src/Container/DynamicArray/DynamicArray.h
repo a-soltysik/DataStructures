@@ -49,10 +49,8 @@ public:
 
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
-
     [[nodiscard]] ConstIterator begin() const noexcept;
     [[nodiscard]] ConstIterator end() const noexcept;
-
     [[nodiscard]] ConstIterator cbegin() const noexcept;
     [[nodiscard]] ConstIterator cend() const noexcept;
 
@@ -61,6 +59,8 @@ public:
     friend std::istream& operator>>(std::istream& is, DynamicArray& array);
 
 private:
+    [[nodiscard]] DataType* BasicFind(DataType value) const noexcept;
+
     DataType* data = nullptr;
     size_t size = 0u;
 };

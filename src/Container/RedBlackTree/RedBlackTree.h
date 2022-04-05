@@ -99,6 +99,7 @@ public:
 struct RedBlackTreeConstIterator
 {
     using iterator_category = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
     using value_type = RedBlackTree::DataType;
     using pointer = const value_type*;
     using reference = const value_type&;

@@ -345,17 +345,17 @@ AvlTree::Node* AvlTree::Find(const DataType& value, Node* root) const noexcept
 {
     while (root != NIL)
     {
-        if (value == root->value)
-        {
-            return root;
-        }
         if (value > root->value)
         {
             root = root->right;
         }
-        else
+        else if (value < root->value)
         {
             root = root->left;
+        }
+        else
+        {
+            return root;
         }
     }
     return NIL;

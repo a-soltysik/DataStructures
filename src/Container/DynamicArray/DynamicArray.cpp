@@ -118,7 +118,7 @@ void DynamicArray::PushFront(DataType value)
 {
     DataType* newData = new DataType[size + 1u];
 
-    std::memcpy(newData + 1, data, size * sizeof(DataType));
+    std::memcpy(newData + 1u, data, size * sizeof(DataType));
     newData[0] = value;
 
     delete[] data;
@@ -258,28 +258,12 @@ void DynamicArray::Clear()
 
 DynamicArray::ConstIterator DynamicArray::Find(DataType value) const noexcept
 {
-    auto* end = data + size;
-    for (auto* it = data; it != end; it++)
-    {
-        if (*it == value)
-        {
-            return {it};
-        }
-    }
-    return cend();
+    return BasicFind(value);
 }
 
 DynamicArray::Iterator DynamicArray::Find(DataType value) noexcept
 {
-    auto* last = data + size;
-    for (auto* it = data; it != last; it++)
-    {
-        if (*it == value)
-        {
-            return {it};
-        }
-    }
-    return end();
+    return BasicFind(value);
 }
 
 size_t DynamicArray::Size() const noexcept
@@ -370,6 +354,54 @@ std::istream& operator>>(std::istream& is, DynamicArray& array)
     }
 
     return is;
+}
+
+[[nodiscard]] DynamicArray::DataType* DynamicArray::BasicFind(DataType value) const noexcept
+{
+    DataType* it = data;
+    DataType* last = data + size;
+
+    for (size_t i = size / 4; i > 0; i--)
+    {
+        if (*it == value)
+            return it;
+        ++it;
+
+        if (*it == value)
+            return it;
+        ++it;
+
+        if (*it == value)
+            return it;
+        ++it;
+
+        if (*it == value)
+            return it;
+        ++it;
+    }
+
+    switch (last - it)
+    {
+    case 3:
+        if (*it == value)
+            return it;
+        ++it;
+        [[fallthrough]];
+    case 2:
+        if (*it == value)
+            return it;
+        ++it;
+        [[fallthrough]];
+    case 1:
+        if (*it == value)
+            return it;
+        ++it;
+        [[fallthrough]];
+    case 0:
+        [[fallthrough]];
+    default:
+        return it;
+    }
 }
 
 DynamicArrayConstIterator::DynamicArrayConstIterator(DynamicArray::DataType* ptr) noexcept

@@ -89,10 +89,8 @@ void App::MainMenu()
             manager = std::make_unique<BenchmarkManager>();
             manager->Menu();
             break;
-        case 3:
-            return;
         default:
-            break;
+            return;
         }
     }
 }

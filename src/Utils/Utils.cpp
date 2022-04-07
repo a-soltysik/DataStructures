@@ -5,9 +5,6 @@
 
 namespace Utils
 {
-    std::random_device device;
-    std::mt19937 rng(device());
-
     void SetUtf8()
     {
     #ifdef _WIN32
@@ -17,6 +14,9 @@ namespace Utils
 
     int32_t GetRandomInt(int32_t from, int32_t to)
     {
+        static std::random_device device;
+        static std::mt19937 rng(device());
+
         std::uniform_int_distribution<int32_t> distribution(from, to);
         return distribution(rng);
     }

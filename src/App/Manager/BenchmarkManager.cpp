@@ -13,6 +13,7 @@
 
 void BenchmarkManager::Menu()
 {
+    Settings::NUMBER_OF_TESTS = Utils::GetChoiceFromMenu("Podaj liczbę powtórzeń eksperymentów: ", 1, INT32_MAX);
     LocationMenu();
 }
 

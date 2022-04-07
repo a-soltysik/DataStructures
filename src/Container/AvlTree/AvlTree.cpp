@@ -372,29 +372,29 @@ void AvlTree::InsertFix(Node* node) const noexcept
         parent->UpdateHeight();
         Height balance = parent->BalanceFactor();
 
-        if (balance > 1)
+        if (balance > 1)                                    // Jeżeli ciężar jest lewej stronie
         {
-            if (value <= parent->left->value)
-            {
-                parent = RightRotate(parent);
+            if (value <= parent->left->value)               // Jeżeli wartość jest mniejsza bądź równa
+            {                                               // wartości lewego dziecka rodzica
+                parent = RightRotate(parent);               // dokonaj rotacji RR na rodzicu
             }
-            else
-            {
-                parent->left = LeftRotate(parent->left);
-                parent = RightRotate(parent);
+            else                                            // W przeciwnym przypadku
+            {                                               // Dokonaj rotacji LR
+                parent->left = LeftRotate(parent->left);    //
+                parent = RightRotate(parent);               //
             }
         }
-        else if (balance < -1)
+        else if (balance < -1)                              // Jeżeli ciężar jest po prawej stronie
         {
-            if (value < parent->right->value)
-            {
-                parent->right = RightRotate(parent->right);
-                parent = LeftRotate(parent);
+            if (value < parent->right->value)               // Jeżeli wartość jest mniejsza od
+            {                                               // wartości prawego dziecka rodzica
+                parent->right = RightRotate(parent->right); // dokonaj rotacji RL
+                parent = LeftRotate(parent);                //
             }
-            else
-            {
-                parent = LeftRotate(parent);
-            }
+            else                                            // W przeciwnym wypadku
+            {                                               // dokonaj rotacji LL
+                parent = LeftRotate(parent);                //
+            }                                               //
         }
 
         child = parent;
@@ -412,28 +412,28 @@ void AvlTree::RemoveFix(Node* node) const noexcept
         node->UpdateHeight();
         Height balance = node->BalanceFactor();
 
-        if (balance > 1)
+        if (balance > 1)                                // Jeżeli ciężar jest lewej stronie
         {
-            if (node->left->BalanceFactor() >= 0)
-            {
-                node = RightRotate(node);
+            if (node->left->BalanceFactor() >= 0)       // Jeżeli ciężar lewego dziecka węzła
+            {                                           // jest po lewej stronie lub go nie ma
+                node = RightRotate(node);               // dokonaj rotacji RR
             }
-            else
-            {
-                node->left = LeftRotate(node->left);
-                node = RightRotate(node);
+            else                                        // W przeciwnym przypadku
+            {                                           // dokonaj rotacji LR
+                node->left = LeftRotate(node->left);    //
+                node = RightRotate(node);               //
             }
         }
-        else if (balance < -1)
+        else if (balance < -1)                          // Jeżeli ciężar jest po prawej stronie
         {
-            if (node->right->BalanceFactor() <= 0)
-            {
-                node = LeftRotate(node);
+            if (node->right->BalanceFactor() <= 0)      // Jeżeli ciężar prawego dziecka węzła
+            {                                           // jest po prawej stronie lub go nie ma
+                node = LeftRotate(node);                // dokonaj rotacji LL
             }
-            else
-            {
-                node->right = RightRotate(node->right);
-                node = LeftRotate(node);
+            else                                        // W przeciwnym przypadku
+            {                                           // dokonaj rotacji RL
+                node->right = RightRotate(node->right); //
+                node = LeftRotate(node);                //
             }
         }
         child = node;
@@ -567,7 +567,7 @@ void AvlTree::Serialize(std::ostream& os, AvlTree::Node* node) const
     }
 }
 
-AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node, size_t& size)
+AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node, size_t& sizeOfTree)
 {
     if (!is.good())
     {
@@ -580,11 +580,11 @@ AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node, size_
         return NIL;
     }
     Node* newNode = MakeNode(static_cast<DataType>(value));
-    size--;
+    sizeOfTree--;
 
     newNode->parent = node;
-    newNode->left   = Deserialize(is, newNode, size);
-    newNode->right  = Deserialize(is, newNode, size);
+    newNode->left   = Deserialize(is, newNode, sizeOfTree);
+    newNode->right  = Deserialize(is, newNode, sizeOfTree);
 
     return newNode;
 }

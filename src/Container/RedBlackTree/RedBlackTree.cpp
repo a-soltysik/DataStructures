@@ -385,48 +385,48 @@ void RedBlackTree::InsertFix(Node* node) const noexcept
 {
     while (node->parent->color == Node::Color::RED)
     {
-        if (node->parent == node->parent->parent->left)
+        if (node->parent == node->parent->parent->left)             // Jeśli rodzic jest lewym dzieckiem i...
         {
             Node* rightUncle = node->parent->parent->right;
             if (rightUncle->color == Node::Color::RED)
             {
-                node->parent->color = Node::Color::BLACK;
-                rightUncle->color = Node::Color::BLACK;
-                node->parent->parent->color = Node::Color::RED;
-                node = node->parent->parent;
+                node->parent->color = Node::Color::BLACK;           // Jeśli prawy stryj jest czerwony
+                rightUncle->color = Node::Color::BLACK;             // przekoloruj węzły
+                node->parent->parent->color = Node::Color::RED;     //
+                node = node->parent->parent;                        //
             }
-            else
+            else                                                    // Jeśli prawy stryj jest czarny i...
             {
-                if (node == node->parent->right)
-                {
-                    node = node->parent;
-                    LeftRotate(node);
+                if (node == node->parent->right)                    // Jeśli węzeł jest prawym synem
+                {                                                   // dokonaj obrotu wokół rodzica
+                    node = node->parent;                            //
+                    LeftRotate(node);                               //
                 }
-                node->parent->color = Node::Color::BLACK;
-                node->parent->parent->color = Node::Color::RED;
-                RightRotate(node->parent->parent);
+                node->parent->color = Node::Color::BLACK;           // Jeśli węzeł jest lewym synem
+                node->parent->parent->color = Node::Color::RED;     // dokonaj obrotu wokół dziadka
+                RightRotate(node->parent->parent);                  // i przekoloruj węzły
             }
         }
-        else
+        else                                                        // Jeśli rodzic jest prawym dzieckiem i...
         {
             Node* leftUncle = node->parent->parent->left;
             if (leftUncle->color == Node::Color::RED)
             {
-                node->parent->color = Node::Color::BLACK;
-                leftUncle->color = Node::Color::BLACK;
-                node->parent->parent->color = Node::Color::RED;
-                node = node->parent->parent;
+                node->parent->color = Node::Color::BLACK;           // Jeśli prawy stryj jest czerwony
+                leftUncle->color = Node::Color::BLACK;              // przekoloruj węzły
+                node->parent->parent->color = Node::Color::RED;     //
+                node = node->parent->parent;                        //
             }
-            else
+            else                                                    // Jeśli lewy stryj jest czarny i...
             {
-                if (node == node->parent->left)
-                {
-                    node = node->parent;
-                    RightRotate(node);
+                if (node == node->parent->left)                     // Jeśli węzeł jest lewym synem
+                {                                                   // dokonaj obrotu wokół rodzica
+                    node = node->parent;                            //
+                    RightRotate(node);                              //
                 }
-                node->parent->color = Node::Color::BLACK;
-                node->parent->parent->color = Node::Color::RED;
-                LeftRotate(node->parent->parent);
+                node->parent->color = Node::Color::BLACK;           // Jeśli węzeł jest prawym synem
+                node->parent->parent->color = Node::Color::RED;     // dokonaj obrotu wokół dziadka
+                LeftRotate(node->parent->parent);                   // i przekoloruj węzły
             }
         }
     }
@@ -437,68 +437,70 @@ void RedBlackTree::RemoveFix(Node* node) const noexcept
 {
     while (node != Root() && node->color == Node::Color::BLACK)
     {
-        if (node == node->parent->left)
+        if (node == node->parent->left)                                 // Jeśli węzeł jest lewym dzieckiem i...
         {
             Node* rightSibling = node->parent->right;
-            if (rightSibling->color == Node::Color::RED)
-            {
-                rightSibling->color = Node::Color::BLACK;
-                node->parent->color = Node::Color::RED;
-                LeftRotate(node->parent);
-                rightSibling = node->parent->right;
+            if (rightSibling->color == Node::Color::RED)                // Jeśli brat jest czerwony
+            {                                                           // przekoloruj węzły
+                rightSibling->color = Node::Color::BLACK;               // i dokonaj obrotu wokół rodzica
+                node->parent->color = Node::Color::RED;                 //
+                LeftRotate(node->parent);                               //
+                rightSibling = node->parent->right;                     //
             }
 
-            if (rightSibling->left->color == Node::Color::BLACK && rightSibling->right->color == Node::Color::BLACK)
-            {
-                rightSibling->color = Node::Color::RED;
-                node = node->parent;
+            if (rightSibling->left->color  == Node::Color::BLACK &&     // Jeśli oboje dzieci brata są czarne
+                rightSibling->right->color == Node::Color::BLACK)       // przekoloruj brata
+            {                                                           //
+                rightSibling->color = Node::Color::RED;                 //
+                node = node->parent;                                    //
             }
-            else
+            else                                                        // Jeśli któreś z dzieci brata jest czerwone
             {
-                if (rightSibling->right->color == Node::Color::BLACK)
-                {
-                    rightSibling->left->color = Node::Color::BLACK;
-                    rightSibling->color = Node::Color::RED;
-                    RightRotate(rightSibling);
-                    rightSibling = node->parent->right;
+                if (rightSibling->right->color == Node::Color::BLACK)   // Jeśli prawe dziecko brata jest czarne
+                {                                                       // przekoloruj węzły
+                    rightSibling->left->color = Node::Color::BLACK;     // i dokonaj obrotu wokół brata
+                    rightSibling->color = Node::Color::RED;             //
+                    RightRotate(rightSibling);                          //
+                    rightSibling = node->parent->right;                 //
                 }
-                rightSibling->color = node->parent->color;
-                node->parent->color = Node::Color::BLACK;
-                rightSibling->right->color = Node::Color::BLACK;
-                LeftRotate(node->parent);
-                node = Root();
+                rightSibling->color = node->parent->color;              // przekoloruj węzły
+                node->parent->color = Node::Color::BLACK;               // i dokonaj obrotu wokół rodzica
+                rightSibling->right->color = Node::Color::BLACK;        //
+                LeftRotate(node->parent);                               //
+                node = Root();                                          //
             }
         }
-        else
+        else                                                            // Jeśli węzeł jest prawym dzieckiem i...
         {
             Node* leftSibling = node->parent->left;
-            if (leftSibling->color == Node::Color::RED)
-            {
-                leftSibling->color = Node::Color::BLACK;
-                node->parent->color = Node::Color::RED;
-                RightRotate(node->parent);
-                leftSibling = node->parent->left;
+            if (leftSibling->color == Node::Color::RED)                 // Jeśli brat jest czerwony
+            {                                                           // przekoloruj węzły
+                leftSibling->color = Node::Color::BLACK;                // i dokonaj obrotu wokół rodzica
+                node->parent->color = Node::Color::RED;                 //
+                RightRotate(node->parent);                              //
+                leftSibling = node->parent->left;                       //
             }
 
-            if (leftSibling->right->color == Node::Color::BLACK && leftSibling->left->color == Node::Color::BLACK)
-            {
-                leftSibling->color = Node::Color::RED;
-                node = node->parent;
+            if (leftSibling->right->color == Node::Color::BLACK &&      // Jeśli oboje dzieci brata są czarne
+                leftSibling->left->color  == Node::Color::BLACK)        // przekoloruj brata
+            {                                                           //
+                leftSibling->color = Node::Color::RED;                  //
+                node = node->parent;                                    //
             }
-            else
+            else                                                        // Jeśli któreś z dzieci brata jest czerwone
             {
-                if (leftSibling->left->color == Node::Color::BLACK)
-                {
-                    leftSibling->right->color = Node::Color::BLACK;
-                    leftSibling->color = Node::Color::RED;
-                    LeftRotate(leftSibling);
-                    leftSibling = node->parent->left;
+                if (leftSibling->left->color == Node::Color::BLACK)     // Jeśli prawe dziecko brata jest czarne
+                {                                                       // przekoloruj węzły
+                    leftSibling->right->color = Node::Color::BLACK;     // i dokonaj obrotu wokół brata
+                    leftSibling->color = Node::Color::RED;              //
+                    LeftRotate(leftSibling);                            //
+                    leftSibling = node->parent->left;                   //
                 }
-                leftSibling->color = node->parent->color;
-                node->parent->color = Node::Color::BLACK;
-                leftSibling->left->color = Node::Color::BLACK;
-                RightRotate(node->parent);
-                node = Root();
+                leftSibling->color = node->parent->color;               // przekoloruj węzły
+                node->parent->color = Node::Color::BLACK;               // i dokonaj obrotu wokół rodzica
+                leftSibling->left->color = Node::Color::BLACK;          //
+                RightRotate(node->parent);                              //
+                node = Root();                                          //
             }
         }
     }
@@ -589,9 +591,9 @@ void RedBlackTree::Serialize(std::ostream& os, Node* node) const
     }
 }
 
-RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node, size_t& size)
+RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node, size_t& sizeOfTree)
 {
-    if (!is.good() || size == 0)
+    if (!is.good() || sizeOfTree == 0)
     {
         return NIL;
     }
@@ -602,11 +604,11 @@ RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node, size
         return NIL;
     }
     Node* newNode = MakeNode(static_cast<DataType>(value));
-    size--;
+    sizeOfTree--;
 
     newNode->parent = node;
-    newNode->left   = Deserialize(is, newNode, size);
-    newNode->right  = Deserialize(is, newNode, size);
+    newNode->left   = Deserialize(is, newNode, sizeOfTree);
+    newNode->right  = Deserialize(is, newNode, sizeOfTree);
 
     return newNode;
 }

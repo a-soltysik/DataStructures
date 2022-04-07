@@ -90,7 +90,7 @@ public:
 
     void ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const;
     void Serialize(std::ostream& os, Node* node) const;
-    [[nodiscard]] Node* Deserialize(std::istream& is, Node* node, size_t& size);
+    [[nodiscard]] Node* Deserialize(std::istream& is, Node* node, size_t& sizeOfTree);
 
     Node* NIL = MakeNil();
     size_t size = 0u;

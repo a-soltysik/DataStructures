@@ -1,4 +1,4 @@
-#include "Container/List/List.h"
+#include "Containers/List.h"
 #include "Utils/Parser.h"
 
 List::List(std::initializer_list<DataType> initList)
@@ -463,13 +463,13 @@ std::string List::ToString() const
 
 std::ostream& operator<<(std::ostream& os, const List& list)
 {
-    if (!os.good())
+    if (os.fail())
     {
         return os;
     }
     os << list.Size() << "\n";
     List::Node* iterator = list.front;
-    while (iterator != nullptr && os.good())
+    while (iterator != nullptr && !os.fail())
     {
         os << iterator->value << " ";
         iterator = iterator->next;
@@ -479,13 +479,13 @@ std::ostream& operator<<(std::ostream& os, const List& list)
 
 std::istream& operator>>(std::istream& is, List& list)
 {
-    if (!is.good())
+    if (is.fail())
     {
         return is;
     }
     size_t size;
     is >> size;
-    for (size_t i = 0u; i < size && is.good(); i++)
+    for (size_t i = 0u; i < size && !is.fail(); i++)
     {
         List::DataType value;
         is >> value;

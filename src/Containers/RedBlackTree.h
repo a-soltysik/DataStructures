@@ -1,8 +1,6 @@
 #pragma once
 
 #include <istream>
-#include <optional>
-#include <iterator>
 
 struct RedBlackTreeIterator;
 struct RedBlackTreeConstIterator;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "App/Manager/Manager.h"
-#include "Settings.h"
+#include "App/Managers/Manager.h"
+#include "App/Settings.h"
 
-class BenchmarkManager : public Manager
+class ContainerBenchmarkManager : public Manager
 {
 public:
     using Manager::Manager;

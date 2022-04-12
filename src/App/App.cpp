@@ -1,19 +1,25 @@
 #include "App/App.h"
 
-#include "Container/DynamicArray/DynamicArray.h"
-#include "Container/List/List.h"
-#include "Container/RedBlackTree/RedBlackTree.h"
-#include "Container/Heap/Heap.h"
-#include "Container/AvlTree/AvlTree.h"
+#include "Containers/DynamicArray.h"
+#include "Containers/List.h"
+#include "Containers/RedBlackTree.h"
+#include "Containers/Heap.h"
+#include "Containers/AvlTree.h"
 
-#include "App/Manager/LinearContainerManager.h"
-#include "App/Manager/TreeContainerManager.h"
-#include "App/Manager/BenchmarkManager.h"
+#include "App/Managers/ContainerManagers/LinearContainerManager.h"
+#include "App/Managers/ContainerManagers/TreeContainerManager.h"
+#include "App/Managers/ContainerManagers/ContainerBenchmarkManager.h"
 
 #include "Utils/Timer.h"
 
+#include <iostream>
+
 int32_t App::Run()
 {
+    AvlTree tree;
+    for (auto a : tree) {
+        std::cout << a;
+    }
     Utils::SetUtf8();
 
     try
@@ -86,7 +92,7 @@ void App::MainMenu()
             ContainerMenu();
             break;
         case 2:
-            manager = std::make_unique<BenchmarkManager>();
+            manager = std::make_unique<ContainerBenchmarkManager>();
             manager->Menu();
             break;
         default:

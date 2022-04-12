@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Container/DynamicArray/DynamicArray.h"
+#include "Containers/DynamicArray.h"
 #include "Utils/Utils.h"
 
 class DynamicArrayTest : public testing::Test

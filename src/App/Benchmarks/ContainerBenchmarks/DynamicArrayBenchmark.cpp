@@ -1,8 +1,8 @@
-#include "Benchmark/DynamicArray/Benchmark.h"
-#include "Container/DynamicArray/DynamicArray.h"
+#include "App/Benchmarks/ContainerBenchmarks/DynamicArrayBenchmark.h"
+#include "Containers/DynamicArray.h"
 #include "Utils/Utils.h"
 #include "Utils/Timer.h"
-#include "Settings.h"
+#include "App/Settings.h"
 
 #include <vector>
 #include <algorithm>

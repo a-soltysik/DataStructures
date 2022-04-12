@@ -1,8 +1,8 @@
-#include "Benchmark/AvlTree/Benchmark.h"
-#include "Container/AvlTree/AvlTree.h"
+#include "App/Benchmarks/ContainerBenchmarks/AvlTreeBenchmark.h"
+#include "Containers/AvlTree.h"
 #include "Utils/Utils.h"
 #include "Utils/Timer.h"
-#include "Settings.h"
+#include "App/Settings.h"
 
 #include <map>
 

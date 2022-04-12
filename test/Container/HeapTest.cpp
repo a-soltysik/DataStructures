@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Container/Heap/Heap.h"
+#include "Containers/Heap.h"
 #include "Utils/Utils.h"
 
 #include <algorithm>

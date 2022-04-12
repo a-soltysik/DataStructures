@@ -2,12 +2,11 @@
 
 #include "Utils/Parser.h"
 
-#include <filesystem>
+#include <fstream>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
-
 
 namespace Utils
 {
@@ -19,9 +18,8 @@ namespace Utils
     void SetUtf8();
 
     [[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
-    [[nodiscard]] std::filesystem::path GetPathFromResources(const std::filesystem::path& path);
 
-    [[nodiscard]] uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+    [[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
     /**
     *  Indicates that value T can be moved (own implementation of std::move)
@@ -48,7 +46,7 @@ namespace Utils
     [[nodiscard]] constexpr const T& Max(const T& val1, const T& val2) noexcept;
 
     template<typename T>
-    [[nodiscard]] std::optional<T> getInput(std::istream& is);
+    [[nodiscard]] std::optional<T> getInput(std::istream& is, bool isEofAcceptable);
 
 
     /**
@@ -113,7 +111,7 @@ namespace Utils
         {
             is >> value;
         }
-        if (is.good())
+        if (!is.fail())
         {
             return value;
         }

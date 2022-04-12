@@ -1,4 +1,4 @@
-﻿#include "Container/DynamicArray/DynamicArray.h"
+﻿#include "Containers/DynamicArray.h"
 #include "Utils/Parser.h"
 
 #include <cstring>
@@ -327,12 +327,12 @@ std::string DynamicArray::ToString() const
 
 std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
 {
-    if (!os.good())
+    if (!os.fail())
     {
         return os;
     }
     os << array.Size() << "\n";
-    for (size_t i = 0u; i < array.Size() && os.good(); i++)
+    for (size_t i = 0u; i < array.Size() && !os.fail(); i++)
     {
         os << array[i] << " ";
     }
@@ -341,14 +341,14 @@ std::ostream& operator<<(std::ostream& os, const DynamicArray& array)
 
 std::istream& operator>>(std::istream& is, DynamicArray& array)
 {
-    if (!is.good())
+    if (is.fail())
     {
         return is;
     }
     size_t size;
     is >> size;
     array.Resize(size);
-    for (size_t i = 0u; i < size && is.good(); i++)
+    for (size_t i = 0u; i < size && !is.fail(); i++)
     {
         is >> array[i];
     }

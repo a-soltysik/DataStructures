@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Manager/ContainerManager.h"
+#include "App/Managers/ContainerManagers/ContainerManager.h"
 
 template<typename T>
 class LinearContainerManager : public ContainerManager<T>
@@ -12,22 +12,18 @@ public:
 
 protected:
     void AddMenu();
-
     void PushFrontMenu();
-
     void InsertMenu();
-
     void PushBackMenu();
 
     void RemoveMenu();
-
     void RemoveFrontMenu();
-
     void RemoveAtMenu();
-
     void RemoveBackMenu();
 
     void AccessMenu();
+
+    void GetTestContainerMenu();
 };
 
 template<typename T>
@@ -72,7 +68,7 @@ void LinearContainerManager<T>::Menu()
             this->CreateFromFileMenu();
             break;
         case 8:
-            this->GetTestContainerMenu();
+            GetTestContainerMenu();
             break;
         default:
             return;
@@ -245,5 +241,45 @@ void LinearContainerManager<T>::AccessMenu()
     catch (const std::out_of_range& e)
     {
         std::cout << "Podana pozycja wykracza poza zasięg kontenera\n";
+    }
+}
+
+template<typename T>
+void LinearContainerManager<T>::GetTestContainerMenu()
+{
+    std::cout << "Podaj nazwę pliku: ";
+    auto filename = Utils::getInput<std::string>(std::cin);
+
+    if (!filename.has_value())
+    {
+        std::cout << "Błąd odczytu nazwy\n";
+        return;
+    }
+
+    std::ifstream fin(filename.value());
+
+    auto sizeOpt = Utils::getInput<size_t>(fin);
+
+    if (sizeOpt.has_value())
+    {
+        T newContainer;
+
+        size_t size = sizeOpt.value();
+
+        for (size_t i = 0; i < size; i++)
+        {
+            auto value = Utils::getInput<typename T::DataType>(fin);
+            if (!value.has_value())
+            {
+                std::cout << "Błąd odczytu danych\n";
+                return;
+            }
+            newContainer.PushBack(value.value());
+        }
+        this->container = newContainer;
+    }
+    else
+    {
+        std::cout << "Błąd odczytu danych\n";
     }
 }

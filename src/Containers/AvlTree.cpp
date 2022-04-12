@@ -1,4 +1,4 @@
-#include "Container/AvlTree/AvlTree.h"
+#include "Containers/AvlTree.h"
 
 #include "Utils/Utils.h"
 
@@ -197,7 +197,7 @@ std::string AvlTree::ToString() const
 
 std::ostream& operator<<(std::ostream& os, const AvlTree& tree)
 {
-    if (!os.good())
+    if (os.fail())
     {
         return os;
     }
@@ -208,7 +208,7 @@ std::ostream& operator<<(std::ostream& os, const AvlTree& tree)
 
 std::istream& operator>>(std::istream& is, AvlTree& tree)
 {
-    if (!is.good())
+    if (is.fail())
     {
         return is;
     }
@@ -551,7 +551,7 @@ void AvlTree::ToString(std::string& result, const std::string& prefix, const Nod
 
 void AvlTree::Serialize(std::ostream& os, AvlTree::Node* node) const
 {
-    if (!os.good())
+    if (os.fail())
     {
         return;
     }
@@ -569,7 +569,7 @@ void AvlTree::Serialize(std::ostream& os, AvlTree::Node* node) const
 
 AvlTree::Node* AvlTree::Deserialize(std::istream& is, AvlTree::Node* node, size_t& sizeOfTree)
 {
-    if (!is.good())
+    if (is.fail())
     {
         return NIL;
     }

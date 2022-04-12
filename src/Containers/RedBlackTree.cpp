@@ -1,4 +1,4 @@
-#include "Container/RedBlackTree/RedBlackTree.h"
+#include "Containers/RedBlackTree.h"
 #include "Utils/Utils.h"
 
 RedBlackTree::RedBlackTree(std::initializer_list<DataType> initList)
@@ -227,7 +227,7 @@ std::string RedBlackTree::ToString() const
 
 std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
 {
-    if (!os.good())
+    if (os.fail())
     {
         return os;
     }
@@ -238,7 +238,7 @@ std::ostream& operator<<(std::ostream& os, const RedBlackTree& tree)
 
 std::istream& operator>>(std::istream& is, RedBlackTree& tree)
 {
-    if (!is.good())
+    if (is.fail())
     {
         return is;
     }
@@ -575,7 +575,7 @@ void RedBlackTree::ToString(std::string& result, const std::string& prefix, cons
 
 void RedBlackTree::Serialize(std::ostream& os, Node* node) const
 {
-    if (!os.good())
+    if (os.fail())
     {
         return;
     }
@@ -593,7 +593,7 @@ void RedBlackTree::Serialize(std::ostream& os, Node* node) const
 
 RedBlackTree::Node* RedBlackTree::Deserialize(std::istream& is, Node* node, size_t& sizeOfTree)
 {
-    if (!is.good() || sizeOfTree == 0)
+    if (is.fail() || sizeOfTree == 0)
     {
         return NIL;
     }

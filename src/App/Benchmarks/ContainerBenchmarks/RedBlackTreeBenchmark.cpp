@@ -1,8 +1,8 @@
-#include "Benchmark/RedBlackTree/Benchmark.h"
-#include "Container/RedBlackTree/RedBlackTree.h"
+#include "App/Benchmarks/ContainerBenchmarks/RedBlackTreeBenchmark.h"
+#include "Containers/RedBlackTree.h"
 #include "Utils/Utils.h"
 #include "Utils/Timer.h"
-#include "Settings.h"
+#include "App/Settings.h"
 
 #include <map>
 

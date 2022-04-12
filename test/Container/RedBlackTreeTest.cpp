@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Container/RedBlackTree/RedBlackTree.h"
+#include "Containers/RedBlackTree.h"
 #include "Utils/Utils.h"
 
 #include <algorithm>

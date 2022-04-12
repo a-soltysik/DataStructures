@@ -1,23 +1,24 @@
-#include "App/Manager/BenchmarkManager.h"
+#include "App/Managers/ContainerManagers/ContainerBenchmarkManager.h"
 
-#include "Benchmark/DynamicArray/Benchmark.h"
-#include "Benchmark/List/Benchmark.h"
-#include "Benchmark/RedBlackTree/Benchmark.h"
-#include "Benchmark/Heap/Benchmark.h"
-#include "Benchmark/AvlTree/Benchmark.h"
+#include "App/Benchmarks/ContainerBenchmarks/DynamicArrayBenchmark.h"
+#include "App/Benchmarks/ContainerBenchmarks/ListBenchmark.h"
+#include "App/Benchmarks/ContainerBenchmarks/RedBlackTreeBenchmark.h"
+#include "App/Benchmarks/ContainerBenchmarks/HeapBenchmark.h"
+#include "App/Benchmarks/ContainerBenchmarks/AvlTreeBenchmark.h"
 
 #include "Utils/Timer.h"
+#include "Utils/Utils.h"
 
-#include <fstream>
 #include <iostream>
+#include <filesystem>
 
-void BenchmarkManager::Menu()
+void ContainerBenchmarkManager::Menu()
 {
     Settings::NUMBER_OF_TESTS = Utils::GetChoiceFromMenu("Podaj liczbę powtórzeń eksperymentów: ", 1, INT32_MAX);
     LocationMenu();
 }
 
-void BenchmarkManager::ContainerMenu(std::ostream& os)
+void ContainerBenchmarkManager::ContainerMenu(std::ostream& os)
 {
     constexpr char MENU[] = "Wybierz tryb:\n"
                             "1. Benchmark tablicy dynamicznej\n"
@@ -69,7 +70,7 @@ void BenchmarkManager::ContainerMenu(std::ostream& os)
     std::cout << "Czas trwania benchmarku: " << timer.GetTimeInSeconds() << "s\n";
 }
 
-void BenchmarkManager::PrepareFileToSave()
+void ContainerBenchmarkManager::PrepareFileToSave()
 {
     std::filesystem::path path;
     uint8_t counter = 0;
@@ -80,7 +81,7 @@ void BenchmarkManager::PrepareFileToSave()
     } while (std::filesystem::exists(std::filesystem::current_path() / path));
 
     std::ofstream fout(path);
-    if (fout.good())
+    if (!fout.fail())
     {
         fout << "Zapisywanie do pliku: " << path << "\n";
         ContainerMenu(fout);
@@ -91,7 +92,7 @@ void BenchmarkManager::PrepareFileToSave()
     }
 }
 
-void BenchmarkManager::LocationMenu()
+void ContainerBenchmarkManager::LocationMenu()
 {
     constexpr char LOCATION_MENU[] = "Wybierz miejsce zapisu wyników:\n"
                                      "1. Konsola\n"

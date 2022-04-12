@@ -1,8 +1,8 @@
-#include "Benchmark/Heap/Benchmark.h"
-#include "Container/Heap/Heap.h"
+#include "App/Benchmarks/ContainerBenchmarks/HeapBenchmark.h"
+#include "Containers/Heap.h"
 #include "Utils/Utils.h"
 #include "Utils/Timer.h"
-#include "Settings.h"
+#include "App/Settings.h"
 
 #include <vector>
 #include <algorithm>

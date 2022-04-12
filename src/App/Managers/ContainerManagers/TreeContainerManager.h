@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Manager/ContainerManager.h"
+#include "App/Managers/ContainerManagers/ContainerManager.h"
 
 template<typename T>
 class TreeContainerManager : public ContainerManager<T>
@@ -13,8 +13,7 @@ public:
 protected:
     void AddMenu();
     void RemoveMenu();
-
-
+    void GetTestContainerMenu();
 };
 
 template<typename T>
@@ -55,7 +54,7 @@ void TreeContainerManager<T>::Menu()
             this->CreateFromFileMenu();
             break;
         case 7:
-            this->GetTestContainerMenu();
+            GetTestContainerMenu();
             break;
         default:
             return;
@@ -89,4 +88,44 @@ void TreeContainerManager<T>::RemoveMenu()
         return;
     }
     this->container.Remove(number.value());
+}
+
+template<typename T>
+void TreeContainerManager<T>::GetTestContainerMenu()
+{
+    std::cout << "Podaj nazwę pliku: ";
+    auto filename = Utils::getInput<std::string>(std::cin);
+
+    if (!filename.has_value())
+    {
+        std::cout << "Błąd odczytu nazwy\n";
+        return;
+    }
+
+    std::ifstream fin(filename.value());
+
+    auto sizeOpt = Utils::getInput<size_t>(fin);
+
+    if (sizeOpt.has_value())
+    {
+        T newContainer;
+
+        size_t size = sizeOpt.value();
+
+        for (size_t i = 0; i < size; i++)
+        {
+            auto value = Utils::getInput<typename T::DataType>(fin);
+            if (!value.has_value())
+            {
+                std::cout << "Błąd odczytu danych\n";
+                return;
+            }
+            newContainer.Insert(value.value());
+        }
+        this->container = newContainer;
+    }
+    else
+    {
+        std::cout << "Błąd odczytu danych\n";
+    }
 }

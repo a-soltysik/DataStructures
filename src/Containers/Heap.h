@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Container/DynamicArray/DynamicArray.h"
+#include "Containers/DynamicArray.h"
 
 class Heap
 {

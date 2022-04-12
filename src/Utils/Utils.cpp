@@ -1,4 +1,4 @@
-#include "Utils.h"
+#include "Utils/Utils.h"
 
 #include <random>
 #include <iostream>
@@ -21,20 +21,15 @@ namespace Utils
         return distribution(rng);
     }
 
-    std::filesystem::path GetPathFromResources(const std::filesystem::path& path)
-    {
-        return std::filesystem::path("Resources") / path;
-    }
-
-    uint8_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max)
+    uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max)
     {
         bool wrongChoice;
-        uint8_t choiceValue;
+        uint32_t choiceValue;
 
         do
         {
             std::cout << menu;
-            auto choice = Utils::getInput<uint8_t>(std::cin);
+            auto choice = Utils::getInput<decltype(choiceValue)>(std::cin);
             wrongChoice = !choice.has_value() || (choice.has_value() && (choice.value() < min || choice.value() > max));
             if (wrongChoice)
             {

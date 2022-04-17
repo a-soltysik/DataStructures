@@ -8,7 +8,7 @@
 class RedBlackTreeTest : public testing::Test
 {
 protected:
-    RedBlackTree tree;
+    RedBlackTree<int32_t> tree;
 };
 
 TEST_F(RedBlackTreeTest, InsertTest)
@@ -166,12 +166,12 @@ TEST_F(RedBlackTreeTest, FindTest)
 
 TEST_F(RedBlackTreeTest, ClearTest)
 {
-    for (int32_t i = 0u; i < 23521; i++)
+    for (int32_t i = 0u; i < 12345; i++)
     {
         tree.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
     }
-    ASSERT_EQ(tree.Size(), 23521);
-    ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
+    ASSERT_EQ(tree.Size(), 12345);
 
     tree.Clear();
     ASSERT_EQ(tree.Size(), 0);

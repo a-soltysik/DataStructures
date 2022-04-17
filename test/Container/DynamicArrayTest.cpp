@@ -6,7 +6,7 @@
 class DynamicArrayTest : public testing::Test
 {
 protected:
-    DynamicArray array;
+    DynamicArray<int32_t> array;
 };
 
 TEST_F(DynamicArrayTest, PushBackTest)

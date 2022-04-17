@@ -7,15 +7,7 @@ FetchContent_Declare(
 set (gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-set(CONTAINER_DIR ${DS_SRC_DIR}/Containers)
-
 set(DS_TEST_SRC_LIST
-    ${CONTAINER_DIR}/DynamicArray.cpp
-    ${CONTAINER_DIR}/List.cpp
-    ${CONTAINER_DIR}/RedBlackTree.cpp
-    ${CONTAINER_DIR}/Heap.cpp
-    ${CONTAINER_DIR}/AvlTree.cpp
-
     ${DS_SRC_DIR}/Utils/Utils.cpp
     )
 

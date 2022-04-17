@@ -15,8 +15,8 @@ namespace DynamicArrayBenchmark
         int64_t stdVectorTime;
     };
 
-    void FillArray(DynamicArray& array, size_t size);
-    void FillVector(std::vector<DynamicArray::DataType>& vector, size_t size);
+    void FillArray(DynamicArray<Settings::DataType>& array, size_t size);
+    void FillVector(std::vector<Settings::DataType>& vector, size_t size);
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
@@ -57,7 +57,7 @@ namespace DynamicArrayBenchmark
     int64_t FindVectorTest(size_t size);
 
 
-    void FillArray(DynamicArray& array, size_t size)
+    void FillArray(DynamicArray<Settings::DataType>& array, size_t size)
     {
         array.Resize(size);
         for (size_t i = 0u; i < size; i++)
@@ -66,7 +66,7 @@ namespace DynamicArrayBenchmark
         }
     }
 
-    void FillVector(std::vector<DynamicArray::DataType>& vector, size_t size)
+    void FillVector(std::vector<Settings::DataType>& vector, size_t size)
     {
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)
@@ -116,7 +116,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -135,7 +135,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -175,7 +175,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -194,7 +194,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -234,7 +234,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
@@ -254,7 +254,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
             auto middle = testedVector.cbegin() + testedVector.size() / 2;
 
@@ -301,7 +301,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -320,7 +320,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -360,7 +360,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -379,7 +379,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -419,7 +419,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
@@ -439,7 +439,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
             auto middle = testedVector.cbegin() + testedVector.size() / 2;
 
@@ -480,7 +480,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
@@ -500,7 +500,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
             size_t middle = testedVector.size() / 2;
 
@@ -542,7 +542,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray testedArray;
+            DynamicArray<Settings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -562,7 +562,7 @@ namespace DynamicArrayBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<DynamicArray::DataType> testedVector;
+            std::vector<Settings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;

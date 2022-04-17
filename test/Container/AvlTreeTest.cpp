@@ -8,7 +8,7 @@
 class AvlTreeTest : public testing::Test
 {
 protected:
-    AvlTree tree;
+    AvlTree<int32_t> tree;
 };
 
 TEST_F(AvlTreeTest, InsertTest)
@@ -171,9 +171,7 @@ TEST_F(AvlTreeTest, ClearTest)
         tree.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
         ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
     }
-
     ASSERT_EQ(tree.Size(), 12345);
-    ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
 
     tree.Clear();
     ASSERT_EQ(tree.Size(), 0);

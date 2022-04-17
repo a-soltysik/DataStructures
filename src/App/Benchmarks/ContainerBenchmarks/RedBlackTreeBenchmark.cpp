@@ -14,8 +14,8 @@ namespace RedBlackTreeBenchmark
         int64_t mapTime;
     };
 
-    void FillRedBlackTree(RedBlackTree& tree, size_t size);
-    void FillMap(std::map<RedBlackTree::DataType, bool>& map, size_t size);
+    void FillRedBlackTree(RedBlackTree<Settings::DataType>& tree, size_t size);
+    void FillMap(std::map<Settings::DataType, bool>& map, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -32,7 +32,7 @@ namespace RedBlackTreeBenchmark
     int64_t FindRedBlackTreeTest(size_t size);
     int64_t FindMapTest(size_t size);
 
-    void FillRedBlackTree(RedBlackTree& tree, size_t size)
+    void FillRedBlackTree(RedBlackTree<Settings::DataType>& tree, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -40,7 +40,7 @@ namespace RedBlackTreeBenchmark
         }
     }
 
-    void FillMap(std::map<RedBlackTree::DataType, bool>& map, size_t size)
+    void FillMap(std::map<Settings::DataType, bool>& map, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -85,7 +85,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            RedBlackTree testedRedBlackTree;
+            RedBlackTree<Settings::DataType> testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
 
             Utils::Timer timer;
@@ -104,7 +104,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<RedBlackTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;
@@ -151,7 +151,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            RedBlackTree testedRedBlackTree;
+            RedBlackTree<Settings::DataType> testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
             auto min = *testedRedBlackTree.cbegin();
 
@@ -171,7 +171,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<RedBlackTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
             auto min = (*testedMap.cbegin()).first;
 
@@ -213,7 +213,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            RedBlackTree testedRedBlackTree;
+            RedBlackTree<Settings::DataType> testedRedBlackTree;
             FillRedBlackTree(testedRedBlackTree, size);
 
             Utils::Timer timer;
@@ -233,7 +233,7 @@ namespace RedBlackTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<RedBlackTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;

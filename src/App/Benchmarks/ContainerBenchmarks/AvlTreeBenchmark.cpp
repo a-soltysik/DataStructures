@@ -14,8 +14,8 @@ namespace AvlTreeBenchmark
         int64_t mapTime;
     };
 
-    void FillAvlTree(AvlTree& tree, size_t size);
-    void FillMap(std::map<AvlTree::DataType, bool>& map, size_t size);
+    void FillAvlTree(AvlTree<Settings::DataType>& tree, size_t size);
+    void FillMap(std::map<Settings::DataType, bool>& map, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -32,7 +32,7 @@ namespace AvlTreeBenchmark
     int64_t FindAvlTreeTest(size_t size);
     int64_t FindMapTest(size_t size);
 
-    void FillAvlTree(AvlTree& tree, size_t size)
+    void FillAvlTree(AvlTree<Settings::DataType>& tree, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -40,7 +40,7 @@ namespace AvlTreeBenchmark
         }
     }
 
-    void FillMap(std::map<AvlTree::DataType, bool>& map, size_t size)
+    void FillMap(std::map<Settings::DataType, bool>& map, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -85,7 +85,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree testedAvlTree;
+            AvlTree<Settings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
 
             Utils::Timer timer;
@@ -104,7 +104,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<AvlTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;
@@ -151,7 +151,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree testedAvlTree;
+            AvlTree<Settings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
             auto min = *testedAvlTree.cbegin();
 
@@ -171,7 +171,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<AvlTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
             auto min = (*testedMap.cbegin()).first;
 
@@ -213,7 +213,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree testedAvlTree;
+            AvlTree<Settings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
 
             Utils::Timer timer;
@@ -233,7 +233,7 @@ namespace AvlTreeBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::map<AvlTree::DataType, bool> testedMap;
+            std::map<Settings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;

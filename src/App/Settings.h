@@ -4,6 +4,7 @@
 
 struct Settings
 {
+    using DataType = int32_t;
     static constexpr int32_t MAX_VALUE = INT32_MAX;
     static constexpr int32_t MIN_VALUE = INT32_MIN;
 

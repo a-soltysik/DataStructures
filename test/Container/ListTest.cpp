@@ -6,7 +6,7 @@
 class ListTest : public testing::Test
 {
 protected:
-    List list;
+    List<int32_t> list;
 };
 
 TEST_F(ListTest, PushBackTest)

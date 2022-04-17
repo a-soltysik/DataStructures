@@ -16,10 +16,6 @@
 
 int32_t App::Run()
 {
-    AvlTree tree;
-    for (auto a : tree) {
-        std::cout << a;
-    }
     Utils::SetUtf8();
 
     try
@@ -54,19 +50,19 @@ void App::ContainerMenu()
     switch (choice)
     {
     case 1:
-        manager = std::make_unique<LinearContainerManager<DynamicArray>>();
+        manager = std::make_unique<LinearContainerManager<DynamicArray<Settings::DataType>>>();
         break;
     case 2:
-        manager = std::make_unique<LinearContainerManager<List>>();
+        manager = std::make_unique<LinearContainerManager<List<Settings::DataType>>>();
         break;
     case 3:
-        manager = std::make_unique<TreeContainerManager<Heap>>();
+        manager = std::make_unique<TreeContainerManager<Heap<Settings::DataType>>>();
         break;
     case 4:
-        manager = std::make_unique<TreeContainerManager<RedBlackTree>>();
+        manager = std::make_unique<TreeContainerManager<RedBlackTree<Settings::DataType>>>();
         break;
     case 5:
-        manager = std::make_unique<TreeContainerManager<AvlTree>>();
+        manager = std::make_unique<TreeContainerManager<AvlTree<Settings::DataType>>>();
         break;
     default:
         return;

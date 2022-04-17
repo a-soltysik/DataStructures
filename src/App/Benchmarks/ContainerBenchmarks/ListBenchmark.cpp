@@ -15,8 +15,8 @@ namespace ListBenchmark
         int64_t stdListTime;
     };
 
-    void FillList(List& list, size_t size);
-    void FillStdList(std::list<List::DataType>& list, size_t size);
+    void FillList(List<Settings::DataType>& list, size_t size);
+    void FillStdList(std::list<Settings::DataType>& list, size_t size);
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
@@ -56,7 +56,7 @@ namespace ListBenchmark
     int64_t FindListTest(size_t size);
     int64_t FindStdListTest(size_t size);
 
-    void FillList(List& list, size_t size)
+    void FillList(List<Settings::DataType>& list, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -64,7 +64,7 @@ namespace ListBenchmark
         }
     }
 
-    void FillStdList(std::list<List::DataType>& list, size_t size)
+    void FillStdList(std::list<Settings::DataType>& list, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
@@ -108,7 +108,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -127,7 +127,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -167,7 +167,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -186,7 +186,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -226,7 +226,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
@@ -246,7 +246,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -294,7 +294,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -313,7 +313,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -353,7 +353,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -372,7 +372,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -412,7 +412,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
@@ -432,7 +432,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -474,7 +474,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
@@ -494,7 +494,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -537,7 +537,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            List testedList;
+            List<Settings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -557,7 +557,7 @@ namespace ListBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::list<List::DataType> testedStdList;
+            std::list<Settings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;

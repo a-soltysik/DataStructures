@@ -8,7 +8,7 @@
 class HeapTest : public testing::Test
 {
 protected:
-    Heap heap;
+    Heap<int32_t> heap;
 };
 
 TEST_F(HeapTest, InsertTest)

@@ -15,8 +15,8 @@ namespace HeapBenchmark
         int64_t vectorTime;
     };
 
-    void FillHeap(Heap& heap, size_t size);
-    void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size);
+    void FillHeap(Heap<Settings::DataType>& heap, size_t size);
+    void FillVectorHeap(std::vector<Settings::DataType>& vector, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -33,9 +33,9 @@ namespace HeapBenchmark
     int64_t FindHeapTest(size_t size);
     int64_t FindVectorHeapTest(size_t size);
 
-    void FillHeap(Heap& heap, size_t size)
+    void FillHeap(Heap<Settings::DataType>& heap, size_t size)
     {
-        DynamicArray array;
+        DynamicArray<Settings::DataType> array;
         array.Resize(size);
         for (size_t i = 0u; i < size; i++)
         {
@@ -44,7 +44,7 @@ namespace HeapBenchmark
         heap.Assign(Utils::Move(array));
     }
 
-    void FillVectorHeap(std::vector<Heap::DataType>& vector, size_t size)
+    void FillVectorHeap(std::vector<Settings::DataType>& vector, size_t size)
     {
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)
@@ -90,7 +90,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            Heap testedHeap;
+            Heap<Settings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
@@ -109,7 +109,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Heap::DataType> testedVectorHeap;
+            std::vector<Settings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
@@ -157,7 +157,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            Heap testedHeap;
+            Heap<Settings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
@@ -176,7 +176,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Heap::DataType> testedVectorHeap;
+            std::vector<Settings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
@@ -218,7 +218,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            Heap testedHeap;
+            Heap<Settings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
@@ -238,7 +238,7 @@ namespace HeapBenchmark
         int64_t averageTime = 0u;
         for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Heap::DataType> testedVectorHeap;
+            std::vector<Settings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;

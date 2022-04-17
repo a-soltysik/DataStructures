@@ -21,33 +21,36 @@ namespace Utils
 
     [[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
-    /**
-    *  Indicates that value T can be moved (own implementation of std::move)
-    */
     template<typename T>
-    [[nodiscard]] constexpr T&& Move(T&& val) noexcept;
+    struct RemoveReference { using Type = T; };
+
+    template<typename T>
+    struct RemoveReference<T&> { using Type = T; };
+
+    template<typename T>
+    struct RemoveReference<T&&> { using Type = T; };
 
     /**
     *  Indicates that value T can be moved (own implementation of std::move)
     */
     template<typename T>
-    [[nodiscard]] constexpr T&& Move(T& val) noexcept;
+    [[nodiscard]] constexpr decltype(auto) Move(T&& val) noexcept;
 
     /**
     *  Swaps two values (own implementation of std::swap)
     */
     template<typename T>
-    constexpr void Swap(T& val1, T& val2) noexcept;
+    constexpr void Swap(T& val1, T& val2) noexcept(std::is_nothrow_move_constructible_v<T> &&
+                                                   std::is_nothrow_move_assignable_v<T>);
 
     /**
     *  Retuns maximum of two values (own implementation of std::max)
     */
     template<typename T>
-    [[nodiscard]] constexpr const T& Max(const T& val1, const T& val2) noexcept;
+    [[nodiscard]] constexpr const T& Max(const T& val1, const T& val2) noexcept(noexcept(val1 > val2));
 
     template<typename T>
     [[nodiscard]] std::optional<T> getInput(std::istream& is, bool isEofAcceptable);
-
 
     /**
      * DEFINITIONS
@@ -55,19 +58,15 @@ namespace Utils
 
 
     template<typename T>
-    constexpr T&& Move(T&& val) noexcept
+    constexpr decltype(auto) Move(T&& val) noexcept
     {
-        return static_cast<T&&>(val);
+        using ReturnType = typename RemoveReference<T>::Type &&;
+        return static_cast<ReturnType>(val);
     }
 
     template<typename T>
-    constexpr T&& Move(T& val) noexcept
-    {
-        return static_cast<T&&>(val);
-    }
-
-    template<typename T>
-    constexpr void Swap(T& val1, T& val2) noexcept
+    constexpr void Swap(T& val1, T& val2) noexcept(std::is_nothrow_move_constructible_v<T> &&
+                                                   std::is_nothrow_move_assignable_v<T>)
     {
         T tmp = Move(val1);
         val1 = Move(val2);
@@ -75,7 +74,7 @@ namespace Utils
     }
 
     template<typename T>
-    constexpr const T& Max(const T& val1, const T& val2) noexcept
+    constexpr const T& Max(const T& val1, const T& val2) noexcept(noexcept(val1 > val2))
     {
         return val1 > val2 ? val1 : val2;
     }

@@ -19,15 +19,14 @@ public:
     explicit Heap(const DynamicArray<T>& array);
 
     void Assign(const DynamicArray<T>& array);
-    void Insert(DataType value);
-    bool Remove(DataType value);
+    void Insert(const DataType& value);
+    bool Remove(const DataType& value);
     void Pop();
     void Clear();
 
-    [[nodiscard]] Iterator Find(DataType value) noexcept;
-    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
+    [[nodiscard]] Iterator Find(const DataType& value) noexcept;
+    [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
 
-    [[nodiscard]] DataType& Max();
     [[nodiscard]] const DataType& Max() const;
 
     [[nodiscard]] const DynamicArray<T>& Array() const;
@@ -90,7 +89,7 @@ void Heap<T>::Assign(const DynamicArray<T>& array)
 }
 
 template<typename T>
-void Heap<T>::Insert(DataType value)
+void Heap<T>::Insert(const DataType& value)
 {
     data.PushBack(value);
     size_t position = data.Size() - 1;
@@ -105,7 +104,7 @@ void Heap<T>::Insert(DataType value)
 }
 
 template<typename T>
-bool Heap<T>::Remove(DataType value)
+bool Heap<T>::Remove(const DataType& value)
 {
     size_t position = Find(value, 0u);
 
@@ -125,13 +124,13 @@ void Heap<T>::Pop()
 }
 
 template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::Find(DataType value) const noexcept
+typename Heap<T>::ConstIterator Heap<T>::Find(const DataType& value) const noexcept
 {
     return data.Find(value);
 }
 
 template<typename T>
-typename Heap<T>::Iterator Heap<T>::Find(DataType value) noexcept
+typename Heap<T>::Iterator Heap<T>::Find(const DataType& value) noexcept
 {
     return data.Find(value);
 }
@@ -140,12 +139,6 @@ template<typename T>
 const DynamicArray<T>& Heap<T>::Array() const
 {
     return data;
-}
-
-template<typename T>
-typename Heap<T>::DataType& Heap<T>::Max()
-{
-    return data[0];
 }
 
 template<typename T>

@@ -32,12 +32,12 @@ public:
     [[nodiscard]] DataType& operator[](size_t position);
     [[nodiscard]] const DataType& operator[](size_t position) const;
 
-    void PushBack(DataType value);
-    void PushFront(DataType value);
-    Iterator Insert(size_t position, DataType value);
-    Iterator Insert(ConstIterator iterator, DataType value);
+    void PushBack(const DataType& value);
+    void PushFront(const DataType& value);
+    Iterator Insert(size_t position, const DataType& value);
+    Iterator Insert(ConstIterator iterator, const DataType& value);
 
-    bool Remove(DataType value);
+    bool Remove(const DataType& value);
     void RemoveBack();
     void RemoveFront();
     void RemoveAt(size_t position);
@@ -46,8 +46,8 @@ public:
     void Clear();
     void Resize(size_t newSize);
 
-    [[nodiscard]] Iterator Find(DataType value) noexcept;
-    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
+    [[nodiscard]] Iterator Find(const DataType& value) noexcept;
+    [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 
@@ -67,7 +67,7 @@ public:
     friend std::istream& operator>>(std::istream& is, DynamicArray<U>& array);
 
 private:
-    [[nodiscard]] DataType* BasicFind(DataType value) const noexcept;
+    [[nodiscard]] DataType* BasicFind(const DataType& value) const noexcept;
 
     DataType* data = nullptr;
     size_t size = 0u;
@@ -259,7 +259,7 @@ const typename DynamicArray<T>::DataType& DynamicArray<T>::operator[](size_t pos
 }
 
 template<typename T>
-void DynamicArray<T>::PushBack(DataType value)
+void DynamicArray<T>::PushBack(const DataType& value)
 {
     DataType* newData = new DataType[size + 1u];
 
@@ -274,7 +274,7 @@ void DynamicArray<T>::PushBack(DataType value)
 }
 
 template<typename T>
-void DynamicArray<T>::PushFront(DataType value)
+void DynamicArray<T>::PushFront(const DataType& value)
 {
     DataType* newData = new DataType[size + 1u];
 
@@ -288,7 +288,7 @@ void DynamicArray<T>::PushFront(DataType value)
 }
 
 template<typename T>
-typename DynamicArray<T>::Iterator DynamicArray<T>::Insert(size_t position, DataType value)
+typename DynamicArray<T>::Iterator DynamicArray<T>::Insert(size_t position, const DataType& value)
 {
     if (position > size)
     {
@@ -319,13 +319,13 @@ typename DynamicArray<T>::Iterator DynamicArray<T>::Insert(size_t position, Data
 }
 
 template<typename T>
-typename DynamicArray<T>::Iterator DynamicArray<T>::Insert(ConstIterator iterator, DataType value)
+typename DynamicArray<T>::Iterator DynamicArray<T>::Insert(ConstIterator iterator, const DataType& value)
 {
     return Insert(iterator - cbegin(), value);
 }
 
 template<typename T>
-bool DynamicArray<T>::Remove(DataType value)
+bool DynamicArray<T>::Remove(const DataType& value)
 {
     auto positionToRemove = Find(value);
 
@@ -425,13 +425,13 @@ void DynamicArray<T>::Clear()
 }
 
 template<typename T>
-typename DynamicArray<T>::ConstIterator DynamicArray<T>::Find(DataType value) const noexcept
+typename DynamicArray<T>::ConstIterator DynamicArray<T>::Find(const DataType& value) const noexcept
 {
     return BasicFind(value);
 }
 
 template<typename T>
-typename DynamicArray<T>::Iterator DynamicArray<T>::Find(DataType value) noexcept
+typename DynamicArray<T>::Iterator DynamicArray<T>::Find(const DataType& value) noexcept
 {
     return BasicFind(value);
 }
@@ -538,7 +538,7 @@ std::istream& operator>>(std::istream& is, DynamicArray<T>& array)
 }
 
 template<typename T>
-typename DynamicArray<T>::DataType* DynamicArray<T>::BasicFind(DataType value) const noexcept
+typename DynamicArray<T>::DataType* DynamicArray<T>::BasicFind(const DataType& value) const noexcept
 {
     DataType* it = data;
     DataType* last = data + size;

@@ -34,12 +34,12 @@ public:
     [[nodiscard]] DataType& operator[](size_t position);
     [[nodiscard]] const DataType& operator[](size_t position) const;
 
-    void PushBack(DataType value);
-    void PushFront(DataType value);
-    Iterator Insert(size_t position, DataType value);
-    Iterator Insert(ConstIterator iterator, DataType value);
+    void PushBack(const DataType& value);
+    void PushFront(const DataType& value);
+    Iterator Insert(size_t position, const DataType& value);
+    Iterator Insert(ConstIterator iterator, const DataType& value);
 
-    bool Remove(DataType value);
+    bool Remove(const DataType& value);
     void RemoveBack();
     void RemoveFront();
     void RemoveAt(size_t positionToRemove);
@@ -47,8 +47,8 @@ public:
 
     void Clear();
 
-    [[nodiscard]] ConstIterator Find(DataType value) const noexcept;
-    [[nodiscard]] Iterator Find(DataType value) noexcept;
+    [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
+    [[nodiscard]] Iterator Find(const DataType& value) noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 
@@ -74,7 +74,7 @@ private:
         Node* next;
     };
 
-    void AddFirstElement(DataType value);
+    void AddFirstElement(const DataType& value);
     void RemoveLastElement();
     [[nodiscard]] Node* GetNodeAt(size_t position) const noexcept;
 
@@ -243,7 +243,7 @@ const typename List<T>::DataType& List<T>::operator[](size_t position) const
 }
 
 template<typename T>
-void List<T>::PushBack(DataType value)
+void List<T>::PushBack(const DataType& value)
 {
     if (size == 0u)
     {
@@ -260,7 +260,7 @@ void List<T>::PushBack(DataType value)
 }
 
 template<typename T>
-void List<T>::PushFront(DataType value)
+void List<T>::PushFront(const DataType& value)
 {
     if (size == 0u)
     {
@@ -277,7 +277,7 @@ void List<T>::PushFront(DataType value)
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::Insert(size_t position, DataType value)
+typename List<T>::Iterator List<T>::Insert(size_t position, const DataType& value)
 {
     if (position > size)
     {
@@ -314,7 +314,7 @@ typename List<T>::Iterator List<T>::Insert(size_t position, DataType value)
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::Insert(ConstIterator iterator, DataType value)
+typename List<T>::Iterator List<T>::Insert(ConstIterator iterator, const DataType& value)
 {
     if (size == 0u)
     {
@@ -345,7 +345,7 @@ typename List<T>::Iterator List<T>::Insert(ConstIterator iterator, DataType valu
 }
 
 template<typename T>
-bool List<T>::Remove(DataType value)
+bool List<T>::Remove(const DataType& value)
 {
     Node* toDelete = front;
 
@@ -495,7 +495,7 @@ void List<T>::Clear()
 }
 
 template<typename T>
-typename List<T>::ConstIterator List<T>::Find(DataType value) const noexcept
+typename List<T>::ConstIterator List<T>::Find(const DataType& value) const noexcept
 {
     Node* iterator = front;
 
@@ -507,7 +507,7 @@ typename List<T>::ConstIterator List<T>::Find(DataType value) const noexcept
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::Find(DataType value) noexcept
+typename List<T>::Iterator List<T>::Find(const DataType& value) noexcept
 {
     Node* iterator = front;
 
@@ -561,7 +561,7 @@ typename List<T>::ConstIterator List<T>::cend() const noexcept
 }
 
 template<typename T>
-void List<T>::AddFirstElement(DataType value)
+void List<T>::AddFirstElement(const DataType& value)
 {
     Node* newNode = new Node {};
     newNode->value = value;

@@ -31,15 +31,15 @@ public:
     RedBlackTree& operator=(RedBlackTree&& rhs) noexcept;
     ~RedBlackTree();
 
-    Iterator Insert(DataType value);
-    bool Remove(DataType value);
+    Iterator Insert(const DataType& value);
+    bool Remove(const DataType& value);
     void Clear();
 
-    [[nodiscard]] ConstIterator Find(DataType value) const;
-    [[nodiscard]] Iterator Find(DataType value);
+    [[nodiscard]] ConstIterator Find(const DataType& value) const;
+    [[nodiscard]] Iterator Find(const DataType& value);
 
-    [[nodiscard]] DataType Min() const;
-    [[nodiscard]] DataType Max() const;
+    [[nodiscard]] const DataType& Min() const;
+    [[nodiscard]] const DataType& Max() const;
 
     [[nodiscard]] size_t Size() const;
 
@@ -215,7 +215,7 @@ RedBlackTree<T>::~RedBlackTree()
 }
 
 template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(DataType value)
+typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(const DataType& value)
 {
     Node* newNode = MakeNode(value);
     Node* parent = NIL;
@@ -256,7 +256,7 @@ typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(DataType value)
 }
 
 template<typename T>
-bool RedBlackTree<T>::Remove(DataType value)
+bool RedBlackTree<T>::Remove(const DataType& value)
 {
     Node* nodeToRemove = Find(value, Root());
     if (nodeToRemove == NIL)
@@ -325,25 +325,25 @@ void RedBlackTree<T>::Clear()
 }
 
 template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::Find(DataType value) const
+typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::Find(const DataType& value) const
 {
     return {this, Find(value, Root())};
 }
 
 template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::Find(DataType value)
+typename RedBlackTree<T>::Iterator RedBlackTree<T>::Find(const DataType& value)
 {
     return {this, Find(value, Root())};
 }
 
 template<typename T>
-typename RedBlackTree<T>::DataType RedBlackTree<T>::Min() const
+const typename RedBlackTree<T>::DataType& RedBlackTree<T>::Min() const
 {
     return Min(Root())->value;
 }
 
 template<typename T>
-typename RedBlackTree<T>::DataType RedBlackTree<T>::Max() const
+const typename RedBlackTree<T>::DataType& RedBlackTree<T>::Max() const
 {
     return Max(Root())->value;
 }

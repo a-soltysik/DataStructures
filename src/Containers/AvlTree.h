@@ -31,15 +31,15 @@ public:
     AvlTree& operator=(AvlTree&& rhs) noexcept;
     ~AvlTree();
 
-    Iterator Insert(DataType value);
-    bool Remove(DataType value);
+    Iterator Insert(const DataType& value);
+    bool Remove(const DataType& value);
     void Clear();
 
-    [[nodiscard]] ConstIterator Find(DataType value) const;
-    [[nodiscard]] Iterator Find(DataType value);
+    [[nodiscard]] ConstIterator Find(const DataType& value) const;
+    [[nodiscard]] Iterator Find(const DataType& value);
 
-    [[nodiscard]] DataType Min() const;
-    [[nodiscard]] DataType Max() const;
+    [[nodiscard]] const DataType& Min() const;
+    [[nodiscard]] const DataType& Max() const;
 
     [[nodiscard]] size_t Size() const noexcept;
 
@@ -80,7 +80,7 @@ private:
     Node* RightRotate(Node* node) const noexcept;
 
     [[nodiscard]] static Node* MakeNil();
-    [[nodiscard]] Node* MakeNode(DataType value) const;
+    [[nodiscard]] Node* MakeNode(const DataType& value) const;
 
     void SetRoot(Node* node) const noexcept;
     [[nodiscard]] Node* Root() const noexcept;
@@ -217,7 +217,7 @@ AvlTree<T>::~AvlTree()
 }
 
 template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::Insert(DataType value)
+typename AvlTree<T>::Iterator AvlTree<T>::Insert(const DataType& value)
 {
     Node* newNode = MakeNode(value);
     Node* parent = NIL;
@@ -254,7 +254,7 @@ typename AvlTree<T>::Iterator AvlTree<T>::Insert(DataType value)
 }
 
 template<typename T>
-bool AvlTree<T>::Remove(DataType value)
+bool AvlTree<T>::Remove(const DataType& value)
 {
     Node* nodeToRemove = Find(value, Root());
     if (nodeToRemove == NIL)
@@ -296,25 +296,25 @@ void AvlTree<T>::Clear()
 }
 
 template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::Find(DataType value) const
+typename AvlTree<T>::ConstIterator AvlTree<T>::Find(const DataType& value) const
 {
     return {this, Find(value, Root())};
 }
 
 template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::Find(DataType value)
+typename AvlTree<T>::Iterator AvlTree<T>::Find(const DataType& value)
 {
     return {this, Find(value, Root())};
 }
 
 template<typename T>
-typename AvlTree<T>::DataType AvlTree<T>::Min() const
+const typename AvlTree<T>::DataType& AvlTree<T>::Min() const
 {
     return Min(Root())->value;
 }
 
 template<typename T>
-typename AvlTree<T>::DataType AvlTree<T>::Max() const
+const typename AvlTree<T>::DataType& AvlTree<T>::Max() const
 {
     return Max(Root())->value;
 }
@@ -482,7 +482,7 @@ typename AvlTree<T>::Node* AvlTree<T>::MakeNil()
 }
 
 template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::MakeNode(DataType value) const
+typename AvlTree<T>::Node* AvlTree<T>::MakeNode(const DataType& value) const
 {
     Node* node = new Node {};
 

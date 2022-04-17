@@ -305,7 +305,7 @@ void DynamicArray::Resize(size_t newSize)
 {
     DataType* newData = new DataType[newSize];
 
-    std::memcpy(newData, data, size);
+    std::memcpy(newData, data, size * sizeof(DataType));
     delete[] data;
     data = newData;
     size = newSize;

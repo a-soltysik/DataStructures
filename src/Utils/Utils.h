@@ -21,21 +21,6 @@ namespace Utils
 
     [[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
-    template<typename T>
-    struct RemoveReference { using Type = T; };
-
-    template<typename T>
-    struct RemoveReference<T&> { using Type = T; };
-
-    template<typename T>
-    struct RemoveReference<T&&> { using Type = T; };
-
-    /**
-    *  Indicates that value T can be moved (own implementation of std::move)
-    */
-    template<typename T>
-    [[nodiscard]] constexpr decltype(auto) Move(T&& val) noexcept;
-
     /**
     *  Swaps two values (own implementation of std::swap)
     */
@@ -56,21 +41,13 @@ namespace Utils
      * DEFINITIONS
      */
 
-
-    template<typename T>
-    constexpr decltype(auto) Move(T&& val) noexcept
-    {
-        using ReturnType = typename RemoveReference<T>::Type &&;
-        return static_cast<ReturnType>(val);
-    }
-
     template<typename T>
     constexpr void Swap(T& val1, T& val2) noexcept(std::is_nothrow_move_constructible_v<T> &&
                                                    std::is_nothrow_move_assignable_v<T>)
     {
-        T tmp = Move(val1);
-        val1 = Move(val2);
-        val2 = Move(tmp);
+        T tmp = std::move(val1);
+        val1  = std::move(val2);
+        val2  = std::move(tmp);
     }
 
     template<typename T>

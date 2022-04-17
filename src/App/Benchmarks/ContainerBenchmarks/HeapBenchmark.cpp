@@ -41,7 +41,7 @@ namespace HeapBenchmark
         {
             array[i] = Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE);
         }
-        heap.Assign(Utils::Move(array));
+        heap.Assign(array);
     }
 
     void FillVectorHeap(std::vector<Settings::DataType>& vector, size_t size)

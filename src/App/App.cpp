@@ -14,6 +14,8 @@
 
 #include <iostream>
 
+#include "Algorithm/Graphs/UndirectedGraphs/ListGraph.h"
+
 int32_t App::Run()
 {
     Utils::SetUtf8();

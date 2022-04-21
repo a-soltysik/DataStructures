@@ -23,6 +23,7 @@ public:
     DynamicArray() = default;
     explicit DynamicArray(size_t size);
     DynamicArray(std::initializer_list<DataType> initList);
+    DynamicArray(size_t count, const DataType& value);
     DynamicArray(const DynamicArray& rhs);
     DynamicArray(DynamicArray&& rhs) noexcept;
     DynamicArray& operator=(const DynamicArray& rhs);
@@ -170,6 +171,20 @@ DynamicArray<T>::DynamicArray(std::initializer_list<DataType> initList)
     }
     size = initList.size();
 }
+
+template<typename T>
+DynamicArray<T>::DynamicArray(size_t count, const DataType& value)
+{
+    data = new DataType[count];
+
+    for (size_t i = 0; i < count; i++)
+    {
+        data[i] = value;
+    }
+
+    size = count;
+}
+
 
 template<typename T>
 DynamicArray<T>::DynamicArray(const DynamicArray& rhs)

@@ -25,8 +25,8 @@ void TreeContainerManager<T>::Menu()
                             "3. Znajdź element\n"
                             "4. Wyświetl kontener\n"
                             "5. Zapisz kontener do pliku\n"
-                            "6. Odczytaj kontener z pliku\n"
-                            "7. Załaduj testowy kontener\n"
+                            "6. Odczytaj kontener z pliku wygenerowanego przez program\n"
+                            "7. Załaduj testowy kontener z pliku stworzonego przez użytkownika\n"
                             "8. Wróć\n"
                             "> ";
 

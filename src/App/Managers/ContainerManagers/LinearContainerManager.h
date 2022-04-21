@@ -36,8 +36,8 @@ void LinearContainerManager<T>::Menu()
                             "4. Znajdź element\n"
                             "5. Wyświetl kontener\n"
                             "6. Zapisz kontener do pliku\n"
-                            "7. Odczytaj kontener z pliku\n"
-                            "8. Załaduj testowy kontener\n"
+                            "7. Odczytaj kontener z pliku wygenerowanego przez program\n"
+                            "8. Załaduj testowy kontener z pliku stworzonego przez użytkownika\n"
                             "9. Wróć\n"
                             "> ";
 

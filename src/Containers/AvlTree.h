@@ -4,22 +4,23 @@
 
 #include <istream>
 
-template<typename T>
+template<typename T, typename C>
 struct AvlTreeIterator;
 
-template<typename T>
+template<typename T, typename C>
 struct AvlTreeConstIterator;
 
-template<typename T>
+template<typename T, typename C = Utils::Less<T>>
 class AvlTree
 {
 public:
-    friend struct AvlTreeIterator<T>;
-    friend struct AvlTreeConstIterator<T>;
+    friend struct AvlTreeIterator<T, C>;
+    friend struct AvlTreeConstIterator<T, C>;
 
     using DataType = T;
-    using Iterator = AvlTreeIterator<T>;
-    using ConstIterator = AvlTreeConstIterator<T>;
+    using Comparator = C;
+    using Iterator = AvlTreeIterator<T, C>;
+    using ConstIterator = AvlTreeConstIterator<T, C>;
 
     [[nodiscard]] static constexpr const char* ClassName() { return "AvlTree"; }
 
@@ -35,11 +36,11 @@ public:
     bool Remove(const DataType& value);
     void Clear();
 
-    [[nodiscard]] ConstIterator Find(const DataType& value) const;
-    [[nodiscard]] Iterator Find(const DataType& value);
+    [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
+    [[nodiscard]] Iterator Find(const DataType& value) noexcept;
 
-    [[nodiscard]] const DataType& Min() const;
-    [[nodiscard]] const DataType& Max() const;
+    [[nodiscard]] const DataType& Min() const noexcept;
+    [[nodiscard]] const DataType& Max() const noexcept;
 
     [[nodiscard]] size_t Size() const noexcept;
 
@@ -52,11 +53,11 @@ public:
 
     [[nodiscard]] std::string ToString() const;
 
-    template<typename U>
-    friend std::ostream& operator<<(std::ostream& os, const AvlTree<U>& tree);
+    template<typename U, typename V>
+    friend std::ostream& operator<<(std::ostream& os, const AvlTree<U, V>& tree);
 
-    template<typename U>
-    friend std::istream& operator>>(std::istream& is, AvlTree<U>& tree);
+    template<typename U, typename V>
+    friend std::istream& operator>>(std::istream& is, AvlTree<U, V>& tree);
 
 private:
     using Height = int8_t;
@@ -95,28 +96,29 @@ private:
     void RemoveSubtree(Node* root);
     [[nodiscard]] Node* CopySubtree(const AvlTree& tree, Node* root);
 
-    Node* RemoveNodeWithoutChildren(Node* node) const;
-    Node* RemoveNodeWithOneChild(Node* node) const;
-    Node* RemoveNodeWithTwoChildren(Node* node) const;
+    [[nodiscard]] Node* RemoveNodeWithoutChildren(Node* node) const;
+    [[nodiscard]] Node* RemoveNodeWithOneChild(Node* node) const;
+    [[nodiscard]] Node* RemoveNodeWithTwoChildren(Node* node) const;
 
     void ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const;
     void Serialize(std::ostream& os, Node* node) const;
     [[nodiscard]] Node* Deserialize(std::istream& is, Node* node, size_t& sizeOfTree);
 
+    Comparator comparator;
     Node* NIL = MakeNil();
     size_t size = 0;
 };
 
-template<typename T>
+template<typename T, typename C>
 struct AvlTreeConstIterator
 {
     using iterator_category = std::bidirectional_iterator_tag;
-    using value_type = typename AvlTree<T>::DataType;
+    using value_type = typename AvlTree<T, C>::DataType;
     using pointer = const value_type*;
     using reference = const value_type&;
 
     AvlTreeConstIterator() = default;
-    AvlTreeConstIterator(const AvlTree<T>* avlTree, typename AvlTree<T>::Node* node) noexcept;
+    AvlTreeConstIterator(const AvlTree<T, C>* avlTree, typename AvlTree<T, C>::Node* node) noexcept;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -131,19 +133,19 @@ struct AvlTreeConstIterator
     [[nodiscard]] bool operator!=(const AvlTreeConstIterator& rhs) const noexcept;
 
 protected:
-    const AvlTree<T>* avlTree;
-    typename AvlTree<T>::Node* node;
+    const AvlTree<T, C>* avlTree;
+    typename AvlTree<T, C>::Node* node;
 };
 
-template<typename T>
-struct AvlTreeIterator : public AvlTreeConstIterator<T>
+template<typename T, typename C>
+struct AvlTreeIterator : public AvlTreeConstIterator<T, C>
 {
     using iterator_category = std::bidirectional_iterator_tag;
-    using value_type = typename AvlTree<T>::DataType;
+    using value_type = typename AvlTree<T, C>::DataType;
     using pointer = value_type*;
     using reference = value_type&;
 
-    using AvlTreeConstIterator<T>::AvlTreeConstIterator;
+    using AvlTreeConstIterator<T, C>::AvlTreeConstIterator;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -155,8 +157,8 @@ struct AvlTreeIterator : public AvlTreeConstIterator<T>
     AvlTreeIterator operator--(int) noexcept;
 };
 
-template<typename T>
-AvlTree<T>::AvlTree(std::initializer_list<DataType> initList)
+template<typename T, typename C>
+AvlTree<T, C>::AvlTree(std::initializer_list<DataType> initList)
 {
     for (const auto& item: initList)
     {
@@ -164,15 +166,15 @@ AvlTree<T>::AvlTree(std::initializer_list<DataType> initList)
     }
 }
 
-template<typename T>
-AvlTree<T>::AvlTree(const AvlTree& rhs)
+template<typename T, typename C>
+AvlTree<T, C>::AvlTree(const AvlTree& rhs)
 {
     SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
 }
 
-template<typename T>
-AvlTree<T>::AvlTree(AvlTree&& rhs) noexcept
+template<typename T, typename C>
+AvlTree<T, C>::AvlTree(AvlTree&& rhs) noexcept
 {
     NIL = rhs.NIL;
     size = rhs.size;
@@ -181,8 +183,8 @@ AvlTree<T>::AvlTree(AvlTree&& rhs) noexcept
     rhs.size = 0u;
 }
 
-template<typename T>
-AvlTree<T>& AvlTree<T>::operator=(const AvlTree& rhs)
+template<typename T, typename C>
+AvlTree<T, C>& AvlTree<T, C>::operator=(const AvlTree& rhs)
 {
     if (this == &rhs)
     {
@@ -195,8 +197,8 @@ AvlTree<T>& AvlTree<T>::operator=(const AvlTree& rhs)
     return *this;
 }
 
-template<typename T>
-AvlTree<T>& AvlTree<T>::operator=(AvlTree&& rhs) noexcept
+template<typename T, typename C>
+AvlTree<T, C>& AvlTree<T, C>::operator=(AvlTree&& rhs) noexcept
 {
     Clear();
     NIL = rhs.NIL;
@@ -208,16 +210,16 @@ AvlTree<T>& AvlTree<T>::operator=(AvlTree&& rhs) noexcept
     return *this;
 }
 
-template<typename T>
-AvlTree<T>::~AvlTree()
+template<typename T, typename C>
+AvlTree<T, C>::~AvlTree()
 {
     Clear();
     delete NIL;
     NIL = nullptr;
 }
 
-template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::Insert(const DataType& value)
+template<typename T, typename C>
+typename AvlTree<T, C>::Iterator AvlTree<T, C>::Insert(const DataType& value)
 {
     Node* newNode = MakeNode(value);
     Node* parent = NIL;
@@ -229,7 +231,7 @@ typename AvlTree<T>::Iterator AvlTree<T>::Insert(const DataType& value)
     {
         parent = iterator;
 
-        if (value < iterator->value)
+        if (comparator(value, iterator->value))
         {
             iterator = iterator->left;
         }
@@ -238,7 +240,7 @@ typename AvlTree<T>::Iterator AvlTree<T>::Insert(const DataType& value)
             iterator = iterator->right;
         }
     }
-    if (value < parent->value)
+    if (comparator(value, parent->value))
     {
         parent->left = newNode;
     }
@@ -253,8 +255,8 @@ typename AvlTree<T>::Iterator AvlTree<T>::Insert(const DataType& value)
     return {this, newNode};
 }
 
-template<typename T>
-bool AvlTree<T>::Remove(const DataType& value)
+template<typename T, typename C>
+bool AvlTree<T, C>::Remove(const DataType& value)
 {
     Node* nodeToRemove = Find(value, Root());
     if (nodeToRemove == NIL)
@@ -285,8 +287,8 @@ bool AvlTree<T>::Remove(const DataType& value)
     return true;
 }
 
-template<typename T>
-void AvlTree<T>::Clear()
+template<typename T, typename C>
+void AvlTree<T, C>::Clear()
 {
     if (NIL != nullptr)
     {
@@ -295,82 +297,82 @@ void AvlTree<T>::Clear()
     }
 }
 
-template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::Find(const DataType& value) const
+template<typename T, typename C>
+typename AvlTree<T, C>::ConstIterator AvlTree<T, C>::Find(const DataType& value) const noexcept
 {
     return {this, Find(value, Root())};
 }
 
-template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::Find(const DataType& value)
+template<typename T, typename C>
+typename AvlTree<T, C>::Iterator AvlTree<T, C>::Find(const DataType& value) noexcept
 {
     return {this, Find(value, Root())};
 }
 
-template<typename T>
-const typename AvlTree<T>::DataType& AvlTree<T>::Min() const
+template<typename T, typename C>
+const typename AvlTree<T, C>::DataType& AvlTree<T, C>::Min() const noexcept
 {
     return Min(Root())->value;
 }
 
-template<typename T>
-const typename AvlTree<T>::DataType& AvlTree<T>::Max() const
+template<typename T, typename C>
+const typename AvlTree<T, C>::DataType& AvlTree<T, C>::Max() const noexcept
 {
     return Max(Root())->value;
 }
 
-template<typename T>
-size_t AvlTree<T>::Size() const noexcept
+template<typename T, typename C>
+size_t AvlTree<T, C>::Size() const noexcept
 {
     return size;
 }
 
-template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::begin() noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Iterator AvlTree<T, C>::begin() noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename AvlTree<T>::Iterator AvlTree<T>::end() noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Iterator AvlTree<T, C>::end() noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::begin() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::ConstIterator AvlTree<T, C>::begin() const noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::end() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::ConstIterator AvlTree<T, C>::end() const noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::cbegin() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::ConstIterator AvlTree<T, C>::cbegin() const noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename AvlTree<T>::ConstIterator AvlTree<T>::cend() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::ConstIterator AvlTree<T, C>::cend() const noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-std::string AvlTree<T>::ToString() const
+template<typename T, typename C>
+std::string AvlTree<T, C>::ToString() const
 {
     std::string result = "\n";
     ToString(result, "", Root(), false);
     return result;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const AvlTree<T>& tree)
+template<typename T, typename C>
+std::ostream& operator<<(std::ostream& os, const AvlTree<T, C>& tree)
 {
     if (os.fail())
     {
@@ -381,8 +383,8 @@ std::ostream& operator<<(std::ostream& os, const AvlTree<T>& tree)
     return os;
 }
 
-template<typename T>
-std::istream& operator>>(std::istream& is, AvlTree<T>& tree)
+template<typename T, typename C>
+std::istream& operator>>(std::istream& is, AvlTree<T, C>& tree)
 {
     if (is.fail())
     {
@@ -394,20 +396,20 @@ std::istream& operator>>(std::istream& is, AvlTree<T>& tree)
     return is;
 }
 
-template<typename T>
-typename AvlTree<T>::Height AvlTree<T>::Node::BalanceFactor() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Height AvlTree<T, C>::Node::BalanceFactor() const noexcept
 {
     return static_cast<Height>(left->height - right->height);
 }
 
-template<typename T>
-void AvlTree<T>::Node::UpdateHeight() noexcept
+template<typename T, typename C>
+void AvlTree<T, C>::Node::UpdateHeight() noexcept
 {
     height = static_cast<Height>(1 + Utils::Max(left->height, right->height));
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::LeftRotate(Node* node) const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::LeftRotate(Node* node) const noexcept
 {
     Node* child = node->right;
     Node* grandChild = child->left;
@@ -438,8 +440,8 @@ typename AvlTree<T>::Node* AvlTree<T>::LeftRotate(Node* node) const noexcept
     return child;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::RightRotate(Node* node) const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::RightRotate(Node* node) const noexcept
 {
     Node* child = node->left;
     Node* grandChild = child->right;
@@ -468,47 +470,49 @@ typename AvlTree<T>::Node* AvlTree<T>::RightRotate(Node* node) const noexcept
     return child;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::MakeNil()
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::MakeNil()
 {
-    Node* nil = new Node {};
+    Node* nil = new Node {-1,           // height
+                          DataType(),   // value
+                          nullptr,      // left
+                          nullptr,      // right
+                          nullptr};     // parent
 
-    nil->height = -1;
-    nil->parent = nil;
     nil->left = nil;
     nil->right = nil;
+    nil->parent = nil;
 
     return nil;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::MakeNode(const DataType& value) const
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::MakeNode(const DataType& value) const
 {
-    Node* node = new Node {};
-
-    node->height = 0;
-    node->value = value;
-    node->left = NIL;
-    node->right = NIL;
+    Node* node = new Node {0,       // height
+                           value,   // value
+                           NIL,     // left
+                           NIL,     // right
+                           NIL};    // parent
 
     return node;
 }
 
-template<typename T>
-void AvlTree<T>::SetRoot(AvlTree::Node* node) const noexcept
+template<typename T, typename C>
+void AvlTree<T, C>::SetRoot(AvlTree::Node* node) const noexcept
 {
     NIL->left = node;
     node->parent = NIL;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::Root() const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::Root() const noexcept
 {
     return NIL->left;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::Min(AvlTree::Node* node) const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::Min(AvlTree::Node* node) const noexcept
 {
     while (node->left != NIL)
     {
@@ -517,8 +521,8 @@ typename AvlTree<T>::Node* AvlTree<T>::Min(AvlTree::Node* node) const noexcept
     return node;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::Max(AvlTree::Node* node) const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::Max(AvlTree::Node* node) const noexcept
 {
     while (node->right != NIL)
     {
@@ -527,16 +531,16 @@ typename AvlTree<T>::Node* AvlTree<T>::Max(AvlTree::Node* node) const noexcept
     return node;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::Find(const DataType& value, Node* root) const noexcept
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::Find(const DataType& value, Node* root) const noexcept
 {
     while (root != NIL)
     {
-        if (value > root->value)
+        if (comparator(root->value, value))
         {
             root = root->right;
         }
-        else if (value < root->value)
+        else if (comparator(value, root->value))
         {
             root = root->left;
         }
@@ -548,8 +552,8 @@ typename AvlTree<T>::Node* AvlTree<T>::Find(const DataType& value, Node* root) c
     return NIL;
 }
 
-template<typename T>
-void AvlTree<T>::InsertFix(Node* node) const noexcept
+template<typename T, typename C>
+void AvlTree<T, C>::InsertFix(Node* node) const noexcept
 {
     Node* parent = node->parent;
     Node* child = node;
@@ -562,7 +566,7 @@ void AvlTree<T>::InsertFix(Node* node) const noexcept
 
         if (balance > 1)                                    // Jeżeli ciężar jest lewej stronie
         {
-            if (value <= parent->left->value)               // Jeżeli wartość jest mniejsza bądź równa
+            if (!comparator(parent->left->value, value))    // Jeżeli wartość jest mniejsza bądź równa
             {                                               // wartości lewego dziecka rodzica
                 parent = RightRotate(parent);               // dokonaj rotacji RR na rodzicu
             }
@@ -574,7 +578,7 @@ void AvlTree<T>::InsertFix(Node* node) const noexcept
         }
         else if (balance < -1)                              // Jeżeli ciężar jest po prawej stronie
         {
-            if (value < parent->right->value)               // Jeżeli wartość jest mniejsza od
+            if (comparator(value, parent->right->value))    // Jeżeli wartość jest mniejsza od
             {                                               // wartości prawego dziecka rodzica
                 parent->right = RightRotate(parent->right); // dokonaj rotacji RL
                 parent = LeftRotate(parent);                //
@@ -591,8 +595,8 @@ void AvlTree<T>::InsertFix(Node* node) const noexcept
     SetRoot(child);
 }
 
-template<typename T>
-void AvlTree<T>::RemoveFix(Node* node) const noexcept
+template<typename T, typename C>
+void AvlTree<T, C>::RemoveFix(Node* node) const noexcept
 {
     Node* child = Root();
 
@@ -631,8 +635,8 @@ void AvlTree<T>::RemoveFix(Node* node) const noexcept
     SetRoot(child);
 }
 
-template<typename T>
-void AvlTree<T>::RemoveSubtree(AvlTree::Node* root)
+template<typename T, typename C>
+void AvlTree<T, C>::RemoveSubtree(AvlTree::Node* root)
 {
     if (root == NIL)
     {
@@ -647,8 +651,8 @@ void AvlTree<T>::RemoveSubtree(AvlTree::Node* root)
     size--;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::CopySubtree(const AvlTree& tree, AvlTree::Node* root)
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::CopySubtree(const AvlTree& tree, AvlTree::Node* root)
 {
     if (root == tree.NIL)
     {
@@ -668,8 +672,8 @@ typename AvlTree<T>::Node* AvlTree<T>::CopySubtree(const AvlTree& tree, AvlTree:
     return newRoot;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithoutChildren(Node* nodeToRemove) const
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::RemoveNodeWithoutChildren(Node* nodeToRemove) const
 {
     Node* successor = nodeToRemove->parent;
 
@@ -688,8 +692,8 @@ typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithoutChildren(Node* nodeToRem
     return successor;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithOneChild(Node* nodeToRemove) const
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::RemoveNodeWithOneChild(Node* nodeToRemove) const
 {
     Node* successor = nodeToRemove->left != NIL ? nodeToRemove->left : nodeToRemove->right;
     successor->parent = nodeToRemove->parent;
@@ -709,8 +713,8 @@ typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithOneChild(Node* nodeToRemove
     return successor;
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithTwoChildren(Node* node) const
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::RemoveNodeWithTwoChildren(Node* node) const
 {
     Node* successor = Max(node->left);
     Utils::Swap(successor->value, node->value);
@@ -727,8 +731,8 @@ typename AvlTree<T>::Node* AvlTree<T>::RemoveNodeWithTwoChildren(Node* node) con
     return successor;
 }
 
-template<typename T>
-void AvlTree<T>::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
+template<typename T, typename C>
+void AvlTree<T, C>::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
 {
     if (node != NIL)
     {
@@ -744,8 +748,8 @@ void AvlTree<T>::ToString(std::string& result, const std::string& prefix, const 
     }
 }
 
-template<typename T>
-void AvlTree<T>::Serialize(std::ostream& os, AvlTree::Node* node) const
+template<typename T, typename C>
+void AvlTree<T, C>::Serialize(std::ostream& os, AvlTree::Node* node) const
 {
     if (os.fail())
     {
@@ -763,8 +767,8 @@ void AvlTree<T>::Serialize(std::ostream& os, AvlTree::Node* node) const
     }
 }
 
-template<typename T>
-typename AvlTree<T>::Node* AvlTree<T>::Deserialize(std::istream& is, AvlTree::Node* node, size_t& sizeOfTree)
+template<typename T, typename C>
+typename AvlTree<T, C>::Node* AvlTree<T, C>::Deserialize(std::istream& is, AvlTree::Node* node, size_t& sizeOfTree)
 {
     if (is.fail())
     {
@@ -786,30 +790,30 @@ typename AvlTree<T>::Node* AvlTree<T>::Deserialize(std::istream& is, AvlTree::No
     return newNode;
 }
 
-template<typename T>
-AvlTreeConstIterator<T>::AvlTreeConstIterator(const AvlTree<T>* avlTree, typename AvlTree<T>::Node* node) noexcept
+template<typename T, typename C>
+AvlTreeConstIterator<T, C>::AvlTreeConstIterator(const AvlTree<T, C>* avlTree, typename AvlTree<T, C>::Node* node) noexcept
     : avlTree(avlTree)
     , node(node)
 { }
 
-template<typename T>
-typename AvlTreeConstIterator<T>::reference AvlTreeConstIterator<T>::operator*() const noexcept
+template<typename T, typename C>
+typename AvlTreeConstIterator<T, C>::reference AvlTreeConstIterator<T, C>::operator*() const noexcept
 {
     return node->value;
 }
 
-template<typename T>
-typename AvlTreeConstIterator<T>::pointer AvlTreeConstIterator<T>::operator->() const noexcept
+template<typename T, typename C>
+typename AvlTreeConstIterator<T, C>::pointer AvlTreeConstIterator<T, C>::operator->() const noexcept
 {
     return &(**this);
 }
 
-template<typename T>
-AvlTreeConstIterator<T>& AvlTreeConstIterator<T>::operator++() noexcept
+template<typename T, typename C>
+AvlTreeConstIterator<T, C>& AvlTreeConstIterator<T, C>::operator++() noexcept
 {
     if (node->right == avlTree->NIL)
     {
-        typename AvlTree<T>::Node* parent;
+        decltype(node) parent;
         while ((parent = node->parent) != avlTree->NIL && node == parent->right)
         {
             node = parent;
@@ -824,16 +828,16 @@ AvlTreeConstIterator<T>& AvlTreeConstIterator<T>::operator++() noexcept
     return *this;
 }
 
-template<typename T>
-AvlTreeConstIterator<T> AvlTreeConstIterator<T>::operator++(int) noexcept
+template<typename T, typename C>
+AvlTreeConstIterator<T, C> AvlTreeConstIterator<T, C>::operator++(int) noexcept
 {
     AvlTreeConstIterator tmp = *this;
     ++(*this);
     return tmp;
 }
 
-template<typename T>
-AvlTreeConstIterator<T>& AvlTreeConstIterator<T>::operator--() noexcept
+template<typename T, typename C>
+AvlTreeConstIterator<T, C>& AvlTreeConstIterator<T, C>::operator--() noexcept
 {
     if (node == avlTree->NIL)
     {
@@ -841,7 +845,7 @@ AvlTreeConstIterator<T>& AvlTreeConstIterator<T>::operator--() noexcept
     }
     else if (node->left == avlTree->NIL)
     {
-        typename AvlTree<T>::Node* parent;
+        decltype(node) parent;
         while ((parent = node->parent) != avlTree->NIL && node == parent->left)
         {
             node = parent;
@@ -859,64 +863,64 @@ AvlTreeConstIterator<T>& AvlTreeConstIterator<T>::operator--() noexcept
     return *this;
 }
 
-template<typename T>
-AvlTreeConstIterator<T> AvlTreeConstIterator<T>::operator--(int) noexcept
+template<typename T, typename C>
+AvlTreeConstIterator<T, C> AvlTreeConstIterator<T, C>::operator--(int) noexcept
 {
     AvlTreeConstIterator tmp = *this;
     --(*this);
     return tmp;
 }
 
-template<typename T>
-bool AvlTreeConstIterator<T>::operator==(const AvlTreeConstIterator& rhs) const noexcept
+template<typename T, typename C>
+bool AvlTreeConstIterator<T, C>::operator==(const AvlTreeConstIterator& rhs) const noexcept
 {
     return node == rhs.node;
 }
 
-template<typename T>
-bool AvlTreeConstIterator<T>::operator!=(const AvlTreeConstIterator& rhs) const noexcept
+template<typename T, typename C>
+bool AvlTreeConstIterator<T, C>::operator!=(const AvlTreeConstIterator& rhs) const noexcept
 {
     return !(*this == rhs);
 }
 
-template<typename T>
-typename AvlTreeIterator<T>::reference AvlTreeIterator<T>::operator*() const noexcept
+template<typename T, typename C>
+typename AvlTreeIterator<T, C>::reference AvlTreeIterator<T, C>::operator*() const noexcept
 {
-    return const_cast<reference>(AvlTreeConstIterator<T>::operator*());
+    return const_cast<reference>(AvlTreeConstIterator<T, C>::operator*());
 }
 
-template<typename T>
-typename AvlTreeIterator<T>::pointer AvlTreeIterator<T>::operator->() const noexcept
+template<typename T, typename C>
+typename AvlTreeIterator<T, C>::pointer AvlTreeIterator<T, C>::operator->() const noexcept
 {
     return &(**this);
 }
 
-template<typename T>
-AvlTreeIterator<T>& AvlTreeIterator<T>::operator++() noexcept
+template<typename T, typename C>
+AvlTreeIterator<T, C>& AvlTreeIterator<T, C>::operator++() noexcept
 {
-    AvlTreeConstIterator<T>::operator++();
+    AvlTreeConstIterator<T, C>::operator++();
     return *this;
 }
 
-template<typename T>
-AvlTreeIterator<T> AvlTreeIterator<T>::operator++(int) noexcept
+template<typename T, typename C>
+AvlTreeIterator<T, C> AvlTreeIterator<T, C>::operator++(int) noexcept
 {
     AvlTreeIterator tmp = *this;
-    AvlTreeConstIterator<T>::operator++();
+    AvlTreeConstIterator<T, C>::operator++();
     return tmp;
 }
 
-template<typename T>
-AvlTreeIterator<T>& AvlTreeIterator<T>::operator--() noexcept
+template<typename T, typename C>
+AvlTreeIterator<T, C>& AvlTreeIterator<T, C>::operator--() noexcept
 {
-    AvlTreeConstIterator<T>::operator--();
+    AvlTreeConstIterator<T, C>::operator--();
     return *this;
 }
 
-template<typename T>
-AvlTreeIterator<T> AvlTreeIterator<T>::operator--(int) noexcept
+template<typename T, typename C>
+AvlTreeIterator<T, C> AvlTreeIterator<T, C>::operator--(int) noexcept
 {
     AvlTreeIterator tmp = *this;
-    AvlTreeConstIterator<T>::operator--();
+    AvlTreeConstIterator<T, C>::operator--();
     return tmp;
 }

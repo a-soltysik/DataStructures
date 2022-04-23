@@ -6,14 +6,17 @@ template<typename T>
 class UnorderedSet
 {
 public:
-    using DataType = typename List<T>::DataType;
-    using Iterator = typename List<T>::Iterator;
-    using ConstIterator = typename List<T>::ConstIterator;
+    using DataType = T;
+    using Iterator = typename List<DataType>::Iterator;
+    using ConstIterator = typename List<DataType>::ConstIterator;
 
-    [[nodiscard]] static constexpr const char* ClassName() { return "Set"; }
+    [[nodiscard]] static constexpr const char* ClassName() { return "UnorderedSet"; }
 
     UnorderedSet() = default;
     UnorderedSet(std::initializer_list<DataType> initList);
+
+    template<typename It>
+    UnorderedSet(It first, It last);
 
     Iterator Insert(const DataType& value);
     bool Remove(const DataType& value);
@@ -50,6 +53,13 @@ template<typename T>
 UnorderedSet<T>::UnorderedSet(std::initializer_list<DataType> initList)
     : list(initList)
 { }
+
+template<typename T>
+template<typename It>
+UnorderedSet<T>::UnorderedSet(It first, It last)
+    : list(first, last)
+{ }
+
 
 template<typename T>
 typename UnorderedSet<T>::Iterator UnorderedSet<T>::Insert(const DataType& value)

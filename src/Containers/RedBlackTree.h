@@ -4,24 +4,31 @@
 
 #include <istream>
 
-template<typename T>
+template<typename K, typename V, typename C>
+class Map;
+
+template<typename T, typename C>
 struct RedBlackTreeIterator;
 
-template<typename T>
+template<typename T, typename C>
 struct RedBlackTreeConstIterator;
 
-template<typename T>
+template<typename T, typename C = Utils::Less<T>>
 class RedBlackTree
 {
 public:
-    friend struct RedBlackTreeIterator<T>;
-    friend struct RedBlackTreeConstIterator<T>;
+    friend struct RedBlackTreeIterator<T, C>;
+    friend struct RedBlackTreeConstIterator<T, C>;
+
+    template<typename K, typename V, typename U>
+    friend class Map;
 
     using DataType = T;
-    using Iterator = RedBlackTreeIterator<T>;
-    using ConstIterator = RedBlackTreeConstIterator<T>;
+    using Comparator = C;
+    using Iterator = RedBlackTreeIterator<T, C>;
+    using ConstIterator = RedBlackTreeConstIterator<T, C>;
 
-    [[nodiscard]] static constexpr const char* ClassName() { return "RedBlackTree"; }
+    [[nodiscard]] static constexpr const char* ClassName() noexcept { return "RedBlackTree"; }
 
     RedBlackTree() = default;
     RedBlackTree(std::initializer_list<DataType> initList);
@@ -35,13 +42,13 @@ public:
     bool Remove(const DataType& value);
     void Clear();
 
-    [[nodiscard]] ConstIterator Find(const DataType& value) const;
-    [[nodiscard]] Iterator Find(const DataType& value);
+    [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
+    [[nodiscard]] Iterator Find(const DataType& value) noexcept;
 
-    [[nodiscard]] const DataType& Min() const;
-    [[nodiscard]] const DataType& Max() const;
+    [[nodiscard]] const DataType& Min() const noexcept;
+    [[nodiscard]] const DataType& Max() const noexcept;
 
-    [[nodiscard]] size_t Size() const;
+    [[nodiscard]] size_t Size() const noexcept;
 
     [[nodiscard]] Iterator begin() noexcept;
     [[nodiscard]] Iterator end() noexcept;
@@ -52,11 +59,11 @@ public:
 
     [[nodiscard]] std::string ToString() const;
 
-    template<typename U>
-    friend std::ostream& operator<<(std::ostream& os, const RedBlackTree<U>& tree);
+    template<typename U, typename V>
+    friend std::ostream& operator<<(std::ostream& os, const RedBlackTree<U, V>& tree);
 
-    template<typename U>
-    friend std::istream& operator>>(std::istream& is, RedBlackTree<U>& tree);
+    template<typename U, typename V>
+    friend std::istream& operator>>(std::istream& is, RedBlackTree<U, V>& tree);
 
 public:
     struct Node
@@ -69,9 +76,9 @@ public:
         Color color;
         DataType value;
 
-        Node* parent;
-        Node* right;
         Node* left;
+        Node* right;
+        Node* parent;
     };
 
     inline static constexpr int64_t NIL_VALUE = -1;
@@ -92,7 +99,7 @@ public:
     void InsertFix(Node* node) const noexcept;
     void RemoveFix(Node* node) const noexcept;
 
-    void MoveSubtree(Node* from, Node* to) const;
+    void MoveSubtree(Node* from, Node* to) const noexcept;
     void RemoveSubtree(Node* root);
     [[nodiscard]] Node* CopySubtree(const RedBlackTree& tree, Node* root);
 
@@ -100,21 +107,22 @@ public:
     void Serialize(std::ostream& os, Node* node) const;
     [[nodiscard]] Node* Deserialize(std::istream& is, Node* node, size_t& sizeOfTree);
 
+    Comparator comparator;
     Node* NIL = MakeNil();
     size_t size = 0u;
 };
 
-template<typename T>
+template<typename T, typename C>
 struct RedBlackTreeConstIterator
 {
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type = std::ptrdiff_t;
-    using value_type = typename RedBlackTree<T>::DataType;
+    using value_type = typename RedBlackTree<T, C>::DataType;
     using pointer = const value_type*;
     using reference = const value_type&;
 
     RedBlackTreeConstIterator() = default;
-    RedBlackTreeConstIterator(const RedBlackTree<T>* redBlackTree, typename RedBlackTree<T>::Node* node) noexcept;
+    RedBlackTreeConstIterator(const RedBlackTree<T, C>* redBlackTree, typename RedBlackTree<T, C>::Node* node) noexcept;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -129,19 +137,19 @@ struct RedBlackTreeConstIterator
     [[nodiscard]] bool operator!=(const RedBlackTreeConstIterator& rhs) const noexcept;
 
 protected:
-    const RedBlackTree<T>* redBlackTree;
-    typename RedBlackTree<T>::Node* node;
+    const RedBlackTree<T, C>* redBlackTree;
+    typename RedBlackTree<T, C>::Node* node;
 };
 
-template<typename T>
-struct RedBlackTreeIterator : public RedBlackTreeConstIterator<T>
+template<typename T, typename C>
+struct RedBlackTreeIterator : public RedBlackTreeConstIterator<T, C>
 {
     using iterator_category = std::bidirectional_iterator_tag;
-    using value_type = typename RedBlackTree<T>::DataType;
+    using value_type = typename RedBlackTree<T, C>::DataType;
     using pointer = value_type*;
     using reference = value_type&;
 
-    using RedBlackTreeConstIterator<T>::RedBlackTreeConstIterator;
+    using RedBlackTreeConstIterator<T, C>::RedBlackTreeConstIterator;
 
     [[nodiscard]] reference operator*() const noexcept;
 
@@ -153,8 +161,8 @@ struct RedBlackTreeIterator : public RedBlackTreeConstIterator<T>
     RedBlackTreeIterator operator--(int) noexcept;
 };
 
-template<typename T>
-RedBlackTree<T>::RedBlackTree(std::initializer_list<DataType> initList)
+template<typename T, typename C>
+RedBlackTree<T, C>::RedBlackTree(std::initializer_list<DataType> initList)
 {
     for (const auto& item: initList)
     {
@@ -162,15 +170,15 @@ RedBlackTree<T>::RedBlackTree(std::initializer_list<DataType> initList)
     }
 }
 
-template<typename T>
-RedBlackTree<T>::RedBlackTree(const RedBlackTree& rhs)
+template<typename T, typename C>
+RedBlackTree<T, C>::RedBlackTree(const RedBlackTree& rhs)
 {
     SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
 }
 
-template<typename T>
-RedBlackTree<T>::RedBlackTree(RedBlackTree&& rhs) noexcept
+template<typename T, typename C>
+RedBlackTree<T, C>::RedBlackTree(RedBlackTree&& rhs) noexcept
 {
     NIL = rhs.NIL;
     size = rhs.size;
@@ -179,8 +187,8 @@ RedBlackTree<T>::RedBlackTree(RedBlackTree&& rhs) noexcept
     rhs.size = 0u;
 }
 
-template<typename T>
-RedBlackTree<T>& RedBlackTree<T>::operator=(const RedBlackTree& rhs)
+template<typename T, typename C>
+RedBlackTree<T, C>& RedBlackTree<T, C>::operator=(const RedBlackTree& rhs)
 {
     if (this == &rhs)
     {
@@ -193,8 +201,8 @@ RedBlackTree<T>& RedBlackTree<T>::operator=(const RedBlackTree& rhs)
     return *this;
 }
 
-template<typename T>
-RedBlackTree<T>& RedBlackTree<T>::operator=(RedBlackTree&& rhs) noexcept
+template<typename T, typename C>
+RedBlackTree<T, C>& RedBlackTree<T, C>::operator=(RedBlackTree&& rhs) noexcept
 {
     Clear();
     NIL = rhs.NIL;
@@ -206,16 +214,16 @@ RedBlackTree<T>& RedBlackTree<T>::operator=(RedBlackTree&& rhs) noexcept
     return *this;
 }
 
-template<typename T>
-RedBlackTree<T>::~RedBlackTree()
+template<typename T, typename C>
+RedBlackTree<T, C>::~RedBlackTree()
 {
     Clear();
     delete NIL;
     NIL = nullptr;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(const DataType& value)
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Iterator RedBlackTree<T, C>::Insert(const DataType& value)
 {
     Node* newNode = MakeNode(value);
     Node* parent = NIL;
@@ -226,7 +234,7 @@ typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(const DataType& value
     while (iterator != NIL)
     {
         parent = iterator;
-        if (newNode->value < iterator->value)
+        if (comparator(newNode->value, iterator->value))
         {
             iterator = iterator->left;
         }
@@ -240,7 +248,7 @@ typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(const DataType& value
     {
         SetRoot(newNode);
     }
-    else if (newNode->value < parent->value)
+    else if (comparator(newNode->value, parent->value))
     {
         parent->left = newNode;
     }
@@ -255,8 +263,8 @@ typename RedBlackTree<T>::Iterator RedBlackTree<T>::Insert(const DataType& value
     return {this, newNode};
 }
 
-template<typename T>
-bool RedBlackTree<T>::Remove(const DataType& value)
+template<typename T, typename C>
+bool RedBlackTree<T, C>::Remove(const DataType& value)
 {
     Node* nodeToRemove = Find(value, Root());
     if (nodeToRemove == NIL)
@@ -265,7 +273,7 @@ bool RedBlackTree<T>::Remove(const DataType& value)
     }
     Node* successor;
     Node* node = nodeToRemove;
-    typename RedBlackTree<T>::Node::Color originalColor = node->color;
+    auto originalColor = node->color;
 
     if (nodeToRemove->left == NIL)
     {
@@ -310,8 +318,8 @@ bool RedBlackTree<T>::Remove(const DataType& value)
     return true;
 }
 
-template<typename T>
-void RedBlackTree<T>::Clear()
+template<typename T, typename C>
+void RedBlackTree<T, C>::Clear()
 {
     if (NIL != nullptr)
     {
@@ -324,82 +332,82 @@ void RedBlackTree<T>::Clear()
     }
 }
 
-template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::Find(const DataType& value) const
+template<typename T, typename C>
+typename RedBlackTree<T, C>::ConstIterator RedBlackTree<T, C>::Find(const DataType& value) const noexcept
 {
     return {this, Find(value, Root())};
 }
 
-template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::Find(const DataType& value)
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Iterator RedBlackTree<T, C>::Find(const DataType& value) noexcept
 {
     return {this, Find(value, Root())};
 }
 
-template<typename T>
-const typename RedBlackTree<T>::DataType& RedBlackTree<T>::Min() const
+template<typename T, typename C>
+const typename RedBlackTree<T, C>::DataType& RedBlackTree<T, C>::Min() const noexcept
 {
     return Min(Root())->value;
 }
 
-template<typename T>
-const typename RedBlackTree<T>::DataType& RedBlackTree<T>::Max() const
+template<typename T, typename C>
+const typename RedBlackTree<T, C>::DataType& RedBlackTree<T, C>::Max() const noexcept
 {
     return Max(Root())->value;
 }
 
-template<typename T>
-size_t RedBlackTree<T>::Size() const
+template<typename T, typename C>
+size_t RedBlackTree<T, C>::Size() const noexcept
 {
     return size;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::begin() noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Iterator RedBlackTree<T, C>::begin() noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename RedBlackTree<T>::Iterator RedBlackTree<T>::end() noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Iterator RedBlackTree<T, C>::end() noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::begin() const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::ConstIterator RedBlackTree<T, C>::begin() const noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::end() const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::ConstIterator RedBlackTree<T, C>::end() const noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::cbegin() const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::ConstIterator RedBlackTree<T, C>::cbegin() const noexcept
 {
     return {this, Min(Root())};
 }
 
-template<typename T>
-typename RedBlackTree<T>::ConstIterator RedBlackTree<T>::cend() const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::ConstIterator RedBlackTree<T, C>::cend() const noexcept
 {
     return {this, NIL};
 }
 
-template<typename T>
-std::string RedBlackTree<T>::ToString() const
+template<typename T, typename C>
+std::string RedBlackTree<T, C>::ToString() const
 {
     std::string result;
     ToString(result, "", Root(), false);
     return result;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const RedBlackTree<T>& tree)
+template<typename T, typename C>
+std::ostream& operator<<(std::ostream& os, const RedBlackTree<T, C>& tree)
 {
     if (os.fail())
     {
@@ -410,8 +418,8 @@ std::ostream& operator<<(std::ostream& os, const RedBlackTree<T>& tree)
     return os;
 }
 
-template<typename T>
-std::istream& operator>>(std::istream& is, RedBlackTree<T>& tree)
+template<typename T, typename C>
+std::istream& operator>>(std::istream& is, RedBlackTree<T, C>& tree)
 {
     if (is.fail())
     {
@@ -424,34 +432,36 @@ std::istream& operator>>(std::istream& is, RedBlackTree<T>& tree)
     return is;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::MakeNil()
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::MakeNil()
 {
-    Node* nil = new Node {};
+    Node* nil = new Node {Node::Color::BLACK, // color
+                          DataType(),         // value
+                          nullptr,            // left
+                          nullptr,            // right
+                          nullptr};           // parent
 
-    nil->color = Node::Color::BLACK;
+    nil->left   = nil;
+    nil->right  = nil;
     nil->parent = nil;
-    nil->left = nil;
-    nil->right = nil;
 
     return nil;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::MakeNode(const DataType& value) const
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::MakeNode(const DataType& value) const
 {
-    Node* newNode = new Node {};
-
-    newNode->color = Node::Color::BLACK;
-    newNode->value = value;
-    newNode->left = NIL;
-    newNode->right = NIL;
+    Node* newNode = new Node {Node::Color::BLACK, // color
+                              value,              // value
+                              NIL,                // left
+                              NIL,                // right
+                              NIL};               // parent
 
     return newNode;
 }
 
-template<typename T>
-void RedBlackTree<T>::LeftRotate(Node* node) const noexcept
+template<typename T, typename C>
+void RedBlackTree<T, C>::LeftRotate(Node* node) const noexcept
 {
     Node* child = node->right;
     node->right = child->left;
@@ -480,8 +490,8 @@ void RedBlackTree<T>::LeftRotate(Node* node) const noexcept
     node->parent = child;
 }
 
-template<typename T>
-void RedBlackTree<T>::RightRotate(Node* node) const noexcept
+template<typename T, typename C>
+void RedBlackTree<T, C>::RightRotate(Node* node) const noexcept
 {
     Node* child = node->left;
     node->left = child->right;
@@ -510,21 +520,21 @@ void RedBlackTree<T>::RightRotate(Node* node) const noexcept
     node->parent = child;
 }
 
-template<typename T>
-void RedBlackTree<T>::SetRoot(Node* node) const noexcept
+template<typename T, typename C>
+void RedBlackTree<T, C>::SetRoot(Node* node) const noexcept
 {
     NIL->left = node;
     node->parent = NIL;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::Root() const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::Root() const noexcept
 {
     return NIL->left;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::Min(Node* node) const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::Min(Node* node) const noexcept
 {
     while (node->left != NIL)
     {
@@ -533,8 +543,8 @@ typename RedBlackTree<T>::Node* RedBlackTree<T>::Min(Node* node) const noexcept
     return node;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::Max(Node* node) const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::Max(Node* node) const noexcept
 {
     while (node->right != NIL)
     {
@@ -543,16 +553,16 @@ typename RedBlackTree<T>::Node* RedBlackTree<T>::Max(Node* node) const noexcept
     return node;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::Find(const DataType& value, Node* root) const noexcept
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::Find(const DataType& value, Node* root) const noexcept
 {
     while (root != NIL)
     {
-        if (value > root->value)
+        if (comparator(root->value, value))
         {
             root = root->right;
         }
-        else if (value < root->value)
+        else if (comparator(value, root->value))
         {
             root = root->left;
         }
@@ -564,8 +574,8 @@ typename RedBlackTree<T>::Node* RedBlackTree<T>::Find(const DataType& value, Nod
     return NIL;
 }
 
-template<typename T>
-void RedBlackTree<T>::InsertFix(Node* node) const noexcept
+template<typename T, typename C>
+void RedBlackTree<T, C>::InsertFix(Node* node) const noexcept
 {
     while (node->parent->color == Node::Color::RED)
     {
@@ -617,8 +627,8 @@ void RedBlackTree<T>::InsertFix(Node* node) const noexcept
     Root()->color = Node::Color::BLACK;
 }
 
-template<typename T>
-void RedBlackTree<T>::RemoveFix(Node* node) const noexcept
+template<typename T, typename C>
+void RedBlackTree<T, C>::RemoveFix(Node* node) const noexcept
 {
     while (node != Root() && node->color == Node::Color::BLACK)
     {
@@ -692,8 +702,8 @@ void RedBlackTree<T>::RemoveFix(Node* node) const noexcept
     node->color = Node::Color::BLACK;
 }
 
-template<typename T>
-void RedBlackTree<T>::MoveSubtree(Node* from, Node* to) const
+template<typename T, typename C>
+void RedBlackTree<T, C>::MoveSubtree(Node* from, Node* to) const noexcept
 {
     if (from->parent == NIL)
     {
@@ -710,8 +720,8 @@ void RedBlackTree<T>::MoveSubtree(Node* from, Node* to) const
     to->parent = from->parent;
 }
 
-template<typename T>
-void RedBlackTree<T>::RemoveSubtree(Node* root)
+template<typename T, typename C>
+void RedBlackTree<T, C>::RemoveSubtree(Node* root)
 {
     if (root == NIL)
     {
@@ -726,8 +736,8 @@ void RedBlackTree<T>::RemoveSubtree(Node* root)
     size--;
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::CopySubtree(const RedBlackTree& tree, Node* root)
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::CopySubtree(const RedBlackTree& tree, Node* root)
 {
     if (root == tree.NIL)
     {
@@ -745,8 +755,8 @@ typename RedBlackTree<T>::Node* RedBlackTree<T>::CopySubtree(const RedBlackTree&
     return newRoot;
 }
 
-template<typename T>
-void RedBlackTree<T>::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
+template<typename T, typename C>
+void RedBlackTree<T, C>::ToString(std::string& result, const std::string& prefix, const Node* node, bool isRight) const
 {
     if (node != NIL)
     {
@@ -762,8 +772,8 @@ void RedBlackTree<T>::ToString(std::string& result, const std::string& prefix, c
     }
 }
 
-template<typename T>
-void RedBlackTree<T>::Serialize(std::ostream& os, Node* node) const
+template<typename T, typename C>
+void RedBlackTree<T, C>::Serialize(std::ostream& os, Node* node) const
 {
     if (os.fail())
     {
@@ -781,8 +791,8 @@ void RedBlackTree<T>::Serialize(std::ostream& os, Node* node) const
     }
 }
 
-template<typename T>
-typename RedBlackTree<T>::Node* RedBlackTree<T>::Deserialize(std::istream& is, Node* node, size_t& sizeOfTree)
+template<typename T, typename C>
+typename RedBlackTree<T, C>::Node* RedBlackTree<T, C>::Deserialize(std::istream& is, Node* node, size_t& sizeOfTree)
 {
     if (is.fail() || sizeOfTree == 0)
     {
@@ -804,31 +814,31 @@ typename RedBlackTree<T>::Node* RedBlackTree<T>::Deserialize(std::istream& is, N
     return newNode;
 }
 
-template<typename T>
-RedBlackTreeConstIterator<T>::RedBlackTreeConstIterator(const RedBlackTree<T>* redBlackTree,
-                                                        typename RedBlackTree<T>::Node* node) noexcept
+template<typename T, typename C>
+RedBlackTreeConstIterator<T, C>::RedBlackTreeConstIterator(const RedBlackTree<T, C>* redBlackTree,
+                                                           typename RedBlackTree<T, C>::Node* node) noexcept
     : redBlackTree(redBlackTree)
     , node(node)
 { }
 
-template<typename T>
-typename RedBlackTreeConstIterator<T>::reference RedBlackTreeConstIterator<T>::operator*() const noexcept
+template<typename T, typename C>
+typename RedBlackTreeConstIterator<T, C>::reference RedBlackTreeConstIterator<T, C>::operator*() const noexcept
 {
     return node->value;
 }
 
-template<typename T>
-typename RedBlackTreeConstIterator<T>::pointer RedBlackTreeConstIterator<T>::operator->() const noexcept
+template<typename T, typename C>
+typename RedBlackTreeConstIterator<T, C>::pointer RedBlackTreeConstIterator<T, C>::operator->() const noexcept
 {
     return &(**this);
 }
 
-template<typename T>
-RedBlackTreeConstIterator<T>& RedBlackTreeConstIterator<T>::operator++() noexcept
+template<typename T, typename C>
+RedBlackTreeConstIterator<T, C>& RedBlackTreeConstIterator<T, C>::operator++() noexcept
 {
     if (node->right == redBlackTree->NIL)
     {
-        typename RedBlackTree<T>::Node* parent;
+        decltype(node) parent;
         while ((parent = node->parent) != redBlackTree->NIL && node == parent->right)
         {
             node = parent;
@@ -843,16 +853,16 @@ RedBlackTreeConstIterator<T>& RedBlackTreeConstIterator<T>::operator++() noexcep
     return *this;
 }
 
-template<typename T>
-RedBlackTreeConstIterator<T> RedBlackTreeConstIterator<T>::operator++(int) noexcept
+template<typename T, typename C>
+RedBlackTreeConstIterator<T, C> RedBlackTreeConstIterator<T, C>::operator++(int) noexcept
 {
     RedBlackTreeConstIterator tmp = *this;
     ++(*this);
     return tmp;
 }
 
-template<typename T>
-RedBlackTreeConstIterator<T>& RedBlackTreeConstIterator<T>::operator--() noexcept
+template<typename T, typename C>
+RedBlackTreeConstIterator<T, C>& RedBlackTreeConstIterator<T, C>::operator--() noexcept
 {
     if (node == redBlackTree->NIL)
     {
@@ -860,7 +870,7 @@ RedBlackTreeConstIterator<T>& RedBlackTreeConstIterator<T>::operator--() noexcep
     }
     else if (node->left == redBlackTree->NIL)
     {
-        typename RedBlackTree<T>::Node* parent;
+        decltype(node) parent;
         while ((parent = node->parent) != redBlackTree->NIL && node == parent->left)
         {
             node = parent;
@@ -878,64 +888,64 @@ RedBlackTreeConstIterator<T>& RedBlackTreeConstIterator<T>::operator--() noexcep
     return *this;
 }
 
-template<typename T>
-RedBlackTreeConstIterator<T> RedBlackTreeConstIterator<T>::operator--(int) noexcept
+template<typename T, typename C>
+RedBlackTreeConstIterator<T, C> RedBlackTreeConstIterator<T, C>::operator--(int) noexcept
 {
     RedBlackTreeConstIterator tmp = *this;
     --(*this);
     return tmp;
 }
 
-template<typename T>
-bool RedBlackTreeConstIterator<T>::operator==(const RedBlackTreeConstIterator& rhs) const noexcept
+template<typename T, typename C>
+bool RedBlackTreeConstIterator<T, C>::operator==(const RedBlackTreeConstIterator& rhs) const noexcept
 {
     return node == rhs.node;
 }
 
-template<typename T>
-bool RedBlackTreeConstIterator<T>::operator!=(const RedBlackTreeConstIterator& rhs) const noexcept
+template<typename T, typename C>
+bool RedBlackTreeConstIterator<T, C>::operator!=(const RedBlackTreeConstIterator& rhs) const noexcept
 {
     return !(*this == rhs);
 }
 
-template<typename T>
-typename RedBlackTreeIterator<T>::reference RedBlackTreeIterator<T>::operator*() const noexcept
+template<typename T, typename C>
+typename RedBlackTreeIterator<T, C>::reference RedBlackTreeIterator<T, C>::operator*() const noexcept
 {
-    return const_cast<reference>(RedBlackTreeConstIterator<T>::operator*());
+    return const_cast<reference>(RedBlackTreeConstIterator<T, C>::operator*());
 }
 
-template<typename T>
-typename RedBlackTreeIterator<T>::pointer RedBlackTreeIterator<T>::operator->() const noexcept
+template<typename T, typename C>
+typename RedBlackTreeIterator<T, C>::pointer RedBlackTreeIterator<T, C>::operator->() const noexcept
 {
     return &(**this);
 }
 
-template<typename T>
-RedBlackTreeIterator<T>& RedBlackTreeIterator<T>::operator++() noexcept
+template<typename T, typename C>
+RedBlackTreeIterator<T, C>& RedBlackTreeIterator<T, C>::operator++() noexcept
 {
-    RedBlackTreeConstIterator<T>::operator++();
+    RedBlackTreeConstIterator<T, C>::operator++();
     return *this;
 }
 
-template<typename T>
-RedBlackTreeIterator<T> RedBlackTreeIterator<T>::operator++(int) noexcept
+template<typename T, typename C>
+RedBlackTreeIterator<T, C> RedBlackTreeIterator<T, C>::operator++(int) noexcept
 {
     RedBlackTreeIterator tmp = *this;
-    RedBlackTreeConstIterator<T>::operator++();
+    RedBlackTreeConstIterator<T, C>::operator++();
     return tmp;
 }
 
-template<typename T>
-RedBlackTreeIterator<T>& RedBlackTreeIterator<T>::operator--() noexcept
+template<typename T, typename C>
+RedBlackTreeIterator<T, C>& RedBlackTreeIterator<T, C>::operator--() noexcept
 {
-    RedBlackTreeConstIterator<T>::operator--();
+    RedBlackTreeConstIterator<T, C>::operator--();
     return *this;
 }
 
-template<typename T>
-RedBlackTreeIterator<T> RedBlackTreeIterator<T>::operator--(int) noexcept
+template<typename T, typename C>
+RedBlackTreeIterator<T, C> RedBlackTreeIterator<T, C>::operator--(int) noexcept
 {
     RedBlackTreeIterator tmp = *this;
-    RedBlackTreeConstIterator<T>::operator--();
+    RedBlackTreeConstIterator<T, C>::operator--();
     return tmp;
 }

@@ -21,6 +21,15 @@ namespace Utils
 
     [[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
+    template<typename T>
+    struct Less
+    {
+        constexpr bool operator()(const T& lhs, const T& rhs) const noexcept
+        {
+            return lhs < rhs;
+        }
+    };
+
     /**
     *  Swaps two values (own implementation of std::swap)
     */

@@ -9,6 +9,7 @@ FetchContent_MakeAvailable(googletest)
 
 set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Utils/Utils.cpp
+    ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/ListGraph.cpp
     )
 
 set(DS_TEST_SRC_LIST
@@ -19,6 +20,8 @@ set(DS_TEST_SRC_LIST
     ${DS_TEST_SRC_DIR}/Container/RedBlackTreeTest.cpp
     ${DS_TEST_SRC_DIR}/Container/HeapTest.cpp
     ${DS_TEST_SRC_DIR}/Container/AvlTreeTest.cpp
+
+    ${DS_TEST_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/ListGraphTest.cpp
     )
 
 add_executable(${DS_TEST_TARGET} ${DS_TEST_SRC_LIST})

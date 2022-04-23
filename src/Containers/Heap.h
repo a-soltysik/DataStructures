@@ -8,9 +8,9 @@ template<typename T>
 class Heap
 {
 public:
-    using DataType = typename DynamicArray<T>::DataType;
-    using Iterator = DynamicArrayIterator<T>;
-    using ConstIterator = DynamicArrayConstIterator<T>;
+    using DataType = T;
+    using Iterator = typename DynamicArray<DataType>::Iterator;
+    using ConstIterator = typename DynamicArray<DataType>::ConstIterator;
 
     [[nodiscard]] static constexpr const char* ClassName() { return "Heap"; }
 
@@ -60,7 +60,7 @@ private:
 
     void ToString(std::string& result, const std::string& prefix, size_t node, bool isRight) const;
 
-    DynamicArray<T> data;
+    DynamicArray<DataType> data;
 };
 
 template<typename T>

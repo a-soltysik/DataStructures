@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Algorithm/Graphs/Graph.h"
+#include "Algorithms/Graphs/Graph.h"
+#include "Utils/Pair.h"
 
 #include <optional>
 
@@ -14,7 +15,8 @@ public:
 
         bool operator==(Edge rhs) const noexcept
         {
-            return (first == rhs.first && second == rhs.second) || (first == rhs.second && second == rhs.first);
+            return (first == rhs.first && second == rhs.second) ||
+                   (first == rhs.second && second == rhs.first);
         }
 
         bool operator!=(Edge rhs) const noexcept
@@ -33,7 +35,9 @@ public:
     [[nodiscard]] virtual std::optional<Weight> GetWeight(Edge edge) const = 0;
     virtual bool SetWeight(Edge edge, Weight weight) = 0;
 
-    [[nodiscard]] virtual bool doesExist(Edge edge) const = 0;
+    [[nodiscard]] virtual bool DoesExist(Edge edge) const = 0;
+
+    [[nodiscard]] virtual DynamicArray<Utils::Pair<Edge, Weight>> GetEdges() const = 0;
 
     virtual void ForEachEdge(EdgePredicate predicate) const = 0;
 };

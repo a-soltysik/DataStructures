@@ -1,7 +1,8 @@
 #pragma once
 
+#include "Containers/DynamicArray.h"
+
 #include <functional>
-#include <cstdint>
 
 class Graph
 {
@@ -10,7 +11,7 @@ public:
     using Weight = uint32_t;
     using VertexPredicate = std::function<void(Vertex)>;
 
-    static constexpr Weight INF = UINT32_MAX;
+    static constexpr Weight INFINITY = UINT32_MAX;
     static constexpr Vertex MAX_SIZE = UINT32_MAX;
 
     Graph() = default;
@@ -26,8 +27,11 @@ public:
     [[nodiscard]] virtual uint32_t GetOrder() const = 0;
     [[nodiscard]] virtual uint64_t GetSize() const = 0;
 
-    [[nodiscard]] virtual bool doesExist(Vertex vertex) const = 0;
+    [[nodiscard]] virtual bool DoesExist(Vertex vertex) const = 0;
 
-    virtual bool ForEachNeighbour(Vertex source, VertexPredicate predicate) const = 0;
+    [[nodiscard]] virtual std::optional<DynamicArray<Vertex>> GetNeighboursOf(Vertex vertex) const = 0;
+    [[nodiscard]] virtual DynamicArray<Vertex> GetVertices() const = 0;
+
+    virtual bool ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) const = 0;
     virtual void ForEachVertex(VertexPredicate predicate) const = 0;
 };

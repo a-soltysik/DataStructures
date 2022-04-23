@@ -25,6 +25,10 @@ public:
 
     List() = default;
     List(std::initializer_list<DataType> initList);
+
+    template<typename It>
+    List(It first, It last);
+
     List(const List& rhs);
     List(List&& rhs) noexcept;
     List& operator=(const List& rhs);
@@ -141,6 +145,17 @@ List<T>::List(std::initializer_list<DataType> initList)
     for (const auto& item: initList)
     {
         PushBack(item);
+    }
+}
+
+template<typename T>
+template<typename It>
+List<T>::List(It first, It last)
+{
+    while (first != last)
+    {
+        PushBack(*first);
+        first++;
     }
 }
 

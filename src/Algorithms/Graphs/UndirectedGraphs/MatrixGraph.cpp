@@ -127,21 +127,21 @@ bool MatrixGraph::DoesExist(Edge edge) const
     return graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)] != Graph::INFINITY;
 }
 
-std::optional<DynamicArray<Graph::Vertex>> MatrixGraph::GetNeighboursOf(Vertex vertex) const
+std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Vertex vertex) const
 {
     if (!DoesExist(vertex))
     {
         return {};
     }
 
-    DynamicArray<Vertex> result;
+    DynamicArray<Neighbour> result;
     uint32_t sourceIndex = verticesMap.at(vertex);
 
     for (const auto& pair : verticesMap)
     {
         if (graph[sourceIndex][pair.second] != Graph::INFINITY)
         {
-            result.PushBack(pair.first);
+            result.PushBack({pair.first, graph[sourceIndex][pair.second]});
         }
     }
 
@@ -187,7 +187,7 @@ DynamicArray<Utils::Pair<UndirectedGraph::Edge, Graph::Weight>> MatrixGraph::Get
 }
 
 
-bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) const
+bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const
 {
     if (!DoesExist(vertex))
     {
@@ -200,7 +200,7 @@ bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) c
     {
         if (graph[sourceIndex][pair.second] != Graph::INFINITY)
         {
-            predicate(pair.first);
+            predicate({pair.first, graph[sourceIndex][pair.second]});
         }
     }
 
@@ -259,5 +259,3 @@ std::optional<Graph::Vertex> MatrixGraph::FindVertexByIndex(uint32_t index) cons
     }
     return {};
 }
-
-

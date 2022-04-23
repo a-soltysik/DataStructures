@@ -23,20 +23,15 @@ public:
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Edge edge) const override;
 
-    [[nodiscard]] std::optional<DynamicArray<Vertex>> GetNeighboursOf(Vertex vertex) const override;
+    [[nodiscard]] std::optional<DynamicArray<Neighbour>> GetNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] DynamicArray<Vertex> GetVertices() const override;
     [[nodiscard]] DynamicArray<Utils::Pair<Edge, Weight>> GetEdges() const override;
 
-    bool ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) const override;
+    bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const override;
     void ForEachVertex(VertexPredicate predicate) const override;
     void ForEachEdge(EdgePredicate predicate) const override;
 
 private:
-    struct Neighbour
-    {
-        Vertex vertex;
-        Weight weight;
-    };
 
     [[nodiscard]] const Neighbour* GetNeighbourOfFirst(Edge edge) const;
     [[nodiscard]] Neighbour* GetNeighbourOfFirst(Edge edge);

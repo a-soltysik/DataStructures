@@ -38,7 +38,7 @@ public:
         return equalityCounter == size1;
     }
 
-    bool CompareVertices(const Vertices& vertices1, const Vertices& vertices2)
+    static bool CompareVertices(const Vertices& vertices1, const Vertices& vertices2)
     {
         auto size1 = vertices1.Size();
         auto size2 = vertices2.Size();

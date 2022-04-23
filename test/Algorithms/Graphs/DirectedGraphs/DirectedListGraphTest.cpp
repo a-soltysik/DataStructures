@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
 
-#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
+#include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
 
-using Vertex = ListGraph::Vertex;
-using Edge = ListGraph::Edge;
-using Weight = ListGraph::Weight;
+using Vertex = DirectedListGraph::Vertex;
+using DirectedEdge = DirectedListGraph::DirectedEdge;
+using Weight = DirectedListGraph::Weight;
 
-using Edges = DynamicArray<Utils::Pair<Edge, Weight>>;
+using DirectedEdges = DynamicArray<Utils::Pair<DirectedEdge, Weight>>;
 using Vertices = DynamicArray<Vertex>;
 
-class ListGraphTest : public testing::Test
+class DirectedListGraphTest : public testing::Test
 {
 public:
-    static bool CompareEdges(const Edges& edges1, const Edges& edges2)
+    static bool CompareDirectedEdges(const DirectedEdges& DirectedEdges1, const DirectedEdges& DirectedEdges2)
     {
-        auto size1 = edges1.Size();
-        auto size2 = edges2.Size();
+        auto size1 = DirectedEdges1.Size();
+        auto size2 = DirectedEdges2.Size();
 
         if (size1 != size2)
         {
@@ -24,11 +24,11 @@ public:
 
         size_t equalityCounter = 0;
 
-        for (const auto& edge1 : edges1)
+        for (const auto& DirectedEdge1 : DirectedEdges1)
         {
-            for (const auto& edge2 : edges2)
+            for (const auto& DirectedEdge2 : DirectedEdges2)
             {
-                if (edge1 == edge2)
+                if (DirectedEdge1 == DirectedEdge2)
                 {
                     equalityCounter++;
                 }
@@ -65,10 +65,10 @@ public:
     }
 
 protected:
-    ListGraph graph;
+    DirectedListGraph graph;
 };
 
-TEST_F(ListGraphTest, AddVertexTest)
+TEST_F(DirectedListGraphTest, AddVertexTest)
 {
     graph.AddVertex();
     ASSERT_EQ(graph.GetOrder(), 1);
@@ -91,7 +91,7 @@ TEST_F(ListGraphTest, AddVertexTest)
     EXPECT_TRUE(CompareVertices(expected, real));
 }
 
-TEST_F(ListGraphTest, RemoveVertexTest)
+TEST_F(DirectedListGraphTest, RemoveVertexTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -122,7 +122,7 @@ TEST_F(ListGraphTest, RemoveVertexTest)
     ASSERT_TRUE(CompareVertices(expected, real));
 }
 
-TEST_F(ListGraphTest, AddEdgeTest)
+TEST_F(DirectedListGraphTest, AddDirectedEdgeTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -136,25 +136,27 @@ TEST_F(ListGraphTest, AddEdgeTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    ASSERT_EQ(graph.GetEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddEdge({0, 2}, 1));
+    ASSERT_EQ(graph.GetDirectedEdges().Size(), 0);
+    EXPECT_FALSE(graph.AddDirectedEdge({0, 2}, 1));
 
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddDirectedEdge({0, 1}, 1);
+    graph.AddDirectedEdge({4, 0}, 2);
+    graph.AddDirectedEdge({3, 1}, 3);
+    graph.AddDirectedEdge({1, 3}, 4);
 
-    ASSERT_EQ(graph.GetSize(), 3);
+    ASSERT_EQ(graph.GetSize(), 4);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2}),
-                           Utils::MakePair(Edge{3, 1}, Weight{3})};
+    DirectedEdges expectedDirectedEdges = {Utils::MakePair(DirectedEdge{0, 1}, Weight{1}),
+                                           Utils::MakePair(DirectedEdge{4, 0}, Weight{2}),
+                                           Utils::MakePair(DirectedEdge{3, 1}, Weight{3}),
+                                           Utils::MakePair(DirectedEdge{1, 3}, Weight{4})};
 
-    auto realEdges = graph.GetEdges();
-    EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
+    auto realDirectedEdges = graph.GetDirectedEdges();
+    EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
 }
 
-TEST_F(ListGraphTest, RemoveEdgeTest)
+TEST_F(DirectedListGraphTest, RemoveDirectedEdgeTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -168,24 +170,25 @@ TEST_F(ListGraphTest, RemoveEdgeTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddDirectedEdge({0, 1}, 1);
+    graph.AddDirectedEdge({4, 0}, 2);
+    graph.AddDirectedEdge({3, 1}, 3);
 
     ASSERT_EQ(graph.GetSize(), 3);
 
-    graph.RemoveEdge({1, 3});
+    EXPECT_FALSE(graph.RemoveDirectedEdge({1, 3}));
+    graph.RemoveDirectedEdge({3, 1});
 
     ASSERT_EQ(graph.GetSize(), 2);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2})};
+    DirectedEdges expectedDirectedEdges = {Utils::MakePair(DirectedEdge{0, 1}, Weight{1}),
+                                           Utils::MakePair(DirectedEdge{4, 0}, Weight{2})};
 
-    auto realEdges = graph.GetEdges();
-    EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
+    auto realDirectedEdges = graph.GetDirectedEdges();
+    EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
 }
 
-TEST_F(ListGraphTest, GetWeightTest)
+TEST_F(DirectedListGraphTest, GetWeightTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -199,22 +202,22 @@ TEST_F(ListGraphTest, GetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddDirectedEdge({0, 1}, 1);
+    graph.AddDirectedEdge({4, 0}, 2);
+    graph.AddDirectedEdge({3, 1}, 3);
 
     ASSERT_EQ(graph.GetSize(), 3);
 
-    EXPECT_EQ(graph.GetWeight({1, 0}).value(), 1);
+    EXPECT_EQ(graph.GetWeight({1, 0}), std::nullopt);
     EXPECT_EQ(graph.GetWeight({0, 1}).value(), 1);
     EXPECT_EQ(graph.GetWeight({4, 0}).value(), 2);
-    EXPECT_EQ(graph.GetWeight({0, 4}).value(), 2);
+    EXPECT_EQ(graph.GetWeight({0, 4}), std::nullopt);
     EXPECT_EQ(graph.GetWeight({3, 1}).value(), 3);
-    EXPECT_EQ(graph.GetWeight({1, 3}).value(), 3);
+    EXPECT_EQ(graph.GetWeight({1, 3}), std::nullopt);
     EXPECT_EQ(graph.GetWeight({0, 0}), std::nullopt);
 }
 
-TEST_F(ListGraphTest, SetWeightTest)
+TEST_F(DirectedListGraphTest, SetWeightTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -228,31 +231,31 @@ TEST_F(ListGraphTest, SetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddDirectedEdge({0, 1}, 1);
+    graph.AddDirectedEdge({4, 0}, 2);
+    graph.AddDirectedEdge({3, 1}, 3);
 
     ASSERT_EQ(graph.GetSize(), 3);
 
     EXPECT_TRUE(graph.SetWeight({0, 1}, 11));
-    EXPECT_TRUE(graph.SetWeight({0, 1}, 12));
-    EXPECT_EQ(graph.GetWeight({1, 0}).value(), 12);
-    EXPECT_EQ(graph.GetWeight({0, 1}).value(), 12);
+    EXPECT_FALSE(graph.SetWeight({1, 0}, 12));
+    EXPECT_EQ(graph.GetWeight({1, 0}), std::nullopt);
+    EXPECT_EQ(graph.GetWeight({0, 1}).value(), 11);
 
-    EXPECT_TRUE(graph.SetWeight({0, 4}, 13));
-    EXPECT_TRUE(graph.SetWeight({4, 0}, 14));
-    EXPECT_EQ(graph.GetWeight({4, 0}).value(), 14);
-    EXPECT_EQ(graph.GetWeight({0, 4}).value(), 14);
+    EXPECT_TRUE(graph.SetWeight({4, 0}, 13));
+    EXPECT_FALSE(graph.SetWeight({0, 4}, 14));
+    EXPECT_EQ(graph.GetWeight({4, 0}).value(), 13);
+    EXPECT_EQ(graph.GetWeight({0, 4}), std::nullopt);
 
     EXPECT_TRUE(graph.SetWeight({3, 1}, 15));
-    EXPECT_TRUE(graph.SetWeight({1, 3}, 16));
-    EXPECT_EQ(graph.GetWeight({3, 1}).value(), 16);
-    EXPECT_EQ(graph.GetWeight({1, 3}).value(), 16);
+    EXPECT_FALSE(graph.SetWeight({1, 3}, 16));
+    EXPECT_EQ(graph.GetWeight({3, 1}).value(), 15);
+    EXPECT_EQ(graph.GetWeight({1, 3}), std::nullopt);
 
     EXPECT_FALSE(graph.SetWeight({0, 3}, 11));
 }
 
-TEST_F(ListGraphTest, DoesExistTest)
+TEST_F(DirectedListGraphTest, DoesExistTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -266,12 +269,12 @@ TEST_F(ListGraphTest, DoesExistTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
-    graph.RemoveEdge({1, 3});
+    graph.AddDirectedEdge({0, 1}, 1);
+    graph.AddDirectedEdge({4, 0}, 2);
+    graph.AddDirectedEdge({3, 1}, 3);
+    graph.RemoveDirectedEdge({1, 3});
 
-    ASSERT_EQ(graph.GetSize(), 2);
+    ASSERT_EQ(graph.GetSize(), 3);
 
     EXPECT_TRUE(graph.DoesExist(0));
     EXPECT_TRUE(graph.DoesExist(1));
@@ -281,11 +284,11 @@ TEST_F(ListGraphTest, DoesExistTest)
     EXPECT_FALSE(graph.DoesExist(5));
 
     EXPECT_TRUE(graph.DoesExist({0, 1}));
-    EXPECT_TRUE(graph.DoesExist({1, 0}));
+    EXPECT_FALSE(graph.DoesExist({1, 0}));
     EXPECT_TRUE(graph.DoesExist({4, 0}));
-    EXPECT_TRUE(graph.DoesExist({0, 4}));
+    EXPECT_FALSE(graph.DoesExist({0, 4}));
     EXPECT_FALSE(graph.DoesExist({1, 3}));
-    EXPECT_FALSE(graph.DoesExist({3, 1}));
+    EXPECT_TRUE(graph.DoesExist({3, 1}));
     EXPECT_FALSE(graph.DoesExist({1, 1}));
     EXPECT_FALSE(graph.DoesExist({5, 1}));
 }

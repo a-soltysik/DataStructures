@@ -7,9 +7,17 @@
 class Graph
 {
 public:
+    struct Neighbour;
     using Vertex = uint32_t;
     using Weight = uint32_t;
     using VertexPredicate = std::function<void(Vertex)>;
+    using NeighbourPredicate = std::function<void(Neighbour)>;
+
+    struct Neighbour
+    {
+        Vertex vertex;
+        Weight weight;
+    };
 
     static constexpr Weight INFINITY = UINT32_MAX;
     static constexpr Vertex MAX_SIZE = UINT32_MAX;
@@ -29,9 +37,9 @@ public:
 
     [[nodiscard]] virtual bool DoesExist(Vertex vertex) const = 0;
 
-    [[nodiscard]] virtual std::optional<DynamicArray<Vertex>> GetNeighboursOf(Vertex vertex) const = 0;
+    [[nodiscard]] virtual std::optional<DynamicArray<Neighbour>> GetNeighboursOf(Vertex vertex) const = 0;
     [[nodiscard]] virtual DynamicArray<Vertex> GetVertices() const = 0;
 
-    virtual bool ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) const = 0;
+    virtual bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const = 0;
     virtual void ForEachVertex(VertexPredicate predicate) const = 0;
 };

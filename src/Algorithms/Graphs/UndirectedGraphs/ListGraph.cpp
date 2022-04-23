@@ -175,7 +175,7 @@ bool ListGraph::DoesExist(UndirectedGraph::Edge edge) const
     return foundFirst && foundSecond;
 }
 
-std::optional<DynamicArray<Graph::Vertex>> ListGraph::GetNeighboursOf(Vertex vertex) const
+std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex vertex) const
 {
     if (!DoesExist(vertex))
     {
@@ -184,12 +184,14 @@ std::optional<DynamicArray<Graph::Vertex>> ListGraph::GetNeighboursOf(Vertex ver
 
     const auto& neighbours = *verticesMap.at(vertex);
 
-    DynamicArray<Vertex> neighboursVertices;
+    DynamicArray<Neighbour> neighboursVertices;
     neighboursVertices.Resize(neighbours.Size());
 
-    for (size_t i = 0; i < neighbours.Size(); i++)
+    uint32_t i = 0;
+    for (const auto& neighbour : neighbours)
     {
-        neighboursVertices[i] = neighbours[i].vertex;
+        neighboursVertices[i] = neighbour;
+        i++;
     }
 
     return neighboursVertices;
@@ -230,7 +232,7 @@ DynamicArray<Utils::Pair<UndirectedGraph::Edge, Graph::Weight>> ListGraph::GetEd
     return result;
 }
 
-bool ListGraph::ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) const
+bool ListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const
 {
     if (!DoesExist(vertex))
     {
@@ -241,7 +243,7 @@ bool ListGraph::ForEachNeighbourOf(Vertex vertex, VertexPredicate predicate) con
 
     for (const auto& neighbour : neighbours)
     {
-        predicate(neighbour.vertex);
+        predicate(neighbour);
     }
 
     return true;

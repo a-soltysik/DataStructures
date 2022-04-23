@@ -11,6 +11,16 @@ bool UndirectedGraph::Edge::operator!=(Edge rhs) const noexcept
     return !(*this == rhs);
 }
 
+bool UndirectedGraph::EdgeData::operator==(const EdgeData& rhs) const noexcept
+{
+    return vertices == rhs.vertices && weight == rhs.weight;
+}
+
+bool UndirectedGraph::EdgeData::operator!=(const UndirectedGraph::EdgeData& rhs) const noexcept
+{
+    return !(*this == rhs);
+}
+
 float UndirectedGraph::GetDensity() const noexcept
 {
     const uint32_t order = GetOrder();

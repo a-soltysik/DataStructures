@@ -2,12 +2,13 @@
 
 #include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
 
-using Vertex = DirectedListGraph::Vertex;
-using DirectedEdge = DirectedListGraph::DirectedEdge;
-using Weight = DirectedListGraph::Weight;
+using Vertex           = DirectedListGraph::Vertex;
+using DirectedEdge     = DirectedListGraph::DirectedEdge;
+using DirectedEdgeData = DirectedListGraph::DirectedEdgeData;
+using Weight           = DirectedListGraph::Weight;
 
-using DirectedEdges = DynamicArray<Utils::Pair<DirectedEdge, Weight>>;
-using Vertices = DynamicArray<Vertex>;
+using DirectedEdges = DynamicArray<DirectedEdgeData>;
+using Vertices      = DynamicArray<Vertex>;
 
 class DirectedListGraphTest : public testing::Test
 {
@@ -137,20 +138,20 @@ TEST_F(DirectedListGraphTest, AddDirectedEdgeTest)
     ASSERT_TRUE(CompareVertices(expected, real));
 
     ASSERT_EQ(graph.GetDirectedEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddDirectedEdge({0, 2}, 1));
+    EXPECT_FALSE(graph.AddDirectedEdge({{0, 2}, 1}));
 
 
-    graph.AddDirectedEdge({0, 1}, 1);
-    graph.AddDirectedEdge({4, 0}, 2);
-    graph.AddDirectedEdge({3, 1}, 3);
-    graph.AddDirectedEdge({1, 3}, 4);
+    graph.AddDirectedEdge({{0, 1}, 1});
+    graph.AddDirectedEdge({{4, 0}, 2});
+    graph.AddDirectedEdge({{3, 1}, 3});
+    graph.AddDirectedEdge({{1, 3}, 4});
 
     ASSERT_EQ(graph.GetSize(), 4);
 
-    DirectedEdges expectedDirectedEdges = {Utils::MakePair(DirectedEdge{0, 1}, Weight{1}),
-                                           Utils::MakePair(DirectedEdge{4, 0}, Weight{2}),
-                                           Utils::MakePair(DirectedEdge{3, 1}, Weight{3}),
-                                           Utils::MakePair(DirectedEdge{1, 3}, Weight{4})};
+    DirectedEdges expectedDirectedEdges = {DirectedEdgeData {DirectedEdge{0, 1}, Weight{1}},
+                                           DirectedEdgeData {DirectedEdge{4, 0}, Weight{2}},
+                                           DirectedEdgeData {DirectedEdge{3, 1}, Weight{3}},
+                                           DirectedEdgeData {DirectedEdge{1, 3}, Weight{4}}};
 
     auto realDirectedEdges = graph.GetDirectedEdges();
     EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
@@ -170,9 +171,9 @@ TEST_F(DirectedListGraphTest, RemoveDirectedEdgeTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddDirectedEdge({0, 1}, 1);
-    graph.AddDirectedEdge({4, 0}, 2);
-    graph.AddDirectedEdge({3, 1}, 3);
+    graph.AddDirectedEdge({{0, 1}, 1});
+    graph.AddDirectedEdge({{4, 0}, 2});
+    graph.AddDirectedEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -181,8 +182,8 @@ TEST_F(DirectedListGraphTest, RemoveDirectedEdgeTest)
 
     ASSERT_EQ(graph.GetSize(), 2);
 
-    DirectedEdges expectedDirectedEdges = {Utils::MakePair(DirectedEdge{0, 1}, Weight{1}),
-                                           Utils::MakePair(DirectedEdge{4, 0}, Weight{2})};
+    DirectedEdges expectedDirectedEdges = {DirectedEdgeData {DirectedEdge{0, 1}, Weight{1}},
+                                           DirectedEdgeData {DirectedEdge{4, 0}, Weight{2}}};
 
     auto realDirectedEdges = graph.GetDirectedEdges();
     EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
@@ -202,9 +203,9 @@ TEST_F(DirectedListGraphTest, GetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddDirectedEdge({0, 1}, 1);
-    graph.AddDirectedEdge({4, 0}, 2);
-    graph.AddDirectedEdge({3, 1}, 3);
+    graph.AddDirectedEdge({{0, 1}, 1});
+    graph.AddDirectedEdge({{4, 0}, 2});
+    graph.AddDirectedEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -231,9 +232,9 @@ TEST_F(DirectedListGraphTest, SetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddDirectedEdge({0, 1}, 1);
-    graph.AddDirectedEdge({4, 0}, 2);
-    graph.AddDirectedEdge({3, 1}, 3);
+    graph.AddDirectedEdge({{0, 1}, 1});
+    graph.AddDirectedEdge({{4, 0}, 2});
+    graph.AddDirectedEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -269,9 +270,9 @@ TEST_F(DirectedListGraphTest, DoesExistTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddDirectedEdge({0, 1}, 1);
-    graph.AddDirectedEdge({4, 0}, 2);
-    graph.AddDirectedEdge({3, 1}, 3);
+    graph.AddDirectedEdge({{0, 1}, 1});
+    graph.AddDirectedEdge({{4, 0}, 2});
+    graph.AddDirectedEdge({{3, 1}, 3});
     graph.RemoveDirectedEdge({1, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);

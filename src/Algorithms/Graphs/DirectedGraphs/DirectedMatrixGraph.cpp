@@ -46,56 +46,56 @@ bool DirectedMatrixGraph::RemoveVertex(Vertex vertex)
     return true;
 }
 
-bool DirectedMatrixGraph::AddDirectedEdge(DirectedEdge DirectedEdge, Weight weight)
+bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 {
-    if (!DoesExist(DirectedEdge.first) || !DoesExist(DirectedEdge.second))
+    if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
     }
 
-    if (DoesExist(DirectedEdge))
+    if (DoesExist(edge.vertices))
     {
         return false;
     }
 
-    graph[verticesMap.at(DirectedEdge.first)][verticesMap.at(DirectedEdge.second)] = weight;
+    graph[verticesMap.at(edge.vertices.first)][verticesMap.at(edge.vertices.second)] = edge.weight;
 
     size++;
 
     return true;
 }
 
-bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge DirectedEdge)
+bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
 {
-    if (!DoesExist(DirectedEdge))
+    if (!DoesExist(directedEdge))
     {
         return false;
     }
 
-    graph[verticesMap.at(DirectedEdge.first)][verticesMap.at(DirectedEdge.second)] = Graph::INFINITY;
+    graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] = Graph::INFINITY;
 
     size--;
 
     return true;
 }
 
-std::optional<Graph::Weight> DirectedMatrixGraph::GetWeight(DirectedEdge DirectedEdge) const
+std::optional<Graph::Weight> DirectedMatrixGraph::GetWeight(DirectedEdge directedEdge) const
 {
-    if (!DoesExist(DirectedEdge))
+    if (!DoesExist(directedEdge))
     {
         return {};
     }
-    return graph[verticesMap.at(DirectedEdge.first)][verticesMap.at(DirectedEdge.second)];
+    return graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)];
 }
 
-bool DirectedMatrixGraph::SetWeight(DirectedEdge DirectedEdge, Weight weight)
+bool DirectedMatrixGraph::SetWeight(DirectedEdge directedEdge, Weight weight)
 {
-    if (!DoesExist(DirectedEdge))
+    if (!DoesExist(directedEdge))
     {
         return false;
     }
 
-    graph[verticesMap.at(DirectedEdge.first)][verticesMap.at(DirectedEdge.second)] = weight;
+    graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] = weight;
 
     return true;
 }
@@ -115,13 +115,13 @@ bool DirectedMatrixGraph::DoesExist(Vertex vertex) const
     return verticesMap.Find(vertex) != verticesMap.end();
 }
 
-bool DirectedMatrixGraph::DoesExist(DirectedEdge DirectedEdge) const
+bool DirectedMatrixGraph::DoesExist(DirectedEdge directedEdge) const
 {
-    if (!DoesExist(DirectedEdge.first) || !DoesExist(DirectedEdge.second))
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return false;
     }
-    return graph[verticesMap.at(DirectedEdge.first)][verticesMap.at(DirectedEdge.second)] != Graph::INFINITY;
+    return graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] != Graph::INFINITY;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -162,9 +162,9 @@ DynamicArray<Graph::Vertex> DirectedMatrixGraph::GetVertices() const
 }
 
 
-DynamicArray<Utils::Pair<DirectedGraph::DirectedEdge, Graph::Weight>> DirectedMatrixGraph::GetDirectedEdges() const
+DynamicArray<DirectedGraph::DirectedEdgeData> DirectedMatrixGraph::GetDirectedEdges() const
 {
-    DynamicArray<Utils::Pair<DirectedGraph::DirectedEdge, Graph::Weight>> result;
+    DynamicArray<DirectedEdgeData> result;
     result.Resize(GetSize());
 
     uint64_t DirectedEdgeCounter = 0;
@@ -220,7 +220,7 @@ void DirectedMatrixGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) c
         {
             if (graph[pair1.second][pair2.second] != Graph::INFINITY)
             {
-                predicate({pair1.first, pair2.first}, graph[pair1.second][pair2.second]);
+                predicate({{pair1.first, pair2.first}, graph[pair1.second][pair2.second]});
             }
         }
     }

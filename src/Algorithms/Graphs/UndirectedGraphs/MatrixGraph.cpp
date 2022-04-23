@@ -46,20 +46,20 @@ bool MatrixGraph::RemoveVertex(Vertex vertex)
     return true;
 }
 
-bool MatrixGraph::AddEdge(Edge edge, Weight weight)
+bool MatrixGraph::AddEdge(const EdgeData& edge)
 {
-    if (!DoesExist(edge.first) || !DoesExist(edge.second))
+    if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
     }
 
-    if (DoesExist(edge))
+    if (DoesExist(edge.vertices))
     {
         return false;
     }
 
-    graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)] = weight;
-    graph[verticesMap.at(edge.second)][verticesMap.at(edge.first)] = weight;
+    graph[verticesMap.at(edge.vertices.first)][verticesMap.at(edge.vertices.second)] = edge.weight;
+    graph[verticesMap.at(edge.vertices.second)][verticesMap.at(edge.vertices.first)] = edge.weight;
 
     size++;
 
@@ -165,9 +165,9 @@ DynamicArray<Graph::Vertex> MatrixGraph::GetVertices() const
 }
 
 
-DynamicArray<Utils::Pair<UndirectedGraph::Edge, Graph::Weight>> MatrixGraph::GetEdges() const
+DynamicArray<UndirectedGraph::EdgeData> MatrixGraph::GetEdges() const
 {
-    DynamicArray<Utils::Pair<UndirectedGraph::Edge, Graph::Weight>> result;
+    DynamicArray<EdgeData> result;
     result.Resize(GetSize());
 
     uint64_t edgeCounter = 0;
@@ -223,7 +223,8 @@ void MatrixGraph::ForEachEdge(EdgePredicate predicate) const
         {
             if (graph[i][j] != Graph::INFINITY)
             {
-                predicate({FindVertexByIndex(i).value(), FindVertexByIndex(j).value()}, graph[i][j]);
+                Edge edge{FindVertexByIndex(i).value(), FindVertexByIndex(j).value()};
+                predicate({edge, graph[i][j]});
             }
         }
     }

@@ -31,7 +31,7 @@ bool DirectedListGraph::RemoveVertex(Vertex vertex)
         return false;
     }
 
-    auto iteratorToRemove = verticesMap[vertex];
+    auto iteratorToRemove = verticesMap.at(vertex);
     auto graphIt = graph.begin();
 
     for (auto& neighbours : graph)
@@ -58,19 +58,19 @@ bool DirectedListGraph::RemoveVertex(Vertex vertex)
     return true;
 }
 
-bool DirectedListGraph::AddDirectedEdge(DirectedEdge directedEdge, Weight weight)
+bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 {
-    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
+    if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
     }
 
-    if (DoesExist(directedEdge))
+    if (DoesExist(edge.vertices))
     {
         return false;
     }
 
-    verticesMap[directedEdge.first]->PushBack({directedEdge.second, weight});
+    verticesMap.at(edge.vertices.first)->PushBack({edge.vertices.second, edge.weight});
 
     size++;
     return true;
@@ -83,7 +83,7 @@ bool DirectedListGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
         return false;
     }
 
-    auto& DirectedEdges1 = *verticesMap[directedEdge.first];
+    auto& DirectedEdges1 = *verticesMap.at(directedEdge.first);
     bool found = false;
 
     for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
@@ -183,9 +183,9 @@ DynamicArray<Graph::Vertex> DirectedListGraph::GetVertices() const
     return result;
 }
 
-DynamicArray<Utils::Pair<DirectedGraph::DirectedEdge, Graph::Weight>> DirectedListGraph::GetDirectedEdges() const
+DynamicArray<DirectedGraph::DirectedEdgeData> DirectedListGraph::GetDirectedEdges() const
 {
-    DynamicArray<Utils::Pair<DirectedEdge, Weight>> result;
+    DynamicArray<DirectedEdgeData> result;
     result.Resize(GetSize());
 
     uint64_t edgeCounter = 0;
@@ -232,7 +232,7 @@ void DirectedListGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) con
     {
         for (const auto& neighbour : *pair.second)
         {
-            predicate({pair.first, neighbour.vertex}, neighbour.weight);
+            predicate({{pair.first, neighbour.vertex}, neighbour.weight});
         }
     }
 }

@@ -12,7 +12,7 @@ public:
     Vertex AddVertex() override;
     bool RemoveVertex(Vertex vertex) override;
 
-    bool AddEdge(Edge edge, Weight weight) override;
+    bool AddEdge(const EdgeData& edge) override;
     bool RemoveEdge(Edge edge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(Edge edge) const override;
@@ -25,7 +25,7 @@ public:
 
     [[nodiscard]] std::optional<DynamicArray<Neighbour>> GetNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] DynamicArray<Vertex> GetVertices() const override;
-    [[nodiscard]] DynamicArray<Utils::Pair<Edge, Weight>> GetEdges() const override;
+    [[nodiscard]] DynamicArray<EdgeData> GetEdges() const override;
 
     bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const override;
     void ForEachVertex(VertexPredicate predicate) const override;

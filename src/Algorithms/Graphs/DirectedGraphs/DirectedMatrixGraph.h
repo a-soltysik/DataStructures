@@ -11,20 +11,20 @@ public:
     Vertex AddVertex() override;
     bool RemoveVertex(Vertex vertex) override;
 
-    bool AddDirectedEdge(DirectedEdge DirectedEdge, Weight weight) override;
-    bool RemoveDirectedEdge(DirectedEdge DirectedEdge) override;
+    bool AddDirectedEdge(const DirectedEdgeData& edge) override;
+    bool RemoveDirectedEdge(DirectedEdge directedEdge) override;
 
-    [[nodiscard]] std::optional<Weight> GetWeight(DirectedEdge DirectedEdge) const override;
-    bool SetWeight(DirectedEdge DirectedEdge, Weight weight) override;
+    [[nodiscard]] std::optional<Weight> GetWeight(DirectedEdge directedEdge) const override;
+    bool SetWeight(DirectedEdge directedEdge, Weight weight) override;
 
     [[nodiscard]] uint32_t GetOrder() const noexcept override;
     [[nodiscard]] uint64_t GetSize() const noexcept override;
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
-    [[nodiscard]] bool DoesExist(DirectedEdge DirectedEdge) const override;
+    [[nodiscard]] bool DoesExist(DirectedEdge directedEdge) const override;
 
     [[nodiscard]] std::optional<DynamicArray<Neighbour>> GetNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] DynamicArray<Vertex> GetVertices() const override;
-    [[nodiscard]] DynamicArray<Utils::Pair<DirectedEdge, Weight>> GetDirectedEdges() const override;
+    [[nodiscard]] DynamicArray<DirectedEdgeData> GetDirectedEdges() const override;
 
     bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const override;
     void ForEachVertex(VertexPredicate predicate) const override;

@@ -2,11 +2,12 @@
 
 #include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
 
-using Vertex = MatrixGraph::Vertex;
-using Edge = MatrixGraph::Edge;
-using Weight = MatrixGraph::Weight;
+using Vertex   = MatrixGraph::Vertex;
+using Edge     = MatrixGraph::Edge;
+using EdgeData = MatrixGraph::EdgeData;
+using Weight   = MatrixGraph::Weight;
 
-using Edges = DynamicArray<Utils::Pair<Edge, Weight>>;
+using Edges    = DynamicArray<EdgeData>;
 using Vertices = DynamicArray<Vertex>;
 
 class MatrixGraphTest : public testing::Test
@@ -137,21 +138,20 @@ TEST_F(MatrixGraphTest, AddEdgeTest)
     ASSERT_TRUE(CompareVertices(expected, real));
 
     ASSERT_EQ(graph.GetEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddEdge({0, 2}, 1));
+    EXPECT_FALSE(graph.AddEdge({{0, 2}, 1}));
 
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2}),
-                           Utils::MakePair(Edge{3, 1}, Weight{3})};
+    Edges expectedEdges = {EdgeData {Edge{0, 1}, Weight{1}},
+                           EdgeData {Edge{0, 4}, Weight{2}},
+                           EdgeData {Edge{3, 1}, Weight{3}}};
 
     auto realEdges = graph.GetEdges();
-
     EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
 }
 
@@ -169,9 +169,9 @@ TEST_F(MatrixGraphTest, RemoveEdgeTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -179,8 +179,8 @@ TEST_F(MatrixGraphTest, RemoveEdgeTest)
 
     ASSERT_EQ(graph.GetSize(), 2);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2})};
+    Edges expectedEdges = {EdgeData {Edge{0, 1}, Weight{1}},
+                           EdgeData {Edge{0, 4}, Weight{2}}};
 
     auto realEdges = graph.GetEdges();
     EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
@@ -200,9 +200,9 @@ TEST_F(MatrixGraphTest, GetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -229,9 +229,9 @@ TEST_F(MatrixGraphTest, SetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -267,9 +267,9 @@ TEST_F(MatrixGraphTest, DoesExistTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
     graph.RemoveEdge({1, 3});
 
     ASSERT_EQ(graph.GetSize(), 2);

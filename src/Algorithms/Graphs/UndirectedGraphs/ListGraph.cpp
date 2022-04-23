@@ -33,7 +33,7 @@ bool ListGraph::RemoveVertex(Vertex vertex)
         return false;
     }
 
-    auto iteratorToRemove = verticesMap[vertex];
+    auto iteratorToRemove = verticesMap.at(vertex);
     auto graphIt = graph.begin();
 
     for (auto& neighbours : graph)
@@ -60,20 +60,20 @@ bool ListGraph::RemoveVertex(Vertex vertex)
     return true;
 }
 
-bool ListGraph::AddEdge(Edge edge, Weight weight)
+bool ListGraph::AddEdge(const EdgeData& edge)
 {
-    if (!DoesExist(edge.first) || !DoesExist(edge.second))
+    if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
     }
 
-    if (DoesExist(edge))
+    if (DoesExist(edge.vertices))
     {
         return false;
     }
 
-    verticesMap[edge.first]->PushBack({edge.second, weight});
-    verticesMap[edge.second]->PushBack({edge.first, weight});
+    verticesMap.at(edge.vertices.first)->PushBack({edge.vertices.second, edge.weight});
+    verticesMap.at(edge.vertices.second)->PushBack({edge.vertices.first, edge.weight});
 
     size++;
     return true;
@@ -86,7 +86,7 @@ bool ListGraph::RemoveEdge(Edge edge)
         return false;
     }
 
-    auto& edges1 = *verticesMap[edge.first];
+    auto& edges1 = *verticesMap.at(edge.first);
     bool found = false;
 
     for (auto it = edges1.begin(); it != edges1.end(); it++)
@@ -105,7 +105,7 @@ bool ListGraph::RemoveEdge(Edge edge)
         return false;
     }
 
-    auto& edges2 = *verticesMap[edge.second];
+    auto& edges2 = *verticesMap.at(edge.second);
 
     for (auto it = edges2.begin(); it != edges2.end(); it++)
     {
@@ -212,9 +212,9 @@ DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
     return result;
 }
 
-DynamicArray<Utils::Pair<UndirectedGraph::Edge, Graph::Weight>> ListGraph::GetEdges() const
+DynamicArray<UndirectedGraph::EdgeData> ListGraph::GetEdges() const
 {
-    DynamicArray<Utils::Pair<Edge, Weight>> result;
+    DynamicArray<EdgeData> result;
     UnorderedSet<Edge> edges;
 
     for (const auto& pair : verticesMap)
@@ -268,7 +268,7 @@ void ListGraph::ForEachEdge(EdgePredicate predicate) const
             Edge edge{pair.first, neighbour.vertex};
             if (edges.Insert(edge) != edges.end())
             {
-                predicate(edge, neighbour.weight);
+                predicate({edge, neighbour.weight});
             }
         }
     }

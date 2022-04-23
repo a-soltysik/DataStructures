@@ -2,11 +2,12 @@
 
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 
-using Vertex = ListGraph::Vertex;
-using Edge = ListGraph::Edge;
-using Weight = ListGraph::Weight;
+using Vertex   = ListGraph::Vertex;
+using Edge     = ListGraph::Edge;
+using EdgeData = ListGraph::EdgeData;
+using Weight   = ListGraph::Weight;
 
-using Edges = DynamicArray<Utils::Pair<Edge, Weight>>;
+using Edges    = DynamicArray<EdgeData>;
 using Vertices = DynamicArray<Vertex>;
 
 class ListGraphTest : public testing::Test
@@ -137,20 +138,18 @@ TEST_F(ListGraphTest, AddEdgeTest)
     ASSERT_TRUE(CompareVertices(expected, real));
 
     ASSERT_EQ(graph.GetEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddEdge({0, 2}, 1));
+    EXPECT_FALSE(graph.AddEdge({{0, 2}, 1}));
 
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
-
-    std::cout << graph.GetDensity() << "\n";
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2}),
-                           Utils::MakePair(Edge{3, 1}, Weight{3})};
+    Edges expectedEdges = {EdgeData {Edge{0, 1}, Weight{1}},
+                           EdgeData {Edge{0, 4}, Weight{2}},
+                           EdgeData {Edge{3, 1}, Weight{3}}};
 
     auto realEdges = graph.GetEdges();
     EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
@@ -170,9 +169,9 @@ TEST_F(ListGraphTest, RemoveEdgeTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -180,8 +179,8 @@ TEST_F(ListGraphTest, RemoveEdgeTest)
 
     ASSERT_EQ(graph.GetSize(), 2);
 
-    Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),
-                           Utils::MakePair(Edge{0, 4}, Weight{2})};
+    Edges expectedEdges = {EdgeData {Edge{0, 1}, Weight{1}},
+                           EdgeData {Edge{0, 4}, Weight{2}}};
 
     auto realEdges = graph.GetEdges();
     EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
@@ -201,9 +200,9 @@ TEST_F(ListGraphTest, GetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -230,9 +229,9 @@ TEST_F(ListGraphTest, SetWeightTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
@@ -268,9 +267,9 @@ TEST_F(ListGraphTest, DoesExistTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    graph.AddEdge({0, 1}, 1);
-    graph.AddEdge({4, 0}, 2);
-    graph.AddEdge({3, 1}, 3);
+    graph.AddEdge({{0, 1}, 1});
+    graph.AddEdge({{4, 0}, 2});
+    graph.AddEdge({{3, 1}, 3});
     graph.RemoveEdge({1, 3});
 
     ASSERT_EQ(graph.GetSize(), 2);

@@ -13,16 +13,8 @@ public:
         Vertex first;
         Vertex second;
 
-        bool operator==(Edge rhs) const noexcept
-        {
-            return (first == rhs.first && second == rhs.second) ||
-                   (first == rhs.second && second == rhs.first);
-        }
-
-        bool operator!=(Edge rhs) const noexcept
-        {
-            return !(*this == rhs);
-        }
+        bool operator==(Edge rhs) const noexcept;
+        bool operator!=(Edge rhs) const noexcept;
     };
 
     using EdgePredicate = std::function<void(Edge, Weight)>;
@@ -36,7 +28,7 @@ public:
     virtual bool SetWeight(Edge edge, Weight weight) = 0;
 
     [[nodiscard]] virtual bool DoesExist(Edge edge) const = 0;
-
+    [[nodiscard]] float GetDensity() const noexcept override;
     [[nodiscard]] virtual DynamicArray<Utils::Pair<Edge, Weight>> GetEdges() const = 0;
 
     virtual void ForEachEdge(EdgePredicate predicate) const = 0;

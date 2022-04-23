@@ -144,6 +144,8 @@ TEST_F(ListGraphTest, AddEdgeTest)
     graph.AddEdge({4, 0}, 2);
     graph.AddEdge({3, 1}, 3);
 
+    std::cout << graph.GetDensity() << "\n";
+
     ASSERT_EQ(graph.GetSize(), 3);
 
     Edges expectedEdges = {Utils::MakePair(Edge{0, 1}, Weight{1}),

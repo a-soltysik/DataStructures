@@ -30,8 +30,8 @@ public:
 
     [[nodiscard]] static constexpr const char* ClassName() noexcept { return "RedBlackTree"; }
 
-    RedBlackTree() = default;
-    RedBlackTree(std::initializer_list<DataType> initList);
+    explicit RedBlackTree(const Comparator& comparator = Comparator());
+    RedBlackTree(std::initializer_list<DataType> initList, const Comparator& comparator = Comparator());
     RedBlackTree(const RedBlackTree& rhs);
     RedBlackTree(RedBlackTree&& rhs) noexcept;
     RedBlackTree& operator=(const RedBlackTree& rhs);
@@ -162,7 +162,13 @@ struct RedBlackTreeIterator : public RedBlackTreeConstIterator<T, C>
 };
 
 template<typename T, typename C>
-RedBlackTree<T, C>::RedBlackTree(std::initializer_list<DataType> initList)
+RedBlackTree<T, C>::RedBlackTree(const Comparator& comparator)
+    : comparator(comparator)
+{ }
+
+template<typename T, typename C>
+RedBlackTree<T, C>::RedBlackTree(std::initializer_list<DataType> initList, const Comparator& comparator)
+    : comparator(comparator)
 {
     for (const auto& item: initList)
     {
@@ -175,6 +181,7 @@ RedBlackTree<T, C>::RedBlackTree(const RedBlackTree& rhs)
 {
     SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
+    comparator = rhs.comparator;
 }
 
 template<typename T, typename C>
@@ -182,6 +189,7 @@ RedBlackTree<T, C>::RedBlackTree(RedBlackTree&& rhs) noexcept
 {
     NIL = rhs.NIL;
     size = rhs.size;
+    comparator = std::move(rhs.comparator);
 
     rhs.NIL = nullptr;
     rhs.size = 0u;
@@ -197,6 +205,7 @@ RedBlackTree<T, C>& RedBlackTree<T, C>::operator=(const RedBlackTree& rhs)
     Clear();
     SetRoot(CopySubtree(rhs, rhs.Root()));
     size = rhs.size;
+    comparator = rhs.comparator;
 
     return *this;
 }
@@ -207,6 +216,7 @@ RedBlackTree<T, C>& RedBlackTree<T, C>::operator=(RedBlackTree&& rhs) noexcept
     Clear();
     NIL = rhs.NIL;
     size = rhs.size;
+    comparator = std::move(rhs.comparator);
 
     rhs.NIL = nullptr;
     rhs.size = 0u;

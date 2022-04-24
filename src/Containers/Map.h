@@ -18,14 +18,15 @@ class Map
 public:
     using KeyType = K;
     using ValueType = V;
+    using Comparator = C;
     using DataType = Utils::Pair<const K, V>;
     using Iterator = typename RedBlackTree<DataType, C>::Iterator;
     using ConstIterator = typename RedBlackTree<DataType, C>::ConstIterator;
 
     [[nodiscard]] static constexpr const char* ClassName() noexcept { return "Map"; }
 
-    Map() = default;
-    Map(std::initializer_list<DataType> initList);
+    Map(const Comparator& comparator = Comparator());
+    Map(std::initializer_list<DataType> initList, const Comparator& comparator = Comparator());
 
     [[nodiscard]] ValueType& operator[](const KeyType& key);
     [[nodiscard]] ValueType& at(const KeyType& key);
@@ -64,8 +65,13 @@ private:
 };
 
 template<typename K, typename V, typename C>
-Map<K, V, C>::Map(std::initializer_list<DataType> initList)
-    : tree(initList)
+Map<K, V, C>::Map(const Comparator& comparator)
+    : tree(comparator)
+{}
+
+template<typename K, typename V, typename C>
+Map<K, V, C>::Map(std::initializer_list<DataType> initList, const Comparator& comparator)
+    : tree(initList, comparator)
 { }
 
 template<typename K, typename V, typename C>

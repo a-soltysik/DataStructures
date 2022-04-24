@@ -4,19 +4,20 @@
 
 #include "Utils/Utils.h"
 
-template<typename T>
+template<typename T, typename C = Utils::Greater<T>>
 class Heap
 {
 public:
     using DataType = T;
+    using Comparator = C;
     using Iterator = typename DynamicArray<DataType>::Iterator;
     using ConstIterator = typename DynamicArray<DataType>::ConstIterator;
 
     [[nodiscard]] static constexpr const char* ClassName() { return "Heap"; }
 
-    Heap() = default;
-    Heap(std::initializer_list<DataType> initList);
-    explicit Heap(const DynamicArray<T>& array);
+    explicit Heap(const Comparator& comparator = Comparator());
+    Heap(std::initializer_list<DataType> initList, const Comparator& comparator = Comparator());
+    explicit Heap(const DynamicArray<T>& array, const Comparator& comparator = Comparator());
 
     void Assign(const DynamicArray<T>& array);
     void Insert(const DataType& value);
@@ -27,7 +28,7 @@ public:
     [[nodiscard]] Iterator Find(const DataType& value) noexcept;
     [[nodiscard]] ConstIterator Find(const DataType& value) const noexcept;
 
-    [[nodiscard]] const DataType& Max() const;
+    [[nodiscard]] const DataType& First() const;
 
     [[nodiscard]] const DynamicArray<T>& Array() const;
     [[nodiscard]] size_t Size() const noexcept;
@@ -60,11 +61,18 @@ private:
 
     void ToString(std::string& result, const std::string& prefix, size_t node, bool isRight) const;
 
+    Comparator comparator;
     DynamicArray<DataType> data;
 };
 
-template<typename T>
-Heap<T>::Heap(std::initializer_list<DataType> initList)
+template<typename T, typename C>
+Heap<T, C>::Heap(const Comparator& comparator)
+    : comparator(comparator)
+{ }
+
+template<typename T, typename C>
+Heap<T, C>::Heap(std::initializer_list<DataType> initList, const Comparator& comparator)
+    : comparator(comparator)
 {
     for (const auto& element: initList)
     {
@@ -72,14 +80,15 @@ Heap<T>::Heap(std::initializer_list<DataType> initList)
     }
 }
 
-template<typename T>
-Heap<T>::Heap(const DynamicArray<T>& array)
+template<typename T, typename C>
+Heap<T, C>::Heap(const DynamicArray<T>& array, const Comparator& comparator)
+    : comparator(comparator)
 {
     Assign(array);
 }
 
-template<typename T>
-void Heap<T>::Assign(const DynamicArray<T>& array)
+template<typename T, typename C>
+void Heap<T, C>::Assign(const DynamicArray<T>& array)
 {
     data = array;
     for (size_t i = array.Size() / 2 - 1; i-- > 0;)
@@ -88,14 +97,14 @@ void Heap<T>::Assign(const DynamicArray<T>& array)
     }
 }
 
-template<typename T>
-void Heap<T>::Insert(const DataType& value)
+template<typename T, typename C>
+void Heap<T, C>::Insert(const DataType& value)
 {
     data.PushBack(value);
     size_t position = data.Size() - 1;
     size_t nextPosition = (position - 1) / 2;
 
-    while (position != 0u && data[nextPosition] < value)
+    while (position != 0u && comparator(value, data[nextPosition]))
     {
         Utils::Swap(data[position], data[nextPosition]);
         position = nextPosition;
@@ -103,8 +112,8 @@ void Heap<T>::Insert(const DataType& value)
     }
 }
 
-template<typename T>
-bool Heap<T>::Remove(const DataType& value)
+template<typename T, typename C>
+bool Heap<T, C>::Remove(const DataType& value)
 {
     size_t position = Find(value, 0u);
 
@@ -117,50 +126,50 @@ bool Heap<T>::Remove(const DataType& value)
     return true;
 }
 
-template<typename T>
-void Heap<T>::Pop()
+template<typename T, typename C>
+void Heap<T, C>::Pop()
 {
     RemoveAt(0u);
 }
 
-template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::Find(const DataType& value) const noexcept
+template<typename T, typename C>
+typename Heap<T, C>::ConstIterator Heap<T, C>::Find(const DataType& value) const noexcept
 {
     return data.Find(value);
 }
 
-template<typename T>
-typename Heap<T>::Iterator Heap<T>::Find(const DataType& value) noexcept
+template<typename T, typename C>
+typename Heap<T, C>::Iterator Heap<T, C>::Find(const DataType& value) noexcept
 {
     return data.Find(value);
 }
 
-template<typename T>
-const DynamicArray<T>& Heap<T>::Array() const
+template<typename T, typename C>
+const DynamicArray<T>& Heap<T, C>::Array() const
 {
     return data;
 }
 
-template<typename T>
-const typename Heap<T>::DataType& Heap<T>::Max() const
+template<typename T, typename C>
+const typename Heap<T, C>::DataType& Heap<T, C>::First() const
 {
     return data[0];
 }
 
-template<typename T>
-void Heap<T>::Clear()
+template<typename T, typename C>
+void Heap<T, C>::Clear()
 {
     data.Clear();
 }
 
-template<typename T>
-size_t Heap<T>::Size() const noexcept
+template<typename T, typename C>
+size_t Heap<T, C>::Size() const noexcept
 {
     return data.Size();
 }
 
-template<typename T>
-size_t Heap<T>::Find(const DataType& value, size_t root) const
+template<typename T, typename C>
+size_t Heap<T, C>::Find(const DataType& value, size_t root) const
 {
     if (root >= data.Size())
     {
@@ -181,8 +190,8 @@ size_t Heap<T>::Find(const DataType& value, size_t root) const
     return leftFind != data.Size() ? leftFind : rightFind;
 }
 
-template<typename T>
-size_t Heap<T>::Left(size_t parent) const noexcept
+template<typename T, typename C>
+size_t Heap<T, C>::Left(size_t parent) const noexcept
 {
     size_t left = 2u * parent + 1u;
     if (left >= data.Size())
@@ -192,8 +201,8 @@ size_t Heap<T>::Left(size_t parent) const noexcept
     return left;
 }
 
-template<typename T>
-size_t Heap<T>::Right(size_t parent) const noexcept
+template<typename T, typename C>
+size_t Heap<T, C>::Right(size_t parent) const noexcept
 {
     size_t right = 2u * parent + 2u;
     if (right >= data.Size())
@@ -203,14 +212,14 @@ size_t Heap<T>::Right(size_t parent) const noexcept
     return right;
 }
 
-template<typename T>
-size_t Heap<T>::Parent(size_t node) noexcept
+template<typename T, typename C>
+size_t Heap<T, C>::Parent(size_t node) noexcept
 {
     return (node - 1) / 2;
 }
 
-template<typename T>
-void Heap<T>::RemoveAt(size_t node)
+template<typename T, typename C>
+void Heap<T, C>::RemoveAt(size_t node)
 {
     if (node >= Size())
     {
@@ -228,8 +237,8 @@ void Heap<T>::RemoveAt(size_t node)
     RestoreDown(node);
 }
 
-template<typename T>
-void Heap<T>::RestoreDown(size_t node)
+template<typename T, typename C>
+void Heap<T, C>::RestoreDown(size_t node)
 {
     size_t current_position = node;
 
@@ -239,12 +248,13 @@ void Heap<T>::RestoreDown(size_t node)
     size_t right = Right(current_position);
     bool isRight = right != data.Size();
 
-    while ((isLeft && data[current_position] < data[left]) || (isRight && data[current_position] < data[right]))
+    while ((isLeft && comparator(data[left], data[current_position])) ||
+          (isRight && comparator(data[right], data[current_position])))
     {
         size_t next_position;
         if (isLeft && isRight)
         {
-            next_position = data[left] > data[right] ? left : right;
+            next_position = comparator(data[left], data[right]) ? left : right;
         }
         else
         {
@@ -261,44 +271,44 @@ void Heap<T>::RestoreDown(size_t node)
     }
 }
 
-template<typename T>
-typename Heap<T>::Iterator Heap<T>::begin() noexcept
+template<typename T, typename C>
+typename Heap<T, C>::Iterator Heap<T, C>::begin() noexcept
 {
     return data.begin();
 }
 
-template<typename T>
-typename Heap<T>::Iterator Heap<T>::end() noexcept
+template<typename T, typename C>
+typename Heap<T, C>::Iterator Heap<T, C>::end() noexcept
 {
     return data.end();
 }
 
-template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::begin() const noexcept
+template<typename T, typename C>
+typename Heap<T, C>::ConstIterator Heap<T, C>::begin() const noexcept
 {
     return data.begin();
 }
 
-template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::end() const noexcept
+template<typename T, typename C>
+typename Heap<T, C>::ConstIterator Heap<T, C>::end() const noexcept
 {
     return data.end();
 }
 
-template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::cbegin() const noexcept
+template<typename T, typename C>
+typename Heap<T, C>::ConstIterator Heap<T, C>::cbegin() const noexcept
 {
     return data.cbegin();
 }
 
-template<typename T>
-typename Heap<T>::ConstIterator Heap<T>::cend() const noexcept
+template<typename T, typename C>
+typename Heap<T, C>::ConstIterator Heap<T, C>::cend() const noexcept
 {
     return data.cend();
 }
 
-template<typename T>
-void Heap<T>::ToString(std::string& result, const std::string& prefix, size_t node, bool isRight) const
+template<typename T, typename C>
+void Heap<T, C>::ToString(std::string& result, const std::string& prefix, size_t node, bool isRight) const
 {
     if (node != data.Size())
     {
@@ -314,22 +324,22 @@ void Heap<T>::ToString(std::string& result, const std::string& prefix, size_t no
     }
 }
 
-template<typename T>
-std::string Heap<T>::ToString() const
+template<typename T, typename C>
+std::string Heap<T, C>::ToString() const
 {
     std::string result;
     ToString(result, "", 0, false);
     return result;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const Heap<T>& heap)
+template<typename T, typename C>
+std::ostream& operator<<(std::ostream& os, const Heap<T, C>& heap)
 {
     return os << heap.data;
 }
 
-template<typename T>
-std::istream& operator>>(std::istream& is, Heap<T>& array)
+template<typename T, typename C>
+std::istream& operator>>(std::istream& is, Heap<T, C>& array)
 {
     return is >> array.data;
 }

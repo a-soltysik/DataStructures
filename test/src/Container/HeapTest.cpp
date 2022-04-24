@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "Containers/Heap.h"
-#include "Utils/Utils.h"
 
 #include <algorithm>
 
@@ -123,32 +122,32 @@ TEST_F(HeapTest, PopTest)
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 6);
-    ASSERT_EQ(heap.Max(), 15);
+    ASSERT_EQ(heap.First(), 15);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 5);
-    ASSERT_EQ(heap.Max(), 12);
+    ASSERT_EQ(heap.First(), 12);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 4);
-    ASSERT_EQ(heap.Max(), 10);
+    ASSERT_EQ(heap.First(), 10);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 3);
-    ASSERT_EQ(heap.Max(), 1);
+    ASSERT_EQ(heap.First(), 1);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 2);
-    ASSERT_EQ(heap.Max(), 0);
+    ASSERT_EQ(heap.First(), 0);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
     ASSERT_EQ(heap.Size(), 1);
-    ASSERT_EQ(heap.Max(), -34);
+    ASSERT_EQ(heap.First(), -34);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));
 
     heap.Pop();
@@ -159,7 +158,7 @@ TEST_F(HeapTest, PopTest)
     {
         try
         {
-            [[maybe_unused]] auto tmp = heap.Max();
+            [[maybe_unused]] auto tmp = heap.First();
         }
         catch (const std::out_of_range& e)
         {

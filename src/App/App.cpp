@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-#include "Algorithm/Graphs/UndirectedGraphs/ListGraph.h"
+#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 
 int32_t App::Run()
 {

@@ -24,8 +24,8 @@ public:
 
     [[nodiscard]] static constexpr const char* ClassName() { return "AvlTree"; }
 
-    AvlTree() = default;
-    AvlTree(std::initializer_list<DataType> initList);
+    explicit AvlTree(const Comparator& comparator = Comparator());
+    AvlTree(std::initializer_list<DataType> initList, const Comparator& comparator = Comparator());
     AvlTree(const AvlTree& rhs);
     AvlTree(AvlTree&& rhs) noexcept;
     AvlTree& operator=(const AvlTree& rhs);
@@ -158,7 +158,13 @@ struct AvlTreeIterator : public AvlTreeConstIterator<T, C>
 };
 
 template<typename T, typename C>
-AvlTree<T, C>::AvlTree(std::initializer_list<DataType> initList)
+AvlTree<T, C>::AvlTree(const Comparator& comparator)
+    : comparator(comparator)
+{ }
+
+template<typename T, typename C>
+AvlTree<T, C>::AvlTree(std::initializer_list<DataType> initList, const Comparator& comparator)
+    : comparator(comparator)
 {
     for (const auto& item: initList)
     {

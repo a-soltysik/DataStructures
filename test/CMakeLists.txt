@@ -7,6 +7,9 @@ FetchContent_Declare(
 set (gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+set(DS_TEST_SRC_DIR ${DS_TEST_DIR}/src)
+set(DS_TEST_MOCK_DIR ${DS_TEST_DIR}/mocks)
+
 set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Utils/Utils.cpp
 
@@ -16,6 +19,9 @@ set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/ListGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/MatrixGraph.cpp
+    ${DS_SRC_DIR}/Algorithms/Graphs/DSU.cpp
+
+    ${DS_SRC_DIR}/Algorithms/MST/Kruskal.cpp
     )
 
 set(DS_TEST_SRC_LIST
@@ -34,12 +40,15 @@ set(DS_TEST_SRC_LIST
     ${DS_TEST_SRC_DIR}/Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraphTest.cpp
     ${DS_TEST_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/ListGraphTest.cpp
     ${DS_TEST_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/MatrixGraphTest.cpp
+
+    ${DS_TEST_SRC_DIR}/Algorithms/MST/KruskalTest.cpp
     )
 
 add_executable(${DS_TEST_TARGET} ${DS_TEST_SRC_LIST})
 
-target_include_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_SRC_DIR} ${DS_SRC_DIR})
-target_link_libraries(${DS_TEST_TARGET} PRIVATE gtest gtest_main)
+target_include_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_DIR} ${DS_SRC_DIR} ${DS_TEST_MOCK_DIR})
+target_link_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_MOCK_DIR})
+target_link_libraries(${DS_TEST_TARGET} PRIVATE gtest gtest_main gmock_main)
 
 
 enable_testing()

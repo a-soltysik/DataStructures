@@ -9,6 +9,7 @@ FetchContent_MakeAvailable(googletest)
 
 set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Utils/Utils.cpp
+
     ${DS_SRC_DIR}/Algorithms/Graphs/DirectedGraphs/DirectedGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/DirectedGraphs/DirectedListGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.cpp
@@ -20,6 +21,9 @@ set(DS_TEST_SRC_LIST
 set(DS_TEST_SRC_LIST
     ${DS_TEST_SRC_LIST}
     ${DS_TEST_SRC_DIR}/main.cpp
+
+    ${DS_TEST_SRC_DIR}/Utils/AlgorithmsTest.cpp
+
     ${DS_TEST_SRC_DIR}/Container/DynamicArrayTest.cpp
     ${DS_TEST_SRC_DIR}/Container/ListTest.cpp
     ${DS_TEST_SRC_DIR}/Container/RedBlackTreeTest.cpp

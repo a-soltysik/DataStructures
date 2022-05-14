@@ -62,7 +62,7 @@ namespace DynamicArrayBenchmark
         array.Resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            array[i] = Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            array[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
         }
     }
 
@@ -71,7 +71,7 @@ namespace DynamicArrayBenchmark
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            vector[i] = Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            vector[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
         }
     }
 
@@ -122,7 +122,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -141,7 +141,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -181,7 +181,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.PushFront(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.PushFront(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -200,7 +200,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.insert(testedVector.cbegin(), Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.insert(testedVector.cbegin(), Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -241,7 +241,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.Insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.Insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -261,7 +261,7 @@ namespace DynamicArrayBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -549,7 +549,7 @@ namespace DynamicArrayBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedArray.Find(
-                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -569,7 +569,7 @@ namespace DynamicArrayBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = std::find(testedVector.cbegin(), testedVector.cend(),
-                                                           Utils::GetRandomInt(Settings::MIN_VALUE,
+                                                           Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE,
                                                                                Settings::MAX_VALUE));
 
             timer.Stop();

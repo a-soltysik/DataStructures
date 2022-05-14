@@ -36,7 +36,7 @@ namespace AvlTreeBenchmark
     {
         for (size_t i = 0u; i < size; i++)
         {
-            tree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            tree.Insert(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
 
@@ -44,7 +44,7 @@ namespace AvlTreeBenchmark
     {
         for (size_t i = 0u; i < size; i++)
         {
-            map.insert({Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
+            map.insert({Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
         }
     }
 
@@ -91,7 +91,7 @@ namespace AvlTreeBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedAvlTree.Insert(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedAvlTree.Insert(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -110,7 +110,7 @@ namespace AvlTreeBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedMap.insert({Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
+            testedMap.insert({Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -220,7 +220,7 @@ namespace AvlTreeBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedAvlTree.Find(
-                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -240,7 +240,7 @@ namespace AvlTreeBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedMap.find(
-                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();

@@ -3,6 +3,8 @@
 #include "Utils/Parser.h"
 
 #include <fstream>
+#include <type_traits>
+#include <random>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -18,7 +20,8 @@ constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
 
 void SetUtf8();
 
-[[nodiscard]] int32_t GetRandomInt(int32_t from, int32_t to);
+template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+[[nodiscard]] T GetRandomNumber(T from, T to);
 
 [[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
@@ -56,9 +59,25 @@ template<typename T>
 template<typename T>
 [[nodiscard]] std::optional<T> getInput(std::istream& is, bool isEofAcceptable);
 
+template<typename Derived, typename Base>
+struct DerivedFrom
+{
+    static constexpr bool Value = std::is_base_of_v<Base, Derived> &&
+                                  std::is_convertible_v<const volatile Derived*, const volatile Base*>;
+};
 /**
  * DEFINITIONS
  */
+
+template<typename T, std::enable_if_t<std::is_integral_v<T>, bool>>
+[[nodiscard]] T GetRandomNumber(T from, T to)
+{
+    static std::random_device device;
+    static std::mt19937 rng(device());
+
+    std::uniform_int_distribution<T> distribution(from, to);
+    return distribution(rng);
+}
 
 template<typename T>
 constexpr void Swap(T& val1, T& val2) noexcept(std::is_nothrow_move_constructible_v<T> &&

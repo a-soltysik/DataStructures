@@ -60,7 +60,7 @@ namespace ListBenchmark
     {
         for (size_t i = 0u; i < size; i++)
         {
-            list.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
 
@@ -68,7 +68,7 @@ namespace ListBenchmark
     {
         for (size_t i = 0u; i < size; i++)
         {
-            list.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
         }
     }
 
@@ -114,7 +114,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedList.PushBack(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -133,7 +133,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedStdList.push_back(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -173,7 +173,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedList.PushFront(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.PushFront(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -192,7 +192,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedStdList.push_front(Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.push_front(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -233,7 +233,7 @@ namespace ListBenchmark
             Utils::Timer timer;
             timer.Start();
 
-            testedList.Insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.Insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -254,7 +254,7 @@ namespace ListBenchmark
 
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
-            testedStdList.insert(middle, Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -544,7 +544,7 @@ namespace ListBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedList.Find(
-                Utils::GetRandomInt(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
@@ -564,7 +564,7 @@ namespace ListBenchmark
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(),
-                                                           Utils::GetRandomInt(Settings::MIN_VALUE,
+                                                           Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE,
                                                                                Settings::MAX_VALUE));
 
             timer.Stop();

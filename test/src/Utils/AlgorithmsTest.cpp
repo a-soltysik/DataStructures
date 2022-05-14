@@ -11,7 +11,7 @@ TEST(AlgorithmsTest, QuickSortTest)
 
     for (size_t i = 0; i < 100; i++)
     {
-        array.PushBack(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        array.PushBack(Utils::GetRandomNumber<int32_t>(INT32_MIN, INT32_MAX));
     }
 
     Utils::QuickSort(array.begin(), array.end());
@@ -39,9 +39,9 @@ TEST(AlgorithmsTest, QuickSortCustomStructureTest)
     for (size_t i = 0; i < 100; i++)
     {
         A a;
-        a.object.number1 = Utils::GetRandomInt(0, 10);
-        a.object.number2 = Utils::GetRandomInt(0, 10);
-        a.number = Utils::GetRandomInt(0, 10);
+        a.object.number1 = Utils::GetRandomNumber<int32_t>(0, 10);
+        a.object.number2 = Utils::GetRandomNumber<int32_t>(0, 10);
+        a.number = Utils::GetRandomNumber<int32_t>(0, 10);
         array.PushBack(a);
     }
 

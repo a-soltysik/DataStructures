@@ -168,7 +168,7 @@ TEST_F(RedBlackTreeTest, ClearTest)
 {
     for (int32_t i = 0u; i < 12345; i++)
     {
-        tree.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        tree.Insert(Utils::GetRandomNumber<int32_t>(INT32_MIN, INT32_MAX));
         ASSERT_TRUE(std::is_sorted(tree.cbegin(), tree.cend()));
     }
     ASSERT_EQ(tree.Size(), 12345);

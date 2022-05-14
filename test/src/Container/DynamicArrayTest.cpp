@@ -223,7 +223,7 @@ TEST_F(DynamicArrayTest, ClearTest)
 {
     for (int32_t i = 0; i < 34523; i++)
     {
-        array.PushBack(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        array.PushBack(Utils::GetRandomNumber<int32_t>(INT32_MIN, INT32_MAX));
     }
     EXPECT_EQ(array.Size(), 34523);
     array.Clear();

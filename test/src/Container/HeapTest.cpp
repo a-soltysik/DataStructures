@@ -172,7 +172,7 @@ TEST_F(HeapTest, ClearTest)
 {
     for (int32_t i = 0; i < 23455; i++)
     {
-        heap.Insert(Utils::GetRandomInt(INT32_MIN, INT32_MAX));
+        heap.Insert(Utils::GetRandomNumber<int32_t>(INT32_MIN, INT32_MAX));
     }
     ASSERT_EQ(heap.Size(), 23455);
     ASSERT_TRUE(std::is_heap(heap.Array().cbegin(), heap.Array().cend()));

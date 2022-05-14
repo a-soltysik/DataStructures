@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.h"
-#include "Containers/Set.h"
+
+#include <ostream>
 
 namespace MST
 {
@@ -13,3 +14,5 @@ struct Result
 };
 
 }
+
+std::ostream& operator<<(std::ostream& os, const MST::Result& result);

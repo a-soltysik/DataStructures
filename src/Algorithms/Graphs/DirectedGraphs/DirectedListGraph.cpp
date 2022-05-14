@@ -9,53 +9,11 @@ Graph::Vertex DirectedListGraph::AddVertex()
 
     graph.PushBack(List<Neighbour>());
 
-    Vertex newVertex;
+    Vertex newVertex = GetOrder() - 1;
 
-    if (GetOrder() == 1)
-    {
-        newVertex = 0;
-    }
-    else
-    {
-        newVertex = verticesMap.Max().first + 1;
-    }
-
-    verticesMap[newVertex] = --graph.end();
+    verticesMap.PushBack(--graph.end());
 
     return newVertex;
-}
-
-bool DirectedListGraph::RemoveVertex(Vertex vertex)
-{
-    if (!DoesExist(vertex)) {
-        return false;
-    }
-
-    auto iteratorToRemove = verticesMap.at(vertex);
-    auto graphIt = graph.begin();
-
-    for (auto& neighbours : graph)
-    {
-        if (iteratorToRemove == graphIt)
-        {
-            continue;
-        }
-
-        for (auto it = neighbours.begin(); it != neighbours.end(); it++)
-        {
-            if (it->vertex == vertex)
-            {
-                neighbours.RemoveAt(it);
-                break;
-            }
-        }
-        graphIt++;
-    }
-
-    graph.RemoveAt(graphIt);
-    verticesMap.Remove(vertex);
-
-    return true;
 }
 
 bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
@@ -70,34 +28,10 @@ bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
         return false;
     }
 
-    verticesMap.at(edge.vertices.first)->PushBack({edge.vertices.second, edge.weight});
+    verticesMap[edge.vertices.first]->PushBack({edge.vertices.second, edge.weight});
 
     size++;
     return true;
-}
-
-bool DirectedListGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
-{
-    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
-    {
-        return false;
-    }
-
-    auto& DirectedEdges1 = *verticesMap.at(directedEdge.first);
-    bool found = false;
-
-    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
-    {
-        if (it->vertex == directedEdge.second)
-        {
-            DirectedEdges1.RemoveAt(it);
-            size--;
-            found = true;
-            break;
-        }
-    }
-
-    return found;
 }
 
 std::optional<Graph::Weight> DirectedListGraph::GetWeight(DirectedEdge directedEdge) const
@@ -138,7 +72,7 @@ uint64_t DirectedListGraph::GetSize() const noexcept
 
 bool DirectedListGraph::DoesExist(Vertex vertex) const
 {
-    return verticesMap.Find(vertex) != verticesMap.end();
+    return vertex < GetOrder();
 }
 
 bool DirectedListGraph::DoesExist(DirectedEdge directedEdge) const
@@ -153,7 +87,7 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedListGraph::GetNeighboursOf
         return {};
     }
 
-    const auto& neighbours = *verticesMap.at(vertex);
+    const auto& neighbours = *verticesMap[vertex];
 
     DynamicArray<Neighbour> neighboursVertices;
     neighboursVertices.Resize(neighbours.Size());
@@ -171,13 +105,11 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedListGraph::GetNeighboursOf
 DynamicArray<Graph::Vertex> DirectedListGraph::GetVertices() const
 {
     DynamicArray<Vertex> result;
-    result.Resize(verticesMap.Size());
+    result.Resize(GetOrder());
 
-    size_t i = 0;
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        result[i] = pair.first;
-        i++;
+        result[i] = i;
     }
 
     return result;
@@ -189,11 +121,11 @@ DynamicArray<DirectedGraph::DirectedEdgeData> DirectedListGraph::GetDirectedEdge
     result.Resize(GetSize());
 
     uint64_t edgeCounter = 0;
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *pair.second)
+        for (const auto& neighbour : *verticesMap[i])
         {
-            result[edgeCounter] = {{pair.first, neighbour.vertex}, neighbour.weight};
+            result[edgeCounter] = {{i, neighbour.vertex}, neighbour.weight};
             edgeCounter++;
         }
     }
@@ -208,7 +140,7 @@ bool DirectedListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate pre
         return false;
     }
 
-    const auto& neighbours = *verticesMap.at(vertex);
+    const auto& neighbours = *verticesMap[vertex];
 
     for (const auto& neighbour : neighbours)
     {
@@ -220,35 +152,35 @@ bool DirectedListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate pre
 
 void DirectedListGraph::ForEachVertex(VertexPredicate predicate) const
 {
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        predicate(pair.first);
+        predicate(i);
     }
 }
 
 void DirectedListGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) const
 {
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *pair.second)
+        for (const auto& neighbour : *verticesMap[i])
         {
-            predicate({{pair.first, neighbour.vertex}, neighbour.weight});
+            predicate({{i, neighbour.vertex}, neighbour.weight});
         }
     }
 }
 
-DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(DirectedEdge DirectedEdge)
+DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(DirectedEdge directedEdge)
 {
-    if (!DoesExist(DirectedEdge.first) || !DoesExist(DirectedEdge.second))
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return nullptr;
     }
 
-    auto& neighbours = *verticesMap.at(DirectedEdge.first);
+    auto& neighbours = *verticesMap[directedEdge.first];
 
     for (auto& neighbour : neighbours)
     {
-        if (neighbour.vertex == DirectedEdge.second)
+        if (neighbour.vertex == directedEdge.second)
         {
             return &neighbour;
         }
@@ -264,7 +196,7 @@ const DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(Direc
         return nullptr;
     }
 
-    const auto& neighbours = *verticesMap.at(DirectedEdge.first);
+    const auto& neighbours = *verticesMap[DirectedEdge.first];
 
     for (const auto& neighbour : neighbours)
     {

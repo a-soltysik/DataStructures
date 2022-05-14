@@ -12,9 +12,11 @@ Result FindMstOf(const UndirectedGraph& graph)
 {
     auto vertices = graph.GetVertices();
     auto edges = graph.GetEdges();
+    UndirectedGraph::Vertex numberOfEdges = 0;
 
     DSU forest(vertices);
     Result result;
+    result.edges.Resize(graph.GetOrder() - 1);
 
     SortEdgesByWeight(edges);
 
@@ -23,12 +25,16 @@ Result FindMstOf(const UndirectedGraph& graph)
         if (forest.Find(edge.vertices.first) != forest.Find(edge.vertices.second))
         {
             forest.Union(edge.vertices.first, edge.vertices.second);
-            result.edges.PushBack(edge);
+            result.edges[numberOfEdges++] = edge;
+        }
+        if (numberOfEdges >= graph.GetOrder() - 1)
+        {
+            result.weight = CalculateOverallWeight(result);
+            return result;
         }
     }
 
-    result.weight = CalculateOverallWeight(result);
-    return result;
+    return {{}, 0};
 }
 
 void SortEdgesByWeight(DynamicArray<UndirectedGraph::EdgeData>& edges)

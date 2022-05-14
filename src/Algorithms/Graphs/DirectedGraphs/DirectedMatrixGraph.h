@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
-#include "Containers/Map.h"
 
 class DirectedMatrixGraph : public DirectedGraph
 {
@@ -9,10 +8,7 @@ public:
     using DirectedGraph::DirectedGraph;
 
     Vertex AddVertex() override;
-    bool RemoveVertex(Vertex vertex) override;
-
     bool AddDirectedEdge(const DirectedEdgeData& edge) override;
-    bool RemoveDirectedEdge(DirectedEdge directedEdge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(DirectedEdge directedEdge) const override;
     bool SetWeight(DirectedEdge directedEdge, Weight weight) override;
@@ -31,9 +27,6 @@ public:
     void ForEachDirectedEdge(DirectedEdgePredicate predicate) const override;
 
 private:
-    void RestoreIndicesFrom(Vertex from);
-
     DynamicArray<DynamicArray<Weight>> graph;
-    Map<Vertex, uint32_t> verticesMap;
     uint64_t size = 0;
 };

@@ -11,53 +11,11 @@ Graph::Vertex ListGraph::AddVertex()
 
     graph.PushBack(List<Neighbour>());
 
-    Vertex newVertex;
+    Vertex newVertex = GetOrder() - 1;
 
-    if (GetOrder() == 1)
-    {
-        newVertex = 0;
-    }
-    else
-    {
-        newVertex = verticesMap.Max().first + 1;
-    }
-
-    verticesMap[newVertex] = --graph.end();
+    verticesMap.PushBack(--graph.end());
 
     return newVertex;
-}
-
-bool ListGraph::RemoveVertex(Vertex vertex)
-{
-    if (!DoesExist(vertex)) {
-        return false;
-    }
-
-    auto iteratorToRemove = verticesMap.at(vertex);
-    auto graphIt = graph.begin();
-
-    for (auto& neighbours : graph)
-    {
-        if (iteratorToRemove == graphIt)
-        {
-            continue;
-        }
-
-        for (auto it = neighbours.begin(); it != neighbours.end(); it++)
-        {
-            if (it->vertex == vertex)
-            {
-                neighbours.RemoveAt(it);
-                break;
-            }
-        }
-        graphIt++;
-    }
-
-    graph.RemoveAt(graphIt);
-    verticesMap.Remove(vertex);
-
-    return true;
 }
 
 bool ListGraph::AddEdge(const EdgeData& edge)
@@ -72,50 +30,10 @@ bool ListGraph::AddEdge(const EdgeData& edge)
         return false;
     }
 
-    verticesMap.at(edge.vertices.first)->PushBack({edge.vertices.second, edge.weight});
-    verticesMap.at(edge.vertices.second)->PushBack({edge.vertices.first, edge.weight});
+    verticesMap[edge.vertices.first]->PushBack({edge.vertices.second, edge.weight});
+    verticesMap[edge.vertices.second]->PushBack({edge.vertices.first, edge.weight});
 
     size++;
-    return true;
-}
-
-bool ListGraph::RemoveEdge(Edge edge)
-{
-    if (!DoesExist(edge.first) || !DoesExist(edge.second))
-    {
-        return false;
-    }
-
-    auto& edges1 = *verticesMap.at(edge.first);
-    bool found = false;
-
-    for (auto it = edges1.begin(); it != edges1.end(); it++)
-    {
-        if (it->vertex == edge.second)
-        {
-            edges1.RemoveAt(it);
-            size--;
-            found = true;
-            break;
-        }
-    }
-
-    if (!found)
-    {
-        return false;
-    }
-
-    auto& edges2 = *verticesMap.at(edge.second);
-
-    for (auto it = edges2.begin(); it != edges2.end(); it++)
-    {
-        if (it->vertex == edge.first)
-        {
-            edges2.RemoveAt(it);
-            break;
-        }
-    }
-
     return true;
 }
 
@@ -164,7 +82,7 @@ uint64_t ListGraph::GetSize() const noexcept
 
 bool ListGraph::DoesExist(Vertex vertex) const
 {
-    return verticesMap.Find(vertex) != verticesMap.end();
+    return vertex < GetOrder();
 }
 
 bool ListGraph::DoesExist(UndirectedGraph::Edge edge) const
@@ -182,7 +100,7 @@ std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex 
         return {};
     }
 
-    const auto& neighbours = *verticesMap.at(vertex);
+    const auto& neighbours = *verticesMap[vertex];
 
     DynamicArray<Neighbour> neighboursVertices;
     neighboursVertices.Resize(neighbours.Size());
@@ -202,11 +120,9 @@ DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
     DynamicArray<Vertex> result;
     result.Resize(verticesMap.Size());
 
-    size_t i = 0;
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        result[i] = pair.first;
-        i++;
+        result[i] = i;
     }
 
     return result;
@@ -217,11 +133,11 @@ DynamicArray<UndirectedGraph::EdgeData> ListGraph::GetEdges() const
     DynamicArray<EdgeData> result;
     UnorderedSet<Edge> edges;
 
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *pair.second)
+        for (const auto& neighbour : *verticesMap[i])
         {
-            Edge edge{pair.first, neighbour.vertex};
+            Edge edge{i, neighbour.vertex};
             if (edges.Insert(edge) != edges.end())
             {
                 result.PushBack({edge, neighbour.weight});
@@ -239,7 +155,7 @@ bool ListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) 
         return false;
     }
 
-    const auto& neighbours = *verticesMap.at(vertex);
+    const auto& neighbours = *verticesMap[vertex];
 
     for (const auto& neighbour : neighbours)
     {
@@ -251,9 +167,9 @@ bool ListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) 
 
 void ListGraph::ForEachVertex(Graph::VertexPredicate predicate) const
 {
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        predicate(pair.first);
+        predicate(i);
     }
 }
 
@@ -261,11 +177,11 @@ void ListGraph::ForEachEdge(EdgePredicate predicate) const
 {
     UnorderedSet<Edge> edges;
 
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *pair.second)
+        for (const auto& neighbour : *verticesMap[i])
         {
-            Edge edge{pair.first, neighbour.vertex};
+            Edge edge{i, neighbour.vertex};
             if (edges.Insert(edge) != edges.end())
             {
                 predicate({edge, neighbour.weight});
@@ -281,7 +197,7 @@ ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge)
         return nullptr;
     }
 
-    auto& neighbours = *verticesMap.at(edge.first);
+    auto& neighbours = *verticesMap[edge.first];
 
     for (auto& neighbour : neighbours)
     {
@@ -301,7 +217,7 @@ const ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge) const
         return nullptr;
     }
 
-    const auto& neighbours = *verticesMap.at(edge.first);
+    const auto& neighbours = *verticesMap[edge.first];
 
     for (const auto& neighbour : neighbours)
     {

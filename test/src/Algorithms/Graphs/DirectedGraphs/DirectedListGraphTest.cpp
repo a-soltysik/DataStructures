@@ -92,7 +92,7 @@ TEST_F(DirectedListGraphTest, AddVertexTest)
     EXPECT_TRUE(CompareVertices(expected, real));
 }
 
-TEST_F(DirectedListGraphTest, RemoveVertexTest)
+TEST_F(DirectedListGraphTest, AddDirectedEdgeTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -105,40 +105,8 @@ TEST_F(DirectedListGraphTest, RemoveVertexTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    EXPECT_FALSE(graph.RemoveVertex(5));
-    EXPECT_EQ(graph.GetOrder(), 5);
-
-    graph.RemoveVertex(3);
-    EXPECT_EQ(graph.GetOrder(), 4);
-
-    graph.RemoveVertex(2);
-    EXPECT_EQ(graph.GetOrder(), 3);
-
-    graph.AddVertex();
-    ASSERT_EQ(graph.GetOrder(), 4);
-
-    expected = {0, 1, 4, 5};
-    real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-}
-
-TEST_F(DirectedListGraphTest, AddDirectedEdgeTest)
-{
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.RemoveVertex(2);
-
-    Vertices expected = {0, 1, 3, 4};
-    Vertices real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-
     ASSERT_EQ(graph.GetDirectedEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddDirectedEdge({{0, 2}, 1}));
+    EXPECT_FALSE(graph.AddDirectedEdge({{0, 5}, 1}));
 
 
     graph.AddDirectedEdge({{0, 1}, 1});
@@ -157,38 +125,6 @@ TEST_F(DirectedListGraphTest, AddDirectedEdgeTest)
     EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
 }
 
-TEST_F(DirectedListGraphTest, RemoveDirectedEdgeTest)
-{
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.RemoveVertex(2);
-
-    Vertices expected = {0, 1, 3, 4};
-    Vertices real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-
-    graph.AddDirectedEdge({{0, 1}, 1});
-    graph.AddDirectedEdge({{4, 0}, 2});
-    graph.AddDirectedEdge({{3, 1}, 3});
-
-    ASSERT_EQ(graph.GetSize(), 3);
-
-    EXPECT_FALSE(graph.RemoveDirectedEdge({1, 3}));
-    graph.RemoveDirectedEdge({3, 1});
-
-    ASSERT_EQ(graph.GetSize(), 2);
-
-    DirectedEdges expectedDirectedEdges = {DirectedEdgeData {DirectedEdge{0, 1}, Weight{1}},
-                                           DirectedEdgeData {DirectedEdge{4, 0}, Weight{2}}};
-
-    auto realDirectedEdges = graph.GetDirectedEdges();
-    EXPECT_TRUE(CompareDirectedEdges(expectedDirectedEdges, realDirectedEdges));
-}
-
 TEST_F(DirectedListGraphTest, GetWeightTest)
 {
     graph.AddVertex();
@@ -196,9 +132,8 @@ TEST_F(DirectedListGraphTest, GetWeightTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -225,9 +160,8 @@ TEST_F(DirectedListGraphTest, SetWeightTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -263,9 +197,8 @@ TEST_F(DirectedListGraphTest, DoesExistTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -273,13 +206,12 @@ TEST_F(DirectedListGraphTest, DoesExistTest)
     graph.AddDirectedEdge({{0, 1}, 1});
     graph.AddDirectedEdge({{4, 0}, 2});
     graph.AddDirectedEdge({{3, 1}, 3});
-    graph.RemoveDirectedEdge({1, 3});
 
     ASSERT_EQ(graph.GetSize(), 3);
 
     EXPECT_TRUE(graph.DoesExist(0));
     EXPECT_TRUE(graph.DoesExist(1));
-    EXPECT_FALSE(graph.DoesExist(2));
+    EXPECT_TRUE(graph.DoesExist(2));
     EXPECT_TRUE(graph.DoesExist(3));
     EXPECT_TRUE(graph.DoesExist(4));
     EXPECT_FALSE(graph.DoesExist(5));

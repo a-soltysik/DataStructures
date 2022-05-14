@@ -2,7 +2,6 @@
 
 #include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
 #include "Containers/List.h"
-#include "Containers/Map.h"
 
 class DirectedListGraph : public DirectedGraph
 {
@@ -10,10 +9,7 @@ public:
     using DirectedGraph::DirectedGraph;
 
     Vertex AddVertex() override;
-    bool RemoveVertex(Vertex vertex) override;
-
     bool AddDirectedEdge(const DirectedEdgeData& edge) override;
-    bool RemoveDirectedEdge(DirectedEdge DirectedEdge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(DirectedEdge DirectedEdge) const override;
     bool SetWeight(DirectedEdge DirectedEdge, Weight weight) override;
@@ -36,6 +32,6 @@ private:
     [[nodiscard]] Neighbour* GetNeighbourOfFirst(DirectedEdge DirectedEdge);
 
     List<List<Neighbour>> graph;
-    Map<Vertex, List<List<Neighbour>>::Iterator> verticesMap;
+    DynamicArray<List<List<Neighbour>>::Iterator> verticesMap;
     uint64_t size = 0;
 };

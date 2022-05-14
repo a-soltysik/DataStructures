@@ -19,7 +19,7 @@ public:
         Weight weight;
     };
 
-    static constexpr Weight INFINITY = UINT32_MAX;
+    static constexpr Weight INFINITY_WEIGHT = UINT32_MAX;
     static constexpr Vertex MAX_SIZE = UINT32_MAX;
 
     Graph() = default;
@@ -30,7 +30,6 @@ public:
     virtual ~Graph() = default;
 
     virtual Vertex AddVertex() = 0;
-    virtual bool RemoveVertex(Vertex vertex) = 0;
 
     [[nodiscard]] virtual uint32_t GetOrder() const = 0;
     [[nodiscard]] virtual uint64_t GetSize() const = 0;

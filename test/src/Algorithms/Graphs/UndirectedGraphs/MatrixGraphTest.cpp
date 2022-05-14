@@ -92,7 +92,7 @@ TEST_F(MatrixGraphTest, AddVertexTest)
     EXPECT_TRUE(CompareVertices(expected, real));
 }
 
-TEST_F(MatrixGraphTest, RemoveVertexTest)
+TEST_F(MatrixGraphTest, AddEdgeTest)
 {
     graph.AddVertex();
     graph.AddVertex();
@@ -105,40 +105,8 @@ TEST_F(MatrixGraphTest, RemoveVertexTest)
 
     ASSERT_TRUE(CompareVertices(expected, real));
 
-    EXPECT_FALSE(graph.RemoveVertex(5));
-    EXPECT_EQ(graph.GetOrder(), 5);
-
-    graph.RemoveVertex(3);
-    EXPECT_EQ(graph.GetOrder(), 4);
-
-    graph.RemoveVertex(2);
-    EXPECT_EQ(graph.GetOrder(), 3);
-
-    graph.AddVertex();
-    ASSERT_EQ(graph.GetOrder(), 4);
-
-    expected = {0, 1, 4, 5};
-    real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-}
-
-TEST_F(MatrixGraphTest, AddEdgeTest)
-{
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.RemoveVertex(2);
-
-    Vertices expected = {0, 1, 3, 4};
-    Vertices real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-
     ASSERT_EQ(graph.GetEdges().Size(), 0);
-    EXPECT_FALSE(graph.AddEdge({{0, 2}, 1}));
+    EXPECT_FALSE(graph.AddEdge({{0, 5}, 1}));
 
 
     graph.AddEdge({{0, 1}, 1});
@@ -155,37 +123,6 @@ TEST_F(MatrixGraphTest, AddEdgeTest)
     EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
 }
 
-TEST_F(MatrixGraphTest, RemoveEdgeTest)
-{
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.RemoveVertex(2);
-
-    Vertices expected = {0, 1, 3, 4};
-    Vertices real = graph.GetVertices();
-
-    ASSERT_TRUE(CompareVertices(expected, real));
-
-    graph.AddEdge({{0, 1}, 1});
-    graph.AddEdge({{4, 0}, 2});
-    graph.AddEdge({{3, 1}, 3});
-
-    ASSERT_EQ(graph.GetSize(), 3);
-
-    graph.RemoveEdge({1, 3});
-
-    ASSERT_EQ(graph.GetSize(), 2);
-
-    Edges expectedEdges = {EdgeData {Edge{0, 1}, Weight{1}},
-                           EdgeData {Edge{0, 4}, Weight{2}}};
-
-    auto realEdges = graph.GetEdges();
-    EXPECT_TRUE(CompareEdges(expectedEdges, realEdges));
-}
-
 TEST_F(MatrixGraphTest, GetWeightTest)
 {
     graph.AddVertex();
@@ -193,9 +130,8 @@ TEST_F(MatrixGraphTest, GetWeightTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -222,9 +158,8 @@ TEST_F(MatrixGraphTest, SetWeightTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -260,9 +195,8 @@ TEST_F(MatrixGraphTest, DoesExistTest)
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
-    graph.RemoveVertex(2);
 
-    Vertices expected = {0, 1, 3, 4};
+    Vertices expected = {0, 1, 2, 3, 4};
     Vertices real = graph.GetVertices();
 
     ASSERT_TRUE(CompareVertices(expected, real));
@@ -270,13 +204,12 @@ TEST_F(MatrixGraphTest, DoesExistTest)
     graph.AddEdge({{0, 1}, 1});
     graph.AddEdge({{4, 0}, 2});
     graph.AddEdge({{3, 1}, 3});
-    graph.RemoveEdge({1, 3});
 
-    ASSERT_EQ(graph.GetSize(), 2);
+    ASSERT_EQ(graph.GetSize(), 3);
 
     EXPECT_TRUE(graph.DoesExist(0));
     EXPECT_TRUE(graph.DoesExist(1));
-    EXPECT_FALSE(graph.DoesExist(2));
+    EXPECT_TRUE(graph.DoesExist(2));
     EXPECT_TRUE(graph.DoesExist(3));
     EXPECT_TRUE(graph.DoesExist(4));
     EXPECT_FALSE(graph.DoesExist(5));
@@ -285,8 +218,8 @@ TEST_F(MatrixGraphTest, DoesExistTest)
     EXPECT_TRUE(graph.DoesExist({1, 0}));
     EXPECT_TRUE(graph.DoesExist({4, 0}));
     EXPECT_TRUE(graph.DoesExist({0, 4}));
-    EXPECT_FALSE(graph.DoesExist({1, 3}));
-    EXPECT_FALSE(graph.DoesExist({3, 1}));
+    EXPECT_TRUE(graph.DoesExist({1, 3}));
+    EXPECT_TRUE(graph.DoesExist({3, 1}));
     EXPECT_FALSE(graph.DoesExist({1, 1}));
     EXPECT_FALSE(graph.DoesExist({5, 1}));
 }

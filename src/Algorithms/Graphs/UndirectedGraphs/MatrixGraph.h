@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.h"
-#include "Containers/Map.h"
 
 class MatrixGraph : public UndirectedGraph
 {
@@ -9,10 +8,8 @@ public:
     using UndirectedGraph::UndirectedGraph;
 
     Vertex AddVertex() override;
-    bool RemoveVertex(Vertex vertex) override;
 
     bool AddEdge(const EdgeData& edge) override;
-    bool RemoveEdge(Edge edge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(Edge edge) const override;
     bool SetWeight(Edge edge, Weight weight) override;
@@ -31,10 +28,6 @@ public:
     void ForEachEdge(EdgePredicate predicate) const override;
 
 private:
-    void RestoreIndicesFrom(Vertex from);
-    std::optional<Vertex> FindVertexByIndex(uint32_t index) const;
-
     DynamicArray<DynamicArray<Weight>> graph;
-    Map<Vertex, uint32_t> verticesMap;
     uint64_t size = 0;
 };

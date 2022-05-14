@@ -9,41 +9,14 @@ Graph::Vertex MatrixGraph::AddVertex()
 
     for (auto& row : graph)
     {
-        row.PushBack(Graph::INFINITY);
+        row.PushBack(Graph::INFINITY_WEIGHT);
     }
 
-    Vertex newVertex;
+    Vertex newVertex = GetOrder() - 1;
 
-    if (GetOrder() == 1)
-    {
-        newVertex = 0;
-    }
-    else
-    {
-        newVertex = verticesMap.Max().first + 1;
-    }
-
-    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY));
-    verticesMap[newVertex] = GetOrder() - 1;
+    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY_WEIGHT));
 
     return newVertex;
-}
-
-bool MatrixGraph::RemoveVertex(Vertex vertex)
-{
-    if (!DoesExist(vertex)) {
-        return false;
-    }
-
-    for (auto& row : graph)
-    {
-        row.RemoveAt(verticesMap.at(vertex));
-    }
-
-    graph.RemoveAt(verticesMap.at(vertex));
-    RestoreIndicesFrom(vertex);
-
-    return true;
 }
 
 bool MatrixGraph::AddEdge(const EdgeData& edge)
@@ -58,25 +31,10 @@ bool MatrixGraph::AddEdge(const EdgeData& edge)
         return false;
     }
 
-    graph[verticesMap.at(edge.vertices.first)][verticesMap.at(edge.vertices.second)] = edge.weight;
-    graph[verticesMap.at(edge.vertices.second)][verticesMap.at(edge.vertices.first)] = edge.weight;
+    graph[edge.vertices.first][edge.vertices.second] = edge.weight;
+    graph[edge.vertices.second][edge.vertices.first] = edge.weight;
 
     size++;
-
-    return true;
-}
-
-bool MatrixGraph::RemoveEdge(Edge edge)
-{
-    if (!DoesExist(edge))
-    {
-        return false;
-    }
-
-    graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)] = Graph::INFINITY;
-    graph[verticesMap.at(edge.second)][verticesMap.at(edge.first)] = Graph::INFINITY;
-
-    size--;
 
     return true;
 }
@@ -87,7 +45,7 @@ std::optional<Graph::Weight> MatrixGraph::GetWeight(Edge edge) const
     {
         return {};
     }
-    return graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)];
+    return graph[edge.first][edge.second];
 }
 
 bool MatrixGraph::SetWeight(Edge edge, Weight weight)
@@ -97,8 +55,8 @@ bool MatrixGraph::SetWeight(Edge edge, Weight weight)
         return false;
     }
 
-    graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)] = weight;
-    graph[verticesMap.at(edge.second)][verticesMap.at(edge.first)] = weight;
+    graph[edge.first][edge.second] = weight;
+    graph[edge.second][edge.first] = weight;
 
     return true;
 }
@@ -115,7 +73,7 @@ uint64_t MatrixGraph::GetSize() const noexcept
 
 bool MatrixGraph::DoesExist(Vertex vertex) const
 {
-    return verticesMap.Find(vertex) != verticesMap.end();
+    return vertex < GetOrder();
 }
 
 bool MatrixGraph::DoesExist(Edge edge) const
@@ -124,7 +82,7 @@ bool MatrixGraph::DoesExist(Edge edge) const
     {
         return false;
     }
-    return graph[verticesMap.at(edge.first)][verticesMap.at(edge.second)] != Graph::INFINITY;
+    return graph[edge.first][edge.second] != Graph::INFINITY_WEIGHT;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -134,14 +92,24 @@ std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Verte
         return {};
     }
 
-    DynamicArray<Neighbour> result;
-    uint32_t sourceIndex = verticesMap.at(vertex);
+    uint32_t numberOfNeighbours = 0;
 
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[sourceIndex][pair.second] != Graph::INFINITY)
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
         {
-            result.PushBack({pair.first, graph[sourceIndex][pair.second]});
+            numberOfNeighbours++;
+        }
+    }
+
+    DynamicArray<Neighbour> result;
+    result.Resize(numberOfNeighbours);
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        {
+            result[numberOfNeighbours--] = {i, graph[vertex][i]};
         }
     }
 
@@ -152,13 +120,11 @@ std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Verte
 DynamicArray<Graph::Vertex> MatrixGraph::GetVertices() const
 {
     DynamicArray<Vertex> result;
-    result.Resize(verticesMap.Size());
+    result.Resize(GetOrder());
 
-    size_t i = 0;
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        result[i] = pair.first;
-        i++;
+        result[i] = i;
     }
 
     return result;
@@ -175,10 +141,10 @@ DynamicArray<UndirectedGraph::EdgeData> MatrixGraph::GetEdges() const
     {
         for (uint32_t j = 0; j < i; j++)
         {
-            if (graph[i][j] != Graph::INFINITY)
+            if (graph[i][j] != Graph::INFINITY_WEIGHT)
             {
 
-                result[edgeCounter] = {{FindVertexByIndex(i).value(), FindVertexByIndex(j).value()}, graph[i][j]};
+                result[edgeCounter] = {{i, j}, graph[i][j]};
                 edgeCounter++;
             }
         }
@@ -194,13 +160,11 @@ bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate
         return false;
     }
 
-    uint32_t sourceIndex = verticesMap.at(vertex);
-
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[sourceIndex][pair.second] != Graph::INFINITY)
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
         {
-            predicate({pair.first, graph[sourceIndex][pair.second]});
+            predicate({i, graph[vertex][i]});
         }
     }
 
@@ -209,9 +173,9 @@ bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate
 
 void MatrixGraph::ForEachVertex(VertexPredicate predicate) const
 {
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        predicate(pair.first);
+        predicate(i);
     }
 }
 
@@ -221,42 +185,10 @@ void MatrixGraph::ForEachEdge(EdgePredicate predicate) const
     {
         for (uint32_t j = 0; j < i; j++)
         {
-            if (graph[i][j] != Graph::INFINITY)
+            if (graph[i][j] != Graph::INFINITY_WEIGHT)
             {
-                Edge edge{FindVertexByIndex(i).value(), FindVertexByIndex(j).value()};
-                predicate({edge, graph[i][j]});
+                predicate({{i, j}, graph[i][j]});
             }
         }
     }
-}
-
-void MatrixGraph::RestoreIndicesFrom(Vertex from)
-{
-    bool start = false;
-
-    for (auto& pair : verticesMap)
-    {
-        if (start)
-        {
-            pair.second--;
-        }
-        if (pair.first == from)
-        {
-            start = true;
-        }
-    }
-
-    verticesMap.Remove(from);
-}
-
-std::optional<Graph::Vertex> MatrixGraph::FindVertexByIndex(uint32_t index) const
-{
-    for (const auto& pair : verticesMap)
-    {
-        if (pair.second == index)
-        {
-            return pair.first;
-        }
-    }
-    return {};
 }

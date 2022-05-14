@@ -9,41 +9,14 @@ Graph::Vertex DirectedMatrixGraph::AddVertex()
 
     for (auto& row : graph)
     {
-        row.PushBack(Graph::INFINITY);
+        row.PushBack(Graph::INFINITY_WEIGHT);
     }
 
-    Vertex newVertex;
+    Vertex newVertex = GetOrder() - 1;
 
-    if (GetOrder() == 1)
-    {
-        newVertex = 0;
-    }
-    else
-    {
-        newVertex = verticesMap.Max().first + 1;
-    }
-
-    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY));
-    verticesMap[newVertex] = GetOrder() - 1;
+    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY_WEIGHT));
 
     return newVertex;
-}
-
-bool DirectedMatrixGraph::RemoveVertex(Vertex vertex)
-{
-    if (!DoesExist(vertex)) {
-        return false;
-    }
-
-    for (auto& row : graph)
-    {
-        row.RemoveAt(verticesMap.at(vertex));
-    }
-
-    graph.RemoveAt(verticesMap.at(vertex));
-    RestoreIndicesFrom(vertex);
-
-    return true;
 }
 
 bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
@@ -58,23 +31,9 @@ bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
         return false;
     }
 
-    graph[verticesMap.at(edge.vertices.first)][verticesMap.at(edge.vertices.second)] = edge.weight;
+    graph[edge.vertices.first][edge.vertices.second] = edge.weight;
 
     size++;
-
-    return true;
-}
-
-bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
-{
-    if (!DoesExist(directedEdge))
-    {
-        return false;
-    }
-
-    graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] = Graph::INFINITY;
-
-    size--;
 
     return true;
 }
@@ -85,7 +44,7 @@ std::optional<Graph::Weight> DirectedMatrixGraph::GetWeight(DirectedEdge directe
     {
         return {};
     }
-    return graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)];
+    return graph[directedEdge.first][directedEdge.second];
 }
 
 bool DirectedMatrixGraph::SetWeight(DirectedEdge directedEdge, Weight weight)
@@ -95,7 +54,7 @@ bool DirectedMatrixGraph::SetWeight(DirectedEdge directedEdge, Weight weight)
         return false;
     }
 
-    graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] = weight;
+    graph[directedEdge.first][directedEdge.second] = weight;
 
     return true;
 }
@@ -112,7 +71,7 @@ uint64_t DirectedMatrixGraph::GetSize() const noexcept
 
 bool DirectedMatrixGraph::DoesExist(Vertex vertex) const
 {
-    return verticesMap.Find(vertex) != verticesMap.end();
+    return vertex < GetOrder();
 }
 
 bool DirectedMatrixGraph::DoesExist(DirectedEdge directedEdge) const
@@ -121,7 +80,7 @@ bool DirectedMatrixGraph::DoesExist(DirectedEdge directedEdge) const
     {
         return false;
     }
-    return graph[verticesMap.at(directedEdge.first)][verticesMap.at(directedEdge.second)] != Graph::INFINITY;
+    return graph[directedEdge.first][directedEdge.second] != Graph::INFINITY_WEIGHT;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -131,14 +90,24 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
         return {};
     }
 
-    DynamicArray<Neighbour> result;
-    uint32_t sourceIndex = verticesMap.at(vertex);
+    uint32_t numberOfNeighbours = 0;
 
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[sourceIndex][pair.second] != Graph::INFINITY)
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
         {
-            result.PushBack({pair.first, graph[sourceIndex][pair.second]});
+            numberOfNeighbours++;
+        }
+    }
+
+    DynamicArray<Neighbour> result;
+    result.Resize(numberOfNeighbours);
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        {
+            result[numberOfNeighbours--] = {i, graph[vertex][i]};
         }
     }
 
@@ -149,13 +118,11 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
 DynamicArray<Graph::Vertex> DirectedMatrixGraph::GetVertices() const
 {
     DynamicArray<Vertex> result;
-    result.Resize(verticesMap.Size());
+    result.Resize(GetOrder());
 
-    size_t i = 0;
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        result[i] = pair.first;
-        i++;
+        result[i] = i;
     }
 
     return result;
@@ -168,13 +135,13 @@ DynamicArray<DirectedGraph::DirectedEdgeData> DirectedMatrixGraph::GetDirectedEd
     result.Resize(GetSize());
 
     uint64_t DirectedEdgeCounter = 0;
-    for (const auto& pair1 : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& pair2 : verticesMap)
+        for (Vertex j = 0; j < GetOrder(); j++)
         {
-            if (graph[pair1.second][pair2.second] != Graph::INFINITY)
+            if (graph[i][j] != Graph::INFINITY_WEIGHT)
             {
-                result[DirectedEdgeCounter] = {{pair1.first, pair2.first}, graph[pair1.second][pair2.second]};
+                result[DirectedEdgeCounter] = {{i, j}, graph[i][j]};
                 DirectedEdgeCounter++;
             }
         }
@@ -183,7 +150,6 @@ DynamicArray<DirectedGraph::DirectedEdgeData> DirectedMatrixGraph::GetDirectedEd
     return result;
 }
 
-
 bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const
 {
     if (!DoesExist(vertex))
@@ -191,13 +157,11 @@ bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate p
         return false;
     }
 
-    uint32_t sourceIndex = verticesMap.at(vertex);
-
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[sourceIndex][pair.second] != Graph::INFINITY)
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
         {
-            predicate({pair.first, graph[sourceIndex][pair.second]});
+            predicate({i, graph[vertex][i]});
         }
     }
 
@@ -206,41 +170,22 @@ bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate p
 
 void DirectedMatrixGraph::ForEachVertex(VertexPredicate predicate) const
 {
-    for (const auto& pair : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        predicate(pair.first);
+        predicate(i);
     }
 }
 
 void DirectedMatrixGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) const
 {
-    for (const auto& pair1 : verticesMap)
+    for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& pair2 : verticesMap)
+        for (Vertex j = 0; j < GetOrder(); j++)
         {
-            if (graph[pair1.second][pair2.second] != Graph::INFINITY)
+            if (graph[i][j] != Graph::INFINITY_WEIGHT)
             {
-                predicate({{pair1.first, pair2.first}, graph[pair1.second][pair2.second]});
+                predicate({{i, j}, graph[i][j]});
             }
         }
     }
-}
-
-void DirectedMatrixGraph::RestoreIndicesFrom(Vertex from)
-{
-    bool start = false;
-
-    for (auto& pair : verticesMap)
-    {
-        if (start)
-        {
-            pair.second--;
-        }
-        if (pair.first == from)
-        {
-            start = true;
-        }
-    }
-
-    verticesMap.Remove(from);
 }

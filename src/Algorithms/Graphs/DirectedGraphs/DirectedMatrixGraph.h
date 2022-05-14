@@ -9,12 +9,14 @@ public:
 
     Vertex AddVertex() override;
     bool AddDirectedEdge(const DirectedEdgeData& edge) override;
+    bool RemoveDirectedEdge(DirectedEdge DirectedEdge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(DirectedEdge directedEdge) const override;
     bool SetWeight(DirectedEdge directedEdge, Weight weight) override;
 
     [[nodiscard]] uint32_t GetOrder() const noexcept override;
     [[nodiscard]] uint64_t GetSize() const noexcept override;
+    [[nodiscard]] uint32_t GetNumberOfNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(DirectedEdge directedEdge) const override;
 

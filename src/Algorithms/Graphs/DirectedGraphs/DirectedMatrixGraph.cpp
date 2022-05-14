@@ -38,6 +38,20 @@ bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
     return true;
 }
 
+bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
+{
+    if (!DoesExist(directedEdge))
+    {
+        return false;
+    }
+
+    graph[directedEdge.first][directedEdge.second] = INFINITY_WEIGHT;
+
+    size--;
+
+    return true;
+}
+
 std::optional<Graph::Weight> DirectedMatrixGraph::GetWeight(DirectedEdge directedEdge) const
 {
     if (!DoesExist(directedEdge))
@@ -68,6 +82,27 @@ uint64_t DirectedMatrixGraph::GetSize() const noexcept
 {
     return size;
 }
+
+uint32_t DirectedMatrixGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
+{
+    if (!DoesExist(vertex))
+    {
+        return 0;
+    }
+
+    uint32_t number = 0;
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        {
+            number++;
+        }
+    }
+
+    return number;
+}
+
 
 bool DirectedMatrixGraph::DoesExist(Vertex vertex) const
 {

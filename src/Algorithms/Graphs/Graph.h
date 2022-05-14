@@ -34,6 +34,7 @@ public:
     [[nodiscard]] virtual uint32_t GetOrder() const = 0;
     [[nodiscard]] virtual uint64_t GetSize() const = 0;
     [[nodiscard]] virtual float GetDensity() const = 0;
+    [[nodiscard]] virtual uint32_t GetNumberOfNeighboursOf(Vertex vertex) const = 0;
 
     [[nodiscard]] virtual bool DoesExist(Vertex vertex) const = 0;
 

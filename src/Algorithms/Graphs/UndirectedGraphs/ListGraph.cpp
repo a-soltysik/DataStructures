@@ -37,6 +37,42 @@ bool ListGraph::AddEdge(const EdgeData& edge)
     return true;
 }
 
+bool ListGraph::RemoveEdge(UndirectedGraph::Edge edge)
+{
+    if (!DoesExist(edge.first) || !DoesExist(edge.second))
+    {
+        return false;
+    }
+
+    auto& DirectedEdges1 = *verticesMap[edge.first];
+    bool found = false;
+
+    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    {
+        if (it->vertex == edge.second)
+        {
+            DirectedEdges1.RemoveAt(it);
+            size--;
+            found = true;
+            break;
+        }
+    }
+
+    auto& DirectedEdges2 = *verticesMap[edge.second];
+
+    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    {
+        if (it->vertex == edge.first)
+        {
+            DirectedEdges2.RemoveAt(it);
+            found = true;
+            break;
+        }
+    }
+
+    return found;
+}
+
 std::optional<Graph::Weight> ListGraph::GetWeight(Edge edge) const
 {
     const auto* neighbour = GetNeighbourOfFirst(edge);
@@ -78,6 +114,16 @@ uint32_t ListGraph::GetOrder() const noexcept
 uint64_t ListGraph::GetSize() const noexcept
 {
     return size;
+}
+
+uint32_t ListGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
+{
+    if (!DoesExist(vertex))
+    {
+        return 0;
+    }
+
+    return static_cast<uint32_t>(verticesMap[vertex]->Size());
 }
 
 bool ListGraph::DoesExist(Vertex vertex) const

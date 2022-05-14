@@ -34,6 +34,30 @@ bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
     return true;
 }
 
+bool DirectedListGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
+{
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
+    {
+        return false;
+    }
+
+    auto& DirectedEdges1 = *verticesMap[directedEdge.first];
+    bool found = false;
+
+    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    {
+        if (it->vertex == directedEdge.second)
+        {
+            DirectedEdges1.RemoveAt(it);
+            size--;
+            found = true;
+            break;
+        }
+    }
+
+    return found;
+}
+
 std::optional<Graph::Weight> DirectedListGraph::GetWeight(DirectedEdge directedEdge) const
 {
     const auto* neighbour = GetNeighbourOfFirst(directedEdge);
@@ -68,6 +92,16 @@ uint32_t DirectedListGraph::GetOrder() const noexcept
 uint64_t DirectedListGraph::GetSize() const noexcept
 {
     return size;
+}
+
+uint32_t DirectedListGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
+{
+    if (!DoesExist(vertex))
+    {
+        return 0;
+    }
+
+    return static_cast<uint32_t>(verticesMap[vertex]->Size());
 }
 
 bool DirectedListGraph::DoesExist(Vertex vertex) const

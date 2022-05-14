@@ -39,6 +39,22 @@ bool MatrixGraph::AddEdge(const EdgeData& edge)
     return true;
 }
 
+bool MatrixGraph::RemoveEdge(UndirectedGraph::Edge edge)
+{
+    if (!DoesExist(edge))
+    {
+        return false;
+    }
+
+    graph[edge.first][edge.second] = INFINITY_WEIGHT;
+    graph[edge.second][edge.first] = INFINITY_WEIGHT;
+
+    size--;
+
+    return true;
+}
+
+
 std::optional<Graph::Weight> MatrixGraph::GetWeight(Edge edge) const
 {
     if (!DoesExist(edge))
@@ -69,6 +85,26 @@ uint32_t MatrixGraph::GetOrder() const noexcept
 uint64_t MatrixGraph::GetSize() const noexcept
 {
     return size;
+}
+
+uint32_t MatrixGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
+{
+    if (!DoesExist(vertex))
+    {
+        return 0;
+    }
+
+    uint32_t number = 0;
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        {
+            number++;
+        }
+    }
+
+    return number;
 }
 
 bool MatrixGraph::DoesExist(Vertex vertex) const

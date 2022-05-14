@@ -10,12 +10,14 @@ public:
     Vertex AddVertex() override;
 
     bool AddEdge(const EdgeData& edge) override;
+    bool RemoveEdge(Edge edge) override;
 
     [[nodiscard]] std::optional<Weight> GetWeight(Edge edge) const override;
     bool SetWeight(Edge edge, Weight weight) override;
 
     [[nodiscard]] uint32_t GetOrder() const noexcept override;
     [[nodiscard]] uint64_t GetSize() const noexcept override;
+    [[nodiscard]] uint32_t GetNumberOfNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Edge edge) const override;
 

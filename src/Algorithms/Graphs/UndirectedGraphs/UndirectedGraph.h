@@ -30,6 +30,7 @@ public:
     using Graph::Graph;
 
     virtual bool AddEdge(const EdgeData& edge) = 0;
+    virtual bool RemoveEdge(Edge edge) = 0;
 
     [[nodiscard]] virtual std::optional<Weight> GetWeight(Edge edge) const = 0;
     virtual bool SetWeight(Edge edge, Weight weight) = 0;

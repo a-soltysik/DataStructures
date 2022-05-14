@@ -25,6 +25,7 @@ public:
     using Graph::Graph;
 
     virtual bool AddDirectedEdge(const DirectedEdgeData& edge) = 0;
+    virtual bool RemoveDirectedEdge(DirectedEdge edge) = 0;
 
     [[nodiscard]] virtual std::optional<Weight> GetWeight(DirectedEdge edge) const = 0;
     virtual bool SetWeight(DirectedEdge edge, Weight weight) = 0;

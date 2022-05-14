@@ -2,7 +2,6 @@
 
 #include "Utils/Utils.h"
 
-#include <algorithm>
 namespace Utils
 {
 
@@ -17,6 +16,9 @@ void QuickSort(It first, It last, Comparator comparator);
 
 template<typename It>
 void QuickSort(It first, It last);
+
+template<typename It>
+It Min(It first, It last);
 
 /**
  * DEFINITIONS
@@ -57,6 +59,20 @@ template<typename It>
 void QuickSort(It first, It last)
 {
     QuickSort(first, last, Less<decltype(*first)>());
+}
+
+template<typename It>
+It Min(It first, It last)
+{
+    It minimum = first;
+    for (; first != last; first++)
+    {
+        if (*first < *minimum)
+        {
+            minimum = first;
+        }
+    }
+    return minimum;
 }
 
 namespace Impl

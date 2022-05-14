@@ -8,6 +8,9 @@
 
 namespace Utils::Parser
 {
+    template<typename T>
+    std::optional<T> ToString(const T& value);
+
     /**
     *  Returns maximum length of decimal representation of the given type
     */
@@ -24,6 +27,20 @@ namespace Utils::Parser
     /**
      * DEFINITONS
      */
+
+    template<typename T>
+    std::optional<std::string> ToString(const T& value)
+    {
+        if constexpr(std::is_arithmetic_v<T>)
+        {
+            return NumberToString(value);
+        }
+        else if constexpr(std::is_same_v<std::string, T>)
+        {
+            return value;
+        }
+        return value.ToString();
+    }
 
 
     template<typename T>

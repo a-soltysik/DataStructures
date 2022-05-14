@@ -2,7 +2,6 @@
 
 #include "Utils/Algorithms.h"
 #include "Containers/DynamicArray.h"
-#include "Containers/List.h"
 
 #include <algorithm>
 

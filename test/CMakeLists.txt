@@ -22,6 +22,7 @@ set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Algorithms/Graphs/DSU.cpp
 
     ${DS_SRC_DIR}/Algorithms/MST/Kruskal.cpp
+    ${DS_SRC_DIR}/Algorithms/MST/Prim.cpp
     )
 
 set(DS_TEST_SRC_LIST
@@ -42,6 +43,7 @@ set(DS_TEST_SRC_LIST
     ${DS_TEST_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/MatrixGraphTest.cpp
 
     ${DS_TEST_SRC_DIR}/Algorithms/MST/KruskalTest.cpp
+    ${DS_TEST_SRC_DIR}/Algorithms/MST/PrimTest.cpp
     )
 
 add_executable(${DS_TEST_TARGET} ${DS_TEST_SRC_LIST})

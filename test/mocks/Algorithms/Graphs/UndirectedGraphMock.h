@@ -9,10 +9,12 @@ class UndirectedGraphMock : public UndirectedGraph
 public:
     MOCK_METHOD(Vertex, AddVertex, (), (override));
     MOCK_METHOD(bool, AddEdge, (const EdgeData&), (override));
+    MOCK_METHOD(bool, RemoveEdge, (Edge), (override));
     MOCK_METHOD(std::optional<Weight>, GetWeight, (Edge), (const, override));
     MOCK_METHOD(bool, SetWeight, (Edge, Weight), (override));
     MOCK_METHOD(uint32_t, GetOrder, (), (const, override));
     MOCK_METHOD(uint64_t, GetSize, (), (const, override));
+    MOCK_METHOD(uint32_t, GetNumberOfNeighboursOf, (Vertex), (const, override));
     MOCK_METHOD(bool, DoesExist, (Vertex), (const, override));
     MOCK_METHOD(bool, DoesExist, (Edge), (const, override));
     MOCK_METHOD(std::optional<DynamicArray<Neighbour>>, GetNeighboursOf, (Vertex), (const, override));

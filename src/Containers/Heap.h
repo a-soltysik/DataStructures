@@ -42,11 +42,11 @@ public:
 
     [[nodiscard]] std::string ToString() const;
 
-    template<typename U>
-    friend std::ostream& operator<<(std::ostream& os, const Heap<U>& heap);
+    template<typename U, typename V>
+    friend std::ostream& operator<<(std::ostream& os, const Heap<U, V>& heap);
 
-    template<typename U>
-    friend std::istream& operator>>(std::istream& is, Heap<U>& heap);
+    template<typename U, typename V>
+    friend std::istream& operator>>(std::istream& is, Heap<U, V>& heap);
 
 private:
     [[nodiscard]] static size_t Parent(size_t node) noexcept;

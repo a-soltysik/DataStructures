@@ -43,12 +43,9 @@ Result GetMst(const UndirectedGraph& graph, const DynamicArray<Graph::Vertex>& p
 
 Result FindMstOf(const UndirectedGraph& graph)
 {
-    DynamicArray<uint32_t> priorities;
-    DynamicArray<Graph::Vertex> parents;
+    DynamicArray<uint32_t> priorities(graph.GetOrder());
+    DynamicArray<Graph::Vertex> parents(graph.GetOrder());
     DynamicArray<bool> usedFlags(graph.GetOrder(), false);
-
-    priorities.Resize(graph.GetOrder());
-    parents.Resize(graph.GetOrder());
 
     graph.ForEachVertex([&priorities, &parents](Graph::Vertex vertex){
        priorities[vertex] = INFINITY_PRIORITY;
@@ -60,6 +57,10 @@ Result FindMstOf(const UndirectedGraph& graph)
     for (uint32_t i = 0; i < graph.GetOrder() - 1; i++)
     {
         auto vertex = GetMinimalVertex(priorities, usedFlags);
+        if (vertex == NO_VERTEX)
+        {
+            break;
+        }
         usedFlags[vertex] = true;
 
         graph.ForEachNeighbourOf(vertex, [&usedFlags, &priorities, &parents, vertex](Graph::Neighbour neighbour) {

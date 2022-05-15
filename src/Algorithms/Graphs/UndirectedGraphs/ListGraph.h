@@ -6,8 +6,6 @@
 class ListGraph : public UndirectedGraph
 {
 public:
-    using UndirectedGraph::UndirectedGraph;
-
     Vertex AddVertex() override;
 
     bool AddEdge(const EdgeData& edge) override;
@@ -29,6 +27,8 @@ public:
     bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const override;
     void ForEachVertex(VertexPredicate predicate) const override;
     void ForEachEdge(EdgePredicate predicate) const override;
+
+    [[nodiscard]] std::string ToString() const;
 
 private:
     [[nodiscard]] const Neighbour* GetNeighbourOfFirst(Edge edge) const;

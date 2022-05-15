@@ -744,7 +744,7 @@ void AvlTree<T, C>::ToString(std::string& result, const std::string& prefix, con
     {
         result += prefix;
 
-        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::UP_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
         result += Utils::Parser::NumberToString(node->value) + "\n";

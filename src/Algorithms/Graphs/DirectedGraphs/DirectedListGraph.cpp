@@ -242,3 +242,30 @@ const DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(Direc
 
     return nullptr;
 }
+
+std::string DirectedListGraph::ToString() const
+{
+    std::string result;
+    Graph::Vertex vertex = 0;
+    for (const auto& list : graph)
+    {
+        result += "[" + Utils::Parser::NumberToString(vertex) + "] -> ";
+        Graph::Vertex neighbourNumber = 0;
+        for (const auto& neighbour : list)
+        {
+            result += "[" + Utils::Parser::NumberToString(neighbour.vertex) + ": " +
+                      Utils::Parser::NumberToString(neighbour.weight) + "]";
+            neighbourNumber++;
+            if (neighbourNumber != list.Size())
+            {
+                result += "->";
+            }
+        }
+        vertex++;
+        if (vertex != GetOrder())
+        {
+            result += "\n";
+        }
+    }
+    return result;
+}

@@ -1,5 +1,4 @@
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
-
 #include "Containers/UnorderedSet.h"
 
 Graph::Vertex ListGraph::AddVertex()
@@ -274,4 +273,31 @@ const ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge) const
     }
 
     return nullptr;
+}
+
+std::string ListGraph::ToString() const
+{
+    std::string result;
+    Graph::Vertex vertex = 0;
+    for (const auto& list : graph)
+    {
+        result += "[" + Utils::Parser::NumberToString(vertex) + "] -> ";
+        Graph::Vertex neighbourNumber = 0;
+        for (const auto& neighbour : list)
+        {
+            result += "[" + Utils::Parser::NumberToString(neighbour.vertex) + ": " +
+                      Utils::Parser::NumberToString(neighbour.weight) + "]";
+            neighbourNumber++;
+            if (neighbourNumber != list.Size())
+            {
+                result += "->";
+            }
+        }
+        vertex++;
+        if (vertex != GetOrder())
+        {
+            result += "\n";
+        }
+    }
+    return result;
 }

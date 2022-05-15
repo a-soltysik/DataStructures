@@ -314,7 +314,7 @@ void Heap<T, C>::ToString(std::string& result, const std::string& prefix, size_t
     {
         result += prefix;
 
-        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::HALF_VERTICAL_BAR_RIGHT);
+        result += (isRight ? Utils::VERTICAL_BAR_RIGHT : Utils::UP_RIGHT);
         result += Utils::HORIZONTAL_BAR;
 
         result += Utils::Parser::NumberToString(data[node]) + "\n";

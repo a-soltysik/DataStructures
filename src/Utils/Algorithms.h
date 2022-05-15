@@ -18,7 +18,10 @@ template<typename It>
 void QuickSort(It first, It last);
 
 template<typename It>
-It Min(It first, It last);
+It MinElement(It first, It last);
+
+template<typename It>
+It Max(It first, It last);
 
 /**
  * DEFINITIONS
@@ -62,7 +65,7 @@ void QuickSort(It first, It last)
 }
 
 template<typename It>
-It Min(It first, It last)
+It MinElement(It first, It last)
 {
     It minimum = first;
     for (; first != last; first++)
@@ -73,6 +76,20 @@ It Min(It first, It last)
         }
     }
     return minimum;
+}
+
+template<typename It>
+It MaxElement(It first, It last)
+{
+    It maximum = first;
+    for (; first != last; first++)
+    {
+        if (*first > *maximum)
+        {
+            maximum = first;
+        }
+    }
+    return maximum;
 }
 
 namespace Impl

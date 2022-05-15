@@ -13,17 +13,31 @@
 namespace Utils
 {
 
-constexpr char HORIZONTAL_BAR[] = "\xE2\x94\x80";
-constexpr char VERTICAL_BAR[] = "\xE2\x94\x82";
-constexpr char VERTICAL_BAR_RIGHT[] = "\xE2\x94\x9C";
-constexpr char HALF_VERTICAL_BAR_RIGHT[] = "\xE2\x94\x94";
+constexpr char HORIZONTAL_BAR[]                     = "\xE2\x94\x80";
+constexpr char VERTICAL_BAR[]                       = "\xE2\x94\x82";
+constexpr char VERTICAL_BAR_RIGHT[]                 = "\xE2\x94\x9C";
+constexpr char VERTICAL_BAR_LEFT[]                  = "\xE2\x94\xA4";
+constexpr char UP_RIGHT[]                           = "\xE2\x94\x94";
+constexpr char UP_LEFT[]                            = "\xE2\x94\x98";
+constexpr char CROSS[]                              = "\xE2\x94\xBC";
+constexpr char DOUBLE_CROSS[]                       = "\xE2\x95\xAC";
+constexpr char HORIZONTAL_BAR_UP[]                  = "\xE2\x94\xB4";
+constexpr char DOUBLE_HORIZONTAL_BAR[]              = "\xE2\x95\x90";
+constexpr char DOUBLE_VERTICAL_BAR[]                = "\xE2\x95\x91";
+constexpr char VERTICAL_BAR_DOUBLE_LEFT[]           = "\xE2\x95\xA1";
+constexpr char DOUBLE_VERTICAL_BAR_HORIZONTAL_BAR[] = "\xE2\x95\xAB";
+constexpr char HORIZONTAL_BAR_DOUBLE_UP[]           = "\xE2\x95\xA8";
+constexpr char DOUBLE_HORIZONTAL_BAR_VERTICAL_BAR[] = "\xE2\x95\xAA";
 
 void SetUtf8();
+
+[[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
 
 template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
 [[nodiscard]] T GetRandomNumber(T from, T to);
 
-[[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+template<typename T>
+[[nodiscard]] std::string PutInStringCenter(const T& object, size_t width, char space = ' ');
 
 template<typename T>
 struct Less
@@ -77,6 +91,20 @@ template<typename T, std::enable_if_t<std::is_integral_v<T>, bool>>
 
     std::uniform_int_distribution<T> distribution(from, to);
     return distribution(rng);
+}
+
+template<typename T>
+[[nodiscard]] std::string PutInStringCenter(const T& object, size_t width, char space)
+{
+    std::string objectStr = Parser::ToString(object);
+    if (width <= objectStr.length())
+    {
+        return objectStr;
+    }
+
+    size_t halfSpaces = (width - objectStr.length()) / 2;
+
+    return std::string(halfSpaces, space) + objectStr + std::string(width - halfSpaces - objectStr.length(), space);
 }
 
 template<typename T>

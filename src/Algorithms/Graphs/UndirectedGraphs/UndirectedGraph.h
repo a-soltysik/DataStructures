@@ -41,3 +41,6 @@ public:
 
     virtual void ForEachEdge(EdgePredicate predicate) const = 0;
 };
+
+std::ostream& operator<<(std::ostream& os, const UndirectedGraph& graph);
+std::istream& operator>>(std::istream& is, UndirectedGraph& graph);

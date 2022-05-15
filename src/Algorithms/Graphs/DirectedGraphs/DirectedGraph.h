@@ -36,3 +36,6 @@ public:
 
     virtual void ForEachDirectedEdge(DirectedEdgePredicate predicate) const = 0;
 };
+
+std::ostream& operator<<(std::ostream& os, const DirectedGraph& graph);
+std::istream& operator>>(std::istream& is, DirectedGraph& graph);

@@ -16,3 +16,39 @@ bool DirectedGraph::DirectedEdgeData::operator!=(const DirectedGraph::DirectedEd
 {
     return !(*this == rhs);
 }
+
+std::ostream& operator<<(std::ostream& os, const DirectedGraph& graph)
+{
+    os << graph.GetSize() << " " << graph.GetOrder() << "\n";
+    graph.ForEachDirectedEdge([&os](const DirectedGraph::DirectedEdgeData& edge) {
+        os << edge.vertices.first << " " << edge.vertices.second << " " << edge.weight << "\n";
+    });
+
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, DirectedGraph& graph)
+{
+    size_t size;
+    uint32_t order;
+
+    is >> size >> order;
+
+    for (uint32_t i = 0; i < order; i++)
+    {
+        graph.AddVertex();
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        Graph::Vertex first;
+        Graph::Vertex second;
+        Graph::Weight weight;
+
+        is >> first >> second >> weight;
+
+        graph.AddDirectedEdge({{first, second}, weight});
+    }
+
+    return is;
+}

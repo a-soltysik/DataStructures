@@ -29,6 +29,8 @@ public:
     void ForEachVertex(VertexPredicate predicate) const override;
     void ForEachDirectedEdge(DirectedEdgePredicate predicate) const override;
 
+    [[nodiscard]] std::string ToString() const;
+
 private:
     [[nodiscard]] const Neighbour* GetNeighbourOfFirst(DirectedEdge DirectedEdge) const;
     [[nodiscard]] Neighbour* GetNeighbourOfFirst(DirectedEdge DirectedEdge);

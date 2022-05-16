@@ -1,5 +1,4 @@
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
-#include "Containers/UnorderedSet.h"
 
 Graph::Vertex ListGraph::AddVertex()
 {
@@ -11,8 +10,6 @@ Graph::Vertex ListGraph::AddVertex()
     graph.PushBack(List<Neighbour>());
 
     Vertex newVertex = GetOrder() - 1;
-
-    verticesMap.PushBack(--graph.end());
 
     return newVertex;
 }
@@ -29,8 +26,8 @@ bool ListGraph::AddEdge(const EdgeData& edge)
         return false;
     }
 
-    verticesMap[edge.vertices.first]->PushBack({edge.vertices.second, edge.weight});
-    verticesMap[edge.vertices.second]->PushBack({edge.vertices.first, edge.weight});
+    graph[edge.vertices.first].PushBack({edge.vertices.second, edge.weight});
+    graph[edge.vertices.second].PushBack({edge.vertices.first, edge.weight});
 
     size++;
     return true;
@@ -43,7 +40,7 @@ bool ListGraph::RemoveEdge(UndirectedGraph::Edge edge)
         return false;
     }
 
-    auto& DirectedEdges1 = *verticesMap[edge.first];
+    auto& DirectedEdges1 = graph[edge.first];
     bool found = false;
 
     for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
@@ -57,7 +54,7 @@ bool ListGraph::RemoveEdge(UndirectedGraph::Edge edge)
         }
     }
 
-    auto& DirectedEdges2 = *verticesMap[edge.second];
+    auto& DirectedEdges2 = graph[edge.second];
 
     for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
     {
@@ -122,7 +119,7 @@ uint32_t ListGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
         return 0;
     }
 
-    return static_cast<uint32_t>(verticesMap[vertex]->Size());
+    return static_cast<uint32_t>(graph[vertex].Size());
 }
 
 bool ListGraph::DoesExist(Vertex vertex) const
@@ -145,7 +142,7 @@ std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex 
         return {};
     }
 
-    const auto& neighbours = *verticesMap[vertex];
+    const auto& neighbours = graph[vertex];
 
     DynamicArray<Neighbour> neighboursVertices;
     neighboursVertices.Resize(neighbours.Size());
@@ -163,7 +160,7 @@ std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex 
 DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
 {
     DynamicArray<Vertex> result;
-    result.Resize(verticesMap.Size());
+    result.Resize(graph.Size());
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
@@ -176,14 +173,13 @@ DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
 DynamicArray<UndirectedGraph::EdgeData> ListGraph::GetEdges() const
 {
     DynamicArray<EdgeData> result;
-    UnorderedSet<Edge> edges;
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *verticesMap[i])
+        for (const auto& neighbour : graph[i])
         {
             Edge edge{i, neighbour.vertex};
-            if (edges.Insert(edge) != edges.end())
+            if (i > neighbour.vertex)
             {
                 result.PushBack({edge, neighbour.weight});
             }
@@ -200,7 +196,7 @@ bool ListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) 
         return false;
     }
 
-    const auto& neighbours = *verticesMap[vertex];
+    const auto& neighbours = graph[vertex];
 
     for (const auto& neighbour : neighbours)
     {
@@ -220,14 +216,13 @@ void ListGraph::ForEachVertex(Graph::VertexPredicate predicate) const
 
 void ListGraph::ForEachEdge(EdgePredicate predicate) const
 {
-    UnorderedSet<Edge> edges;
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        for (const auto& neighbour : *verticesMap[i])
+        for (const auto& neighbour : graph[i])
         {
             Edge edge{i, neighbour.vertex};
-            if (edges.Insert(edge) != edges.end())
+            if (i > neighbour.vertex)
             {
                 predicate({edge, neighbour.weight});
             }
@@ -242,7 +237,7 @@ ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge)
         return nullptr;
     }
 
-    auto& neighbours = *verticesMap[edge.first];
+    auto& neighbours = graph[edge.first];
 
     for (auto& neighbour : neighbours)
     {
@@ -262,7 +257,7 @@ const ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge) const
         return nullptr;
     }
 
-    const auto& neighbours = *verticesMap[edge.first];
+    const auto& neighbours = graph[edge.first];
 
     for (const auto& neighbour : neighbours)
     {

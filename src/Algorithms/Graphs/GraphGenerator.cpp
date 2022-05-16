@@ -57,9 +57,31 @@ template<typename T, isUndirectedGraph<T> = true>
  */
 
 template<typename T, isGraph<T>>
-std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
+[[nodiscard]] bool validateGraphConfiguration(const GraphConfiguration& configuration)
 {
     if (configuration.density > 1 || configuration.density < GetMinimalDensity<T>(configuration.order))
+    {
+        return false;
+    }
+    if (configuration.order == Graph::MAX_SIZE)
+    {
+        return false;
+    }
+    if (configuration.minimalWeight == Graph::INFINITY_WEIGHT || configuration.maximumWeight == Graph::INFINITY_WEIGHT)
+    {
+        return false;
+    }
+    if (configuration.minimalWeight > configuration.maximumWeight)
+    {
+        return false;
+    }
+    return true;
+}
+
+template<typename T, isGraph<T>>
+std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
+{
+    if (!validateGraphConfiguration<T>(configuration))
     {
         return {};
     }

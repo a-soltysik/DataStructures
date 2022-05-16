@@ -15,8 +15,8 @@ namespace DynamicArrayBenchmark
         int64_t stdVectorTime;
     };
 
-    void FillArray(DynamicArray<Settings::DataType>& array, size_t size);
-    void FillVector(std::vector<Settings::DataType>& vector, size_t size);
+    void FillArray(DynamicArray<ContainerSettings::DataType>& array, size_t size);
+    void FillVector(std::vector<ContainerSettings::DataType>& vector, size_t size);
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
@@ -57,21 +57,21 @@ namespace DynamicArrayBenchmark
     int64_t FindVectorTest(size_t size);
 
 
-    void FillArray(DynamicArray<Settings::DataType>& array, size_t size)
+    void FillArray(DynamicArray<ContainerSettings::DataType>& array, size_t size)
     {
         array.Resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            array[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            array[i] = Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE);
         }
     }
 
-    void FillVector(std::vector<Settings::DataType>& vector, size_t size)
+    void FillVector(std::vector<ContainerSettings::DataType>& vector, size_t size)
     {
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            vector[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            vector[i] = Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE);
         }
     }
 
@@ -92,7 +92,7 @@ namespace DynamicArrayBenchmark
     std::string PushBack()
     {
         std::string result = "Push back test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = PushBackCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -114,45 +114,45 @@ namespace DynamicArrayBenchmark
     int64_t PushBackDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.PushBack(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t PushBackVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.push_back(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string PushFront()
     {
         std::string result = "Push front test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = PushFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -173,45 +173,45 @@ namespace DynamicArrayBenchmark
     int64_t PushFrontDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.PushFront(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.PushFront(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t PushFrontVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.insert(testedVector.cbegin(), Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.insert(testedVector.cbegin(), Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -232,41 +232,41 @@ namespace DynamicArrayBenchmark
     int64_t InsertDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
             Utils::Timer timer;
             timer.Start();
 
-            testedArray.Insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedArray.Insert(middle, Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t InsertVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
             auto middle = testedVector.cbegin() + testedVector.size() / 2;
 
             Utils::Timer timer;
             timer.Start();
 
-            testedVector.insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVector.insert(middle, Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
@@ -278,7 +278,7 @@ namespace DynamicArrayBenchmark
     std::string RemoveBack()
     {
         std::string result = "Remove back test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveBackCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -299,9 +299,9 @@ namespace DynamicArrayBenchmark
     int64_t RemoveBackDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -312,15 +312,15 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveBackVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -331,13 +331,13 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string RemoveFront()
     {
         std::string result = "Remove front test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -358,9 +358,9 @@ namespace DynamicArrayBenchmark
     int64_t RemoveFrontDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
@@ -371,15 +371,15 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveFrontVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
@@ -390,13 +390,13 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string RemoveAt()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveAtCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -417,9 +417,9 @@ namespace DynamicArrayBenchmark
     int64_t RemoveAtDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
@@ -431,15 +431,15 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveAtVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
             auto middle = testedVector.cbegin() + testedVector.size() / 2;
 
@@ -451,13 +451,13 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string AccessElements()
     {
         std::string result = "Access test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = AccessCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -478,9 +478,9 @@ namespace DynamicArrayBenchmark
     int64_t AccessDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
             size_t middle = testedArray.Size() / 2;
 
@@ -492,15 +492,15 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t AccessVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
             size_t middle = testedVector.size() / 2;
 
@@ -512,14 +512,14 @@ namespace DynamicArrayBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -540,41 +540,41 @@ namespace DynamicArrayBenchmark
     int64_t FindDynamicArrayTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            DynamicArray<Settings::DataType> testedArray;
+            DynamicArray<ContainerSettings::DataType> testedArray;
             FillArray(testedArray, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedArray.Find(
-                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t FindVectorTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVector;
+            std::vector<ContainerSettings::DataType> testedVector;
             FillVector(testedVector, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = std::find(testedVector.cbegin(), testedVector.cend(),
-                                                           Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE,
-                                                                               Settings::MAX_VALUE));
+                                                           Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE,
+                                                                                                               ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 }

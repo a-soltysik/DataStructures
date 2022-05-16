@@ -21,9 +21,14 @@ struct GraphConfiguration
 {
     uint32_t order;
     float density;
+    Graph::Weight minimalWeight;
+    Graph::Weight maximumWeight;
 };
 
 template<typename T, isGraph<T> = true>
 [[nodiscard]] std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration);
+
+template<typename T, isGraph<T> = true>
+[[nodiscard]] bool validateGraphConfiguration(const GraphConfiguration& configuration);
 
 }

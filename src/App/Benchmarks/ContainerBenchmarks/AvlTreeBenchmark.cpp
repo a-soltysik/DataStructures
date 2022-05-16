@@ -14,8 +14,8 @@ namespace AvlTreeBenchmark
         int64_t mapTime;
     };
 
-    void FillAvlTree(AvlTree<Settings::DataType>& tree, size_t size);
-    void FillMap(std::map<Settings::DataType, bool>& map, size_t size);
+    void FillAvlTree(AvlTree<ContainerSettings::DataType>& tree, size_t size);
+    void FillMap(std::map<ContainerSettings::DataType, bool>& map, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -32,19 +32,19 @@ namespace AvlTreeBenchmark
     int64_t FindAvlTreeTest(size_t size);
     int64_t FindMapTest(size_t size);
 
-    void FillAvlTree(AvlTree<Settings::DataType>& tree, size_t size)
+    void FillAvlTree(AvlTree<ContainerSettings::DataType>& tree, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
-            tree.Insert(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            tree.Insert(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
         }
     }
 
-    void FillMap(std::map<Settings::DataType, bool>& map, size_t size)
+    void FillMap(std::map<ContainerSettings::DataType, bool>& map, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
-            map.insert({Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
+            map.insert({Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE), true});
         }
     }
 
@@ -62,7 +62,7 @@ namespace AvlTreeBenchmark
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -83,39 +83,39 @@ namespace AvlTreeBenchmark
     int64_t InsertAvlTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree<Settings::DataType> testedAvlTree;
+            AvlTree<ContainerSettings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedAvlTree.Insert(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedAvlTree.Insert(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t InsertMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::map<Settings::DataType, bool> testedMap;
+            std::map<ContainerSettings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedMap.insert({Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE), true});
+            testedMap.insert({Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE), true});
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
@@ -128,7 +128,7 @@ namespace AvlTreeBenchmark
     std::string Remove()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -149,9 +149,9 @@ namespace AvlTreeBenchmark
     int64_t RemoveAvlTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree<Settings::DataType> testedAvlTree;
+            AvlTree<ContainerSettings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
             auto min = *testedAvlTree.cbegin();
 
@@ -163,15 +163,15 @@ namespace AvlTreeBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::map<Settings::DataType, bool> testedMap;
+            std::map<ContainerSettings::DataType, bool> testedMap;
             FillMap(testedMap, size);
             auto min = (*testedMap.cbegin()).first;
 
@@ -183,14 +183,14 @@ namespace AvlTreeBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -211,40 +211,40 @@ namespace AvlTreeBenchmark
     int64_t FindAvlTreeTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            AvlTree<Settings::DataType> testedAvlTree;
+            AvlTree<ContainerSettings::DataType> testedAvlTree;
             FillAvlTree(testedAvlTree, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedAvlTree.Find(
-                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t FindMapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::map<Settings::DataType, bool> testedMap;
+            std::map<ContainerSettings::DataType, bool> testedMap;
             FillMap(testedMap, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedMap.find(
-                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 }

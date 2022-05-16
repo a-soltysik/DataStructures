@@ -15,8 +15,8 @@ namespace ListBenchmark
         int64_t stdListTime;
     };
 
-    void FillList(List<Settings::DataType>& list, size_t size);
-    void FillStdList(std::list<Settings::DataType>& list, size_t size);
+    void FillList(List<ContainerSettings::DataType>& list, size_t size);
+    void FillStdList(std::list<ContainerSettings::DataType>& list, size_t size);
 
     std::string PushBack();
     TestCaseResult PushBackCase(size_t size);
@@ -56,19 +56,19 @@ namespace ListBenchmark
     int64_t FindListTest(size_t size);
     int64_t FindStdListTest(size_t size);
 
-    void FillList(List<Settings::DataType>& list, size_t size)
+    void FillList(List<ContainerSettings::DataType>& list, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
-            list.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.PushBack(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
         }
     }
 
-    void FillStdList(std::list<Settings::DataType>& list, size_t size)
+    void FillStdList(std::list<ContainerSettings::DataType>& list, size_t size)
     {
         for (size_t i = 0u; i < size; i++)
         {
-            list.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            list.push_back(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
         }
     }
 
@@ -85,7 +85,7 @@ namespace ListBenchmark
     std::string PushBack()
     {
         std::string result = "Push back test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = PushBackCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -106,45 +106,45 @@ namespace ListBenchmark
     int64_t PushBackListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedList.PushBack(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.PushBack(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t PushBackStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedStdList.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.push_back(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string PushFront()
     {
         std::string result = "Push front test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = PushFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -165,45 +165,45 @@ namespace ListBenchmark
     int64_t PushFrontListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedList.PushFront(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.PushFront(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t PushFrontStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedStdList.push_front(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.push_front(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -224,29 +224,29 @@ namespace ListBenchmark
     int64_t InsertListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
             Utils::Timer timer;
             timer.Start();
 
-            testedList.Insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedList.Insert(middle, Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t InsertStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -254,12 +254,12 @@ namespace ListBenchmark
 
             auto middle = testedStdList.begin();
             std::advance(middle, testedStdList.size() / 2);
-            testedStdList.insert(middle, Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedStdList.insert(middle, Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
@@ -271,7 +271,7 @@ namespace ListBenchmark
     std::string RemoveBack()
     {
         std::string result = "Remove back test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveBackCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -292,9 +292,9 @@ namespace ListBenchmark
     int64_t RemoveBackListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -305,15 +305,15 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveBackStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -324,13 +324,13 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string RemoveFront()
     {
         std::string result = "Remove front test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveFrontCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -351,9 +351,9 @@ namespace ListBenchmark
     int64_t RemoveFrontListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
@@ -364,15 +364,15 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveFrontStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -383,13 +383,13 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string RemoveAt()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveAtCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -410,9 +410,9 @@ namespace ListBenchmark
     int64_t RemoveAtListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
@@ -424,15 +424,15 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveAtStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -445,13 +445,13 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     std::string AccessElements()
     {
         std::string result = "Access test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = AccessCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -472,9 +472,9 @@ namespace ListBenchmark
     int64_t AccessListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
             size_t middle = testedList.Size() / 2;
 
@@ -486,15 +486,15 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t AccessStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
@@ -507,14 +507,14 @@ namespace ListBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -535,41 +535,41 @@ namespace ListBenchmark
     int64_t FindListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            List<Settings::DataType> testedList;
+            List<ContainerSettings::DataType> testedList;
             FillList(testedList, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedList.Find(
-                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t FindStdListTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::list<Settings::DataType> testedStdList;
+            std::list<ContainerSettings::DataType> testedStdList;
             FillStdList(testedStdList, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = std::find(testedStdList.cbegin(), testedStdList.cend(),
-                                                           Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE,
-                                                                               Settings::MAX_VALUE));
+                                                           Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE,
+                                                                                                               ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 }

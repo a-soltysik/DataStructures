@@ -15,8 +15,8 @@ namespace HeapBenchmark
         int64_t vectorTime;
     };
 
-    void FillHeap(Heap<Settings::DataType>& heap, size_t size);
-    void FillVectorHeap(std::vector<Settings::DataType>& vector, size_t size);
+    void FillHeap(Heap<ContainerSettings::DataType>& heap, size_t size);
+    void FillVectorHeap(std::vector<ContainerSettings::DataType>& vector, size_t size);
 
     std::string Insert();
     TestCaseResult InsertCase(size_t size);
@@ -33,23 +33,23 @@ namespace HeapBenchmark
     int64_t FindHeapTest(size_t size);
     int64_t FindVectorHeapTest(size_t size);
 
-    void FillHeap(Heap<Settings::DataType>& heap, size_t size)
+    void FillHeap(Heap<ContainerSettings::DataType>& heap, size_t size)
     {
-        DynamicArray<Settings::DataType> array;
+        DynamicArray<ContainerSettings::DataType> array;
         array.Resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            array[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            array[i] = Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE);
         }
         heap.Assign(array);
     }
 
-    void FillVectorHeap(std::vector<Settings::DataType>& vector, size_t size)
+    void FillVectorHeap(std::vector<ContainerSettings::DataType>& vector, size_t size)
     {
         vector.resize(size);
         for (size_t i = 0u; i < size; i++)
         {
-            vector[i] = Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE);
+            vector[i] = Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE);
         }
         std::make_heap(vector.begin(), vector.end());
     }
@@ -67,7 +67,7 @@ namespace HeapBenchmark
     std::string Insert()
     {
         std::string result = "Insert test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = InsertCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -88,40 +88,40 @@ namespace HeapBenchmark
     int64_t InsertHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            Heap<Settings::DataType> testedHeap;
+            Heap<ContainerSettings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedHeap.Insert(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedHeap.Insert(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t InsertVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVectorHeap;
+            std::vector<ContainerSettings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
-            testedVectorHeap.push_back(Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+            testedVectorHeap.push_back(Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
             std::push_heap(testedVectorHeap.begin(), testedVectorHeap.end());
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
@@ -134,7 +134,7 @@ namespace HeapBenchmark
     std::string Remove()
     {
         std::string result = "RemoveAt test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = RemoveCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -155,9 +155,9 @@ namespace HeapBenchmark
     int64_t RemoveHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            Heap<Settings::DataType> testedHeap;
+            Heap<ContainerSettings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
@@ -168,15 +168,15 @@ namespace HeapBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t RemoveVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVectorHeap;
+            std::vector<ContainerSettings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
@@ -188,14 +188,14 @@ namespace HeapBenchmark
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
 
     std::string FindElements()
     {
         std::string result = "Find test: \n";
-        for (const auto& size: Settings::TEST_SIZES)
+        for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = FindCase(size);
             result.append("Size: " + std::to_string(size) +
@@ -216,41 +216,41 @@ namespace HeapBenchmark
     int64_t FindHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            Heap<Settings::DataType> testedHeap;
+            Heap<ContainerSettings::DataType> testedHeap;
             FillHeap(testedHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = testedHeap.Find(
-                Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE, Settings::MAX_VALUE));
+                Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE, ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 
     int64_t FindVectorHeapTest(size_t size)
     {
         int64_t averageTime = 0u;
-        for (uint32_t i = 0u; i < Settings::NUMBER_OF_TESTS; i++)
+        for (uint32_t i = 0u; i < ContainerSettings::NUMBER_OF_TESTS; i++)
         {
-            std::vector<Settings::DataType> testedVectorHeap;
+            std::vector<ContainerSettings::DataType> testedVectorHeap;
             FillVectorHeap(testedVectorHeap, size);
 
             Utils::Timer timer;
             timer.Start();
 
             [[maybe_unused]] volatile auto tmp = std::find(testedVectorHeap.cbegin(), testedVectorHeap.cend(),
-                                                           Utils::GetRandomNumber<Settings::DataType>(Settings::MIN_VALUE,
-                                                                               Settings::MAX_VALUE));
+                                                           Utils::GetRandomNumber<ContainerSettings::DataType>(ContainerSettings::MIN_VALUE,
+                                                                                                               ContainerSettings::MAX_VALUE));
 
             timer.Stop();
             averageTime += timer.GetTimeInNanos();
         }
-        return averageTime / Settings::NUMBER_OF_TESTS;
+        return averageTime / ContainerSettings::NUMBER_OF_TESTS;
     }
 }

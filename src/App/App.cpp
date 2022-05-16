@@ -52,19 +52,19 @@ void App::ContainerMenu()
     switch (choice)
     {
     case 1:
-        manager = std::make_unique<LinearContainerManager<DynamicArray<Settings::DataType>>>();
+        manager = std::make_unique<LinearContainerManager<DynamicArray<ContainerSettings::DataType>>>();
         break;
     case 2:
-        manager = std::make_unique<LinearContainerManager<List<Settings::DataType>>>();
+        manager = std::make_unique<LinearContainerManager<List<ContainerSettings::DataType>>>();
         break;
     case 3:
-        manager = std::make_unique<TreeContainerManager<Heap<Settings::DataType>>>();
+        manager = std::make_unique<TreeContainerManager<Heap<ContainerSettings::DataType>>>();
         break;
     case 4:
-        manager = std::make_unique<TreeContainerManager<RedBlackTree<Settings::DataType>>>();
+        manager = std::make_unique<TreeContainerManager<RedBlackTree<ContainerSettings::DataType>>>();
         break;
     case 5:
-        manager = std::make_unique<TreeContainerManager<AvlTree<Settings::DataType>>>();
+        manager = std::make_unique<TreeContainerManager<AvlTree<ContainerSettings::DataType>>>();
         break;
     default:
         return;

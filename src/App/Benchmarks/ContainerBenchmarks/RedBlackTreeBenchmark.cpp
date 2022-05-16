@@ -65,9 +65,9 @@ namespace RedBlackTreeBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = InsertCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
-                          "; std::map: " + std::to_string(mapTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": RedBlackTree: " + Utils::Parser::NumberToString(treeTime) + "ns" +
+                          "; std::map: " + Utils::Parser::NumberToString(mapTime) + "ns\n");
         }
         return result;
     }
@@ -131,9 +131,9 @@ namespace RedBlackTreeBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = RemoveCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
-                          "; std::map: " + std::to_string(mapTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": RedBlackTree: " + Utils::Parser::NumberToString(treeTime) + "ns" +
+                          "; std::map: " + Utils::Parser::NumberToString(mapTime) + "ns\n");
         }
         return result;
     }
@@ -193,9 +193,9 @@ namespace RedBlackTreeBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[treeTime, mapTime] = FindCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": RedBlackTree: " + std::to_string(treeTime) + "ns" +
-                          "; std::map: " + std::to_string(mapTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": RedBlackTree: " + Utils::Parser::NumberToString(treeTime) + "ns" +
+                          "; std::map: " + Utils::Parser::NumberToString(mapTime) + "ns\n");
         }
         return result;
     }

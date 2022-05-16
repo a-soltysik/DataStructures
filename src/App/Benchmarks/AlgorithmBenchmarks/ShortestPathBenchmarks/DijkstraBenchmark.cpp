@@ -43,10 +43,12 @@ std::string RunBenchmark()
         for (const auto& density : AlgorithmSettings::GraphDensities)
         {
             auto[directedListGraphTime, directedMatrixGraphTime] = TestCase(order, density);
-            result.append("Order: " + std::to_string(order) + " Density: " + std::to_string(density) +
-                          ": DirectedListGraph: " + std::to_string(directedListGraphTime) + "ns" +
-                          "; DirectedMatrixGraph: " + std::to_string(directedMatrixGraphTime) + "ns\n");
+            result.append("Order: " + Utils::Parser::NumberToString(order) +
+                          " Density: " + Utils::Parser::NumberToString(density, 2) +
+                          ": DirectedListGraph: " + Utils::Parser::NumberToString(directedListGraphTime) + "ns" +
+                          "; DirectedMatrixGraph: " + Utils::Parser::NumberToString(directedMatrixGraphTime) + "ns\n");
         }
+        result += "\n";
     }
     return result;
 }

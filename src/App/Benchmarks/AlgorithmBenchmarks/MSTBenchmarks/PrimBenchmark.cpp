@@ -41,10 +41,12 @@ std::string RunBenchmark()
         for (const auto& density : AlgorithmSettings::GraphDensities)
         {
             auto[listGraphTime, matrixGraphTime] = TestCase(order, density);
-            result.append("Order: " + std::to_string(order) + " Density: " + std::to_string(density) +
-                          ": ListGraph: " + std::to_string(listGraphTime) + "ns" +
-                          "; MatrixGraph: " + std::to_string(matrixGraphTime) + "ns\n");
+            result.append("Order: " + Utils::Parser::NumberToString(order) +
+                          " Density: " + Utils::Parser::NumberToString(density, 2) +
+                          ": ListGraph: " + Utils::Parser::NumberToString(listGraphTime) + "ns" +
+                          "; MatrixGraph: " + Utils::Parser::NumberToString(matrixGraphTime) + "ns\n");
         }
+        result += "\n";
     }
     return result;
 }
@@ -64,8 +66,6 @@ int64_t ConcreteGraphTest(uint32_t order, float density)
     auto graph = GenerateGraph<T>(order, density);
     for (uint32_t i = 0u; i < AlgorithmSettings::NUMBER_OF_TESTS; i++)
     {
-
-
         Utils::Timer timer;
         timer.Start();
 

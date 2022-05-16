@@ -95,10 +95,10 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = PushBackCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns"
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns"
                                                                                   "; std::vector: " +
-                          std::to_string(stdVectorTime) + "ns\n");
+                          Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -155,9 +155,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = PushFrontCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -214,9 +214,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = InsertCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -281,9 +281,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveBackCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -340,9 +340,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveFrontCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -399,9 +399,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = RemoveAtCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -460,9 +460,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = AccessCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }
@@ -522,9 +522,9 @@ namespace DynamicArrayBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[dynamicArrayTime, stdVectorTime] = FindCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": DynamicArray: " + std::to_string(dynamicArrayTime) + "ns" +
-                          "; std::vector: " + std::to_string(stdVectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": DynamicArray: " + Utils::Parser::NumberToString(dynamicArrayTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(stdVectorTime) + "ns\n");
         }
         return result;
     }

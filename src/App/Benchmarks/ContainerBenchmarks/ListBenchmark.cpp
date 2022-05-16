@@ -88,9 +88,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = PushBackCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -147,9 +147,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = PushFrontCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -206,9 +206,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = InsertCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -274,9 +274,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveBackCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -333,9 +333,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveFrontCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -392,9 +392,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = RemoveAtCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -454,9 +454,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = AccessCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }
@@ -517,9 +517,9 @@ namespace ListBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[listTime, stdListTime] = FindCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": List: " + std::to_string(listTime) + "ns" +
-                          "; std::list: " + std::to_string(stdListTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": List: " + Utils::Parser::NumberToString(listTime) + "ns" +
+                          "; std::list: " + Utils::Parser::NumberToString(stdListTime) + "ns\n");
         }
         return result;
     }

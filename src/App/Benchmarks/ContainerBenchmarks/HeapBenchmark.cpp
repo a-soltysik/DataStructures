@@ -70,9 +70,9 @@ namespace HeapBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = InsertCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": Heap: " + std::to_string(heapTime) + "ns" +
-                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": Heap: " + Utils::Parser::NumberToString(heapTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -137,9 +137,9 @@ namespace HeapBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = RemoveCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": Heap: " + std::to_string(heapTime) + "ns" +
-                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": Heap: " + Utils::Parser::NumberToString(heapTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(vectorTime) + "ns\n");
         }
         return result;
     }
@@ -198,9 +198,9 @@ namespace HeapBenchmark
         for (const auto& size: ContainerSettings::TEST_SIZES)
         {
             auto[heapTime, vectorTime] = FindCase(size);
-            result.append("Size: " + std::to_string(size) +
-                          ": Heap: " + std::to_string(heapTime) + "ns" +
-                          "; std::vector: " + std::to_string(vectorTime) + "ns\n");
+            result.append("Size: " + Utils::Parser::NumberToString(size) +
+                          ": Heap: " + Utils::Parser::NumberToString(heapTime) + "ns" +
+                          "; std::vector: " + Utils::Parser::NumberToString(vectorTime) + "ns\n");
         }
         return result;
     }

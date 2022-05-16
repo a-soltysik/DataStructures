@@ -1,4 +1,5 @@
 #include "Algorithms/ShortestPath/Dijkstra.h"
+#include <iostream>
 
 namespace ShortestPath::Dijkstra
 {
@@ -22,22 +23,18 @@ Graph::Vertex GetMinimalVertex(const DynamicArray<size_t>& distances, const Dyna
     return minimalVertex;
 }
 
-void GetShortestPath(Result& result,
-                     const DynamicArray<Graph::Vertex>& parents,
-                     Graph::Vertex from,
-                     Graph::Vertex to)
+DynamicArray<Graph::Vertex> GetShortestPath(const DynamicArray<Graph::Vertex>& parents,
+                                            Graph::Vertex from,
+                                            Graph::Vertex to)
 {
-    result.path.PushFront(to);
-    auto parent = parents[to];
-    if (parent == NO_VERTEX)
+    DynamicArray<Graph::Vertex> path;
+    while (from != to)
     {
-        if (from != to)
-        {
-            result = {{}, 0};
-        }
-        return;
+        path.PushFront(to);
+        to = parents[to];
     }
-    GetShortestPath(result, parents, from, parent);
+    path.PushFront(to);
+    return path;
 }
 
 Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::Vertex to)
@@ -72,9 +69,13 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
             }
         });
     }
-    result.weight = distances[to];
-    GetShortestPath(result, parents, from, to); //Because backtrace is needed
-    return result;
+
+    if (distances[to] == INFINITY_DISTANCE)
+    {
+        return {{}, 0};
+    }
+
+    return {GetShortestPath(parents, from, to), distances[to]};
 }
 
 }

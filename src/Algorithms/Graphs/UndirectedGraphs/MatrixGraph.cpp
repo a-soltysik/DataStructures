@@ -1,7 +1,5 @@
 #include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
-#include <iostream>
 #include "Utils/Utils.h"
-#include "Utils/Algorithms.h"
 
 Graph::Vertex MatrixGraph::AddVertex()
 {
@@ -24,6 +22,11 @@ Graph::Vertex MatrixGraph::AddVertex()
 
 bool MatrixGraph::AddEdge(const EdgeData& edge)
 {
+    if (edge.vertices.first == edge.vertices.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
@@ -234,7 +237,7 @@ void MatrixGraph::ForEachEdge(EdgePredicate predicate) const
 
 std::string MatrixGraph::ToString() const
 {
-    std::string result;
+    std::string result = "\n";
     auto columnWidth = GetColumnWidth();
     auto separator = RowSeparator(GetOrder() + 1, columnWidth);
 

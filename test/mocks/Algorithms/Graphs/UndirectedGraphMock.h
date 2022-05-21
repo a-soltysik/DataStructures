@@ -23,6 +23,11 @@ public:
     MOCK_METHOD(bool, ForEachNeighbourOf, (Vertex, NeighbourPredicate), (const, override));
     MOCK_METHOD(void, ForEachVertex, (VertexPredicate), (const, override));
     MOCK_METHOD(void, ForEachEdge, (EdgePredicate), (const, override));
+    MOCK_METHOD(std::string, ToString, (), (const, override));
+
+protected:
+    MOCK_METHOD(void, Serialize, (std::ostream&), (const, override));
+    MOCK_METHOD(void, Deserialize, (std::istream&), (override));
 };
 
 inline std::ostream& operator<<(std::ostream& os, const UndirectedGraph::EdgeData& edge)

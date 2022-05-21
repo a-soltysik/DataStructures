@@ -40,7 +40,8 @@ public:
     [[nodiscard]] virtual DynamicArray<EdgeData> GetEdges() const = 0;
 
     virtual void ForEachEdge(EdgePredicate predicate) const = 0;
-};
 
-std::ostream& operator<<(std::ostream& os, const UndirectedGraph& graph);
-std::istream& operator>>(std::istream& is, UndirectedGraph& graph);
+protected:
+    void Serialize(std::ostream& os) const override;
+    void Deserialize(std::istream& is) override;
+};

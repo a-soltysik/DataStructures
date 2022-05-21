@@ -16,6 +16,11 @@ Graph::Vertex ListGraph::AddVertex()
 
 bool ListGraph::AddEdge(const EdgeData& edge)
 {
+    if (edge.vertices.first == edge.vertices.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
@@ -272,7 +277,7 @@ const ListGraph::Neighbour* ListGraph::GetNeighbourOfFirst(Edge edge) const
 
 std::string ListGraph::ToString() const
 {
-    std::string result;
+    std::string result = "\n";
     Graph::Vertex vertex = 0;
     for (const auto& list : graph)
     {

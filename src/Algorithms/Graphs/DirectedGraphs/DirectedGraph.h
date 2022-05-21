@@ -35,7 +35,8 @@ public:
     [[nodiscard]] virtual DynamicArray<DirectedEdgeData> GetDirectedEdges() const = 0;
 
     virtual void ForEachDirectedEdge(DirectedEdgePredicate predicate) const = 0;
-};
 
-std::ostream& operator<<(std::ostream& os, const DirectedGraph& graph);
-std::istream& operator>>(std::istream& is, DirectedGraph& graph);
+protected:
+    void Serialize(std::ostream& os) const override;
+    void Deserialize(std::istream& is) override;
+};

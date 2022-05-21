@@ -22,6 +22,11 @@ Graph::Vertex DirectedMatrixGraph::AddVertex()
 
 bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 {
+    if (edge.vertices.first == edge.vertices.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
@@ -228,7 +233,7 @@ void DirectedMatrixGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) c
 
 std::string DirectedMatrixGraph::ToString() const
 {
-    std::string result;
+    std::string result = "\n";
     auto columnWidth = GetColumnWidth();
     auto separator = RowSeparator(GetOrder() + 1, columnWidth);
 

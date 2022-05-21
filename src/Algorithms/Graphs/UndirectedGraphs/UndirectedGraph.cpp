@@ -28,17 +28,15 @@ float UndirectedGraph::GetDensity() const noexcept
     return static_cast<float>(2 * size) / static_cast<float>((order * (order - 1)));
 }
 
-std::ostream& operator<<(std::ostream& os, const UndirectedGraph& graph)
+void UndirectedGraph::Serialize(std::ostream& os) const
 {
-    os << graph.GetSize() << " " << graph.GetOrder() << "\n";
-    graph.ForEachEdge([&os](const UndirectedGraph::EdgeData& edge) {
+    os << GetSize() << " " << GetOrder() << "\n";
+    ForEachEdge([&os](const UndirectedGraph::EdgeData& edge) {
         os << edge.vertices.first << " " << edge.vertices.second << " " << edge.weight << "\n";
     });
-
-    return os;
 }
 
-std::istream& operator>>(std::istream& is, UndirectedGraph& graph)
+void UndirectedGraph::Deserialize(std::istream& is)
 {
     size_t size;
     uint32_t order;
@@ -47,7 +45,7 @@ std::istream& operator>>(std::istream& is, UndirectedGraph& graph)
 
     for (uint32_t i = 0; i < order; i++)
     {
-        graph.AddVertex();
+        AddVertex();
     }
 
     for (size_t i = 0; i < size; i++)
@@ -58,8 +56,6 @@ std::istream& operator>>(std::istream& is, UndirectedGraph& graph)
 
         is >> first >> second >> weight;
 
-        graph.AddEdge({{first, second}, weight});
+        AddEdge({{first, second}, weight});
     }
-
-    return is;
 }

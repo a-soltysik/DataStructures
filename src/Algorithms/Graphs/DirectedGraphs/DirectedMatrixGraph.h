@@ -28,13 +28,13 @@ public:
     void ForEachVertex(VertexPredicate predicate) const override;
     void ForEachDirectedEdge(DirectedEdgePredicate predicate) const override;
 
-    [[nodiscard]] std::string ToString() const;
+    [[nodiscard]] std::string ToString() const override;
 
 private:
     [[nodiscard]] size_t GetColumnWidth() const;
-    [[nodiscard]] static std::string RowSeparator(size_t columns, size_t columnWidth) ;
-    [[nodiscard]] static std::string RowEndSeparator(size_t columns, size_t columnWidth) ;
-    [[nodiscard]] static std::string RowBeginSeparator(size_t columns, size_t columnWidth) ;
+    [[nodiscard]] static std::string RowSeparator(size_t columns, size_t columnWidth);
+    [[nodiscard]] static std::string RowEndSeparator(size_t columns, size_t columnWidth);
+    [[nodiscard]] static std::string RowBeginSeparator(size_t columns, size_t columnWidth);
 
     DynamicArray<DynamicArray<Weight>> graph;
     uint64_t size = 0;

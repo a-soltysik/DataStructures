@@ -43,4 +43,12 @@ public:
 
     virtual bool ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate) const = 0;
     virtual void ForEachVertex(VertexPredicate predicate) const = 0;
+
+    [[nodiscard]] virtual std::string ToString() const = 0;
+    friend std::ostream& operator<<(std::ostream& os, const Graph& graph);
+    friend std::istream& operator>>(std::istream& os, Graph& graph);
+
+protected:
+    virtual void Serialize(std::ostream& os) const = 0;
+    virtual void Deserialize(std::istream& is) = 0;
 };

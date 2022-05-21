@@ -17,17 +17,15 @@ bool DirectedGraph::DirectedEdgeData::operator!=(const DirectedGraph::DirectedEd
     return !(*this == rhs);
 }
 
-std::ostream& operator<<(std::ostream& os, const DirectedGraph& graph)
+void DirectedGraph::Serialize(std::ostream& os) const
 {
-    os << graph.GetSize() << " " << graph.GetOrder() << "\n";
-    graph.ForEachDirectedEdge([&os](const DirectedGraph::DirectedEdgeData& edge) {
+    os << GetSize() << " " << GetOrder() << "\n";
+    ForEachDirectedEdge([&os](const DirectedGraph::DirectedEdgeData& edge) {
         os << edge.vertices.first << " " << edge.vertices.second << " " << edge.weight << "\n";
     });
-
-    return os;
 }
 
-std::istream& operator>>(std::istream& is, DirectedGraph& graph)
+void DirectedGraph::Deserialize(std::istream& is)
 {
     size_t size;
     uint32_t order;
@@ -36,7 +34,7 @@ std::istream& operator>>(std::istream& is, DirectedGraph& graph)
 
     for (uint32_t i = 0; i < order; i++)
     {
-        graph.AddVertex();
+        AddVertex();
     }
 
     for (size_t i = 0; i < size; i++)
@@ -47,8 +45,6 @@ std::istream& operator>>(std::istream& is, DirectedGraph& graph)
 
         is >> first >> second >> weight;
 
-        graph.AddDirectedEdge({{first, second}, weight});
+        AddDirectedEdge({{first, second}, weight});
     }
-
-    return is;
 }

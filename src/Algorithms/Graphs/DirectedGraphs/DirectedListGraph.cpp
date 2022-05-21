@@ -18,6 +18,11 @@ Graph::Vertex DirectedListGraph::AddVertex()
 
 bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 {
+    if (edge.vertices.first == edge.vertices.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(edge.vertices.first) || !DoesExist(edge.vertices.second))
     {
         return false;
@@ -245,7 +250,7 @@ const DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(Direc
 
 std::string DirectedListGraph::ToString() const
 {
-    std::string result;
+    std::string result = "\n";
     Graph::Vertex vertex = 0;
     for (const auto& list : graph)
     {

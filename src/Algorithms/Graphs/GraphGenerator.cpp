@@ -19,13 +19,13 @@ template<typename T, isGraph<T> = true>
  */
 
 template<typename T, isDirectedGraph<T> = true>
-[[nodiscard]] T GenerateSparseGraph(uint32_t order, size_t size);
+[[nodiscard]] T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size);
 
 template<typename T, isDirectedGraph<T> = true>
-[[nodiscard]] T GenerateDenseGraph(uint32_t order, size_t size);
+[[nodiscard]] T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size);
 
 template<typename T, isDirectedGraph<T> = true>
-[[nodiscard]] T GenerateSpanningTree(uint32_t order);
+[[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
 template<typename T, isDirectedGraph<T> = true>
 [[nodiscard]] float GetMinimalDensity(uint32_t order);
@@ -38,13 +38,13 @@ template<typename T, isDirectedGraph<T> = true>
  */
 
 template<typename T, isUndirectedGraph<T> = true>
-[[nodiscard]] T GenerateSparseGraph(uint32_t order, size_t size);
+[[nodiscard]] T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size);
 
 template<typename T, isUndirectedGraph<T> = true>
-[[nodiscard]] T GenerateDenseGraph(uint32_t order, size_t size);
+[[nodiscard]] T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size);
 
 template<typename T, isUndirectedGraph<T> = true>
-[[nodiscard]] T GenerateSpanningTree(uint32_t order);
+[[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
 template<typename T, isUndirectedGraph<T> = true>
 [[nodiscard]] float GetMinimalDensity(uint32_t order);
@@ -78,6 +78,8 @@ template<typename T, isGraph<T>>
     return true;
 }
 
+
+
 template<typename T, isGraph<T>>
 std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
 {
@@ -88,10 +90,10 @@ std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
 
     if (configuration.density < 0.5)
     {
-        return GenerateSparseGraph<T>(configuration.order, GetSize<T>(configuration));
+        return GenerateSparseGraph<T>(configuration, GetSize<T>(configuration));
     }
 
-    return GenerateDenseGraph<T>(configuration.order, GetSize<T>(configuration));
+    return GenerateDenseGraph<T>(configuration, GetSize<T>(configuration));
 }
 
 template<typename T, isGraph<T>>
@@ -121,16 +123,16 @@ Utils::Pair<Graph::Vertex, Graph::Vertex> DrawEdge(const DynamicArray<Graph::Ver
 }
 
 template<typename T, isDirectedGraph<T>>
-T GenerateSparseGraph(uint32_t order, size_t size)
+T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
 {
-    T graph = GenerateSpanningTree<T>(order);
+    T graph = GenerateSpanningTree<T>(configuration);
 
     auto vertices = graph.GetVertices();
 
     while (graph.GetSize() < size)
     {
         auto pair = DrawEdge(vertices);
-        auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+        auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
 
         graph.AddDirectedEdge({{pair.first, pair.second}, weight});
     }
@@ -139,9 +141,9 @@ T GenerateSparseGraph(uint32_t order, size_t size)
 }
 
 template<typename T, isDirectedGraph<T>>
-T GenerateDenseGraph(uint32_t order, size_t size)
+T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
 {
-    T graph = GenerateGraph<T>(order);
+    T graph = GenerateGraph<T>(configuration.order);
 
     auto vertices = graph.GetVertices();
 
@@ -151,7 +153,7 @@ T GenerateDenseGraph(uint32_t order, size_t size)
         {
             if (i != j)
             {
-                auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+                auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
 
                 graph.AddDirectedEdge({{i, j}, weight});
             }
@@ -175,15 +177,15 @@ T GenerateDenseGraph(uint32_t order, size_t size)
 }
 
 template<typename T, isDirectedGraph<T>>
-T GenerateSpanningTree(uint32_t order)
+T GenerateSpanningTree(const GraphConfiguration& configuration)
 {
-    T graph = GenerateGraph<T>(order);
+    T graph = GenerateGraph<T>(configuration.order);
 
     auto vertices = graph.GetVertices();
 
     for (uint32_t i = 0; i < graph.GetOrder() - 1; i++)
     {
-        auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+        auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
         graph.AddDirectedEdge({{vertices[i], vertices[i + 1]}, weight});
     }
 
@@ -193,26 +195,26 @@ T GenerateSpanningTree(uint32_t order)
 template<typename T, isDirectedGraph<T>>
 float GetMinimalDensity(uint32_t order)
 {
-    return 1.0f / order;
+    return 1.0f / static_cast<float>(order);
 }
 
 template<typename T, isDirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
-    return std::llround(configuration.density * configuration.order * (configuration.order - 1));
+    return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1));
 }
 
 template<typename T, isUndirectedGraph<T>>
-T GenerateSparseGraph(uint32_t order, size_t size)
+T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
 {
-    T graph = GenerateSpanningTree<T>(order);
+    T graph = GenerateSpanningTree<T>(configuration);
 
     auto vertices = graph.GetVertices();
 
     while (graph.GetSize() < size)
     {
         auto pair = DrawEdge(vertices);
-        auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+        auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
 
         graph.AddEdge({{pair.first, pair.second}, weight});
     }
@@ -221,9 +223,9 @@ T GenerateSparseGraph(uint32_t order, size_t size)
 }
 
 template<typename T, isUndirectedGraph<T>>
-T GenerateDenseGraph(uint32_t order, size_t size)
+T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
 {
-    T graph = GenerateGraph<T>(order);
+    T graph = GenerateGraph<T>(configuration.order);
 
     auto vertices = graph.GetVertices();
 
@@ -233,7 +235,7 @@ T GenerateDenseGraph(uint32_t order, size_t size)
         {
             if (i != j)
             {
-                auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+                auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
 
                 graph.AddEdge({{i, j}, weight});
             }
@@ -248,7 +250,7 @@ T GenerateDenseGraph(uint32_t order, size_t size)
 
         if (graph.GetNumberOfNeighboursOf(pair.first) == 0)
         {
-            auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+            auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
             graph.AddEdge({{pair.first, pair.second}, weight});
         }
     }
@@ -257,15 +259,15 @@ T GenerateDenseGraph(uint32_t order, size_t size)
 }
 
 template<typename T, isUndirectedGraph<T>>
-T GenerateSpanningTree(uint32_t order)
+T GenerateSpanningTree(const GraphConfiguration& configuration)
 {
-    T graph = GenerateGraph<T>(order);
+    T graph = GenerateGraph<T>(configuration.order);
 
     auto vertices = graph.GetVertices();
 
     for (uint32_t i = 0; i < graph.GetOrder() - 1; i++)
     {
-        auto weight = Utils::GetRandomNumber<Graph::Weight>(0, 100);
+        auto weight = Utils::GetRandomNumber<Graph::Weight>(configuration.minimalWeight, configuration.maximumWeight);
         graph.AddEdge({{vertices[i], vertices[i + 1]}, weight});
     }
 
@@ -281,21 +283,34 @@ float GetMinimalDensity(uint32_t order)
 template<typename T, isUndirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
-    return std::llround(configuration.density * configuration.order * (configuration.order - 1) / 2);
+    return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1) / 2);
 }
 
+template
+bool validateGraphConfiguration<DirectedListGraph>(const GraphConfiguration& configuration);
 
 template
-std::optional<DirectedListGraph> GenerateConnectedGraph<DirectedListGraph, true>(const GraphConfiguration& configuration);
+bool validateGraphConfiguration<DirectedMatrixGraph>(const GraphConfiguration& configuration);
 
 template
-std::optional<DirectedMatrixGraph> GenerateConnectedGraph<DirectedMatrixGraph, true>(const GraphConfiguration& configuration);
+bool validateGraphConfiguration<ListGraph>(const GraphConfiguration& configuration);
 
 template
-std::optional<ListGraph> GenerateConnectedGraph<ListGraph, true>(const GraphConfiguration& configuration);
+bool validateGraphConfiguration<MatrixGraph>(const GraphConfiguration& configuration);
 
 template
-std::optional<MatrixGraph> GenerateConnectedGraph<MatrixGraph, true>(const GraphConfiguration& configuration);
+std::optional<DirectedListGraph>GenerateConnectedGraph<DirectedListGraph, true>(const GraphConfiguration& configuration);
+
+template
+std::optional<DirectedMatrixGraph>GenerateConnectedGraph<DirectedMatrixGraph, true>(const GraphConfiguration& configuration);
+
+template
+std::optional<ListGraph>GenerateConnectedGraph<ListGraph, true>(const GraphConfiguration& configuration);
+
+template
+std::optional<MatrixGraph>GenerateConnectedGraph<MatrixGraph, true>(const GraphConfiguration& configuration);
+
+
 
 
 }

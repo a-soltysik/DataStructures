@@ -9,12 +9,19 @@
 #include "App/Managers/ContainerManagers/LinearContainerManager.h"
 #include "App/Managers/ContainerManagers/TreeContainerManager.h"
 #include "App/Managers/ContainerManagers/ContainerBenchmarkManager.h"
+#include "App/Managers/GraphManagers/AlgorithmBenchmarkManager.h"
+
+#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
+#include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
+#include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
+#include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
+
+#include "App/Managers/GraphManagers/UndirectedGraphManager.h"
+#include "App/Managers/GraphManagers/DirectedGraphManager.h"
 
 #include "Utils/Timer.h"
 
 #include <iostream>
-
-#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 
 int32_t App::Run()
 {
@@ -38,16 +45,17 @@ int32_t App::Run()
 
 void App::ContainerMenu()
 {
-    constexpr char CONTAINER_MENU[] = "Wybierz kontener:\n"
+    constexpr char CONTAINER_MENU[] = "Wybierz opcję:\n"
                                       "1. Tablica dynamiczna\n"
                                       "2. Lista dwukierunkowa\n"
                                       "3. Kopiec binarny\n"
                                       "4. Drzewo czerwono-czarne\n"
                                       "5. Drzewo AVL\n"
-                                      "6. Powrót\n"
+                                      "6. Benchmarki\n"
+                                      "7. Powrót\n"
                                       "> ";
 
-    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 6);
+    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 7);
 
     switch (choice)
     {
@@ -66,6 +74,45 @@ void App::ContainerMenu()
     case 5:
         manager = std::make_unique<TreeContainerManager<AvlTree<ContainerSettings::DataType>>>();
         break;
+    case 6:
+        manager = std::make_unique<ContainerBenchmarkManager>();
+        break;
+    default:
+        return;
+    }
+    manager->Menu();
+}
+
+void App::GraphMenu()
+{
+    constexpr char CONTAINER_MENU[] = "Wybierz opcję:\n"
+                                      "1. Graf nieskierowany (lista sąsiedztwa)\n"
+                                      "2. Graf nieskierowany (macierz sąsiedztwa)\n"
+                                      "3. Graf skierowany (lista sąsiedztwa)\n"
+                                      "4. Graf skierowany (macierz sąsiedztwa)\n"
+                                      "5. Benchmarki\n"
+                                      "6. Powrót\n"
+                                      "> ";
+
+    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 6);
+
+    switch (choice)
+    {
+    case 1:
+        manager = std::make_unique<UndirectedGraphManager<ListGraph>>();
+        break;
+    case 2:
+        manager = std::make_unique<UndirectedGraphManager<MatrixGraph>>();
+        break;
+    case 3:
+        manager = std::make_unique<DirectedGraphManager<DirectedListGraph>>();
+        break;
+    case 4:
+        manager = std::make_unique<DirectedGraphManager<DirectedMatrixGraph>>();
+        break;
+    case 5:
+        manager = std::make_unique<AlgorithmBenchmarkManager>();
+        break;
     default:
         return;
     }
@@ -76,7 +123,7 @@ void App::MainMenu()
 {
     constexpr char MAIN_MENU[] = "Wybierz tryb:\n"
                                  "1. Test kontenerów\n"
-                                 "2. Benchmark\n"
+                                 "2. Tryb grafów\n"
                                  "3. Wyjście\n"
                                  "> ";
 
@@ -90,8 +137,7 @@ void App::MainMenu()
             ContainerMenu();
             break;
         case 2:
-            manager = std::make_unique<ContainerBenchmarkManager>();
-            manager->Menu();
+            GraphMenu();
             break;
         default:
             return;

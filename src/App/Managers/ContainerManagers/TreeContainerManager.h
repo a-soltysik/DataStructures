@@ -66,7 +66,7 @@ template<typename T>
 void TreeContainerManager<T>::AddMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać do kontenera: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
 
     if (!number.has_value())
     {
@@ -80,7 +80,7 @@ template<typename T>
 void TreeContainerManager<T>::RemoveMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz usunąć z kontenera: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
 
     if (!number.has_value())
     {
@@ -94,7 +94,7 @@ template<typename T>
 void TreeContainerManager<T>::GetTestContainerMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>(std::cin);
+    auto filename = Utils::GetInput<std::string>(std::cin);
 
     if (!filename.has_value())
     {
@@ -104,7 +104,7 @@ void TreeContainerManager<T>::GetTestContainerMenu()
 
     std::ifstream fin(filename.value());
 
-    auto sizeOpt = Utils::getInput<size_t>(fin);
+    auto sizeOpt = Utils::GetInput<size_t>(fin);
 
     if (sizeOpt.has_value())
     {
@@ -114,7 +114,7 @@ void TreeContainerManager<T>::GetTestContainerMenu()
 
         for (size_t i = 0; i < size; i++)
         {
-            auto value = Utils::getInput<typename T::DataType>(fin);
+            auto value = Utils::GetInput<typename T::DataType>(fin);
             if (!value.has_value())
             {
                 std::cout << "Błąd odczytu danych\n";

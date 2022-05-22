@@ -123,7 +123,7 @@ constexpr const T& Max(const T& val1, const T& val2) noexcept(noexcept(val1 > va
 }
 
 template<typename T>
-std::optional<T> getInput(std::istream& is)
+std::optional<T> GetInput(std::istream& is)
 {
     static_assert(std::is_default_constructible_v<T>);
 

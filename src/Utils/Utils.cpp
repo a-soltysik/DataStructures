@@ -20,7 +20,7 @@ uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max)
     do
     {
         std::cout << menu;
-        auto choice = Utils::getInput<decltype(choiceValue)>(std::cin);
+        auto choice = Utils::GetInput<decltype(choiceValue)>(std::cin);
         wrongChoice = !choice.has_value() || (choice.has_value() && (choice.value() < min || choice.value() > max));
         if (wrongChoice)
         {

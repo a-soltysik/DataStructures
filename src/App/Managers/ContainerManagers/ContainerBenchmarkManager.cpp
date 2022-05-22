@@ -7,7 +7,6 @@
 #include "App/Benchmarks/ContainerBenchmarks/AvlTreeBenchmark.h"
 
 #include "Utils/Timer.h"
-#include "Utils/Utils.h"
 
 #include <iostream>
 #include <filesystem>

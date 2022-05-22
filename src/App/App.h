@@ -12,6 +12,7 @@ public:
 private:
     void MainMenu();
     void ContainerMenu();
+    void GraphMenu();
 
     std::unique_ptr<Manager> manager;
 };

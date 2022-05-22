@@ -24,7 +24,7 @@ template<typename T>
 void ContainerManager<T>::SaveToFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>(std::cin);
+    auto filename = Utils::GetInput<std::string>(std::cin);
 
     if (!filename.has_value())
     {
@@ -49,7 +49,7 @@ template<typename T>
 void ContainerManager<T>::CreateFromFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>(std::cin);
+    auto filename = Utils::GetInput<std::string>(std::cin);
 
     if (!filename.has_value())
     {
@@ -58,7 +58,7 @@ void ContainerManager<T>::CreateFromFileMenu()
     }
 
     std::ifstream fin(filename.value());
-    auto newContainer = Utils::getInput<T>(fin);
+    auto newContainer = Utils::GetInput<T>(fin);
 
     if (newContainer.has_value())
     {
@@ -81,7 +81,7 @@ template<typename T>
 void ContainerManager<T>::FindMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz wyszukać: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
 
     if (!number.has_value())
     {

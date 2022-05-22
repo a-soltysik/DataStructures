@@ -134,7 +134,7 @@ template<typename T>
 void LinearContainerManager<T>::PushFrontMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać na początek: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -148,7 +148,7 @@ template<typename T>
 void LinearContainerManager<T>::InsertMenu()
 {
     std::cout << "Podaj pozycję na którą chcesz dodać liczbę: ";
-    auto position = Utils::getInput<size_t>(std::cin);
+    auto position = Utils::GetInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -156,7 +156,7 @@ void LinearContainerManager<T>::InsertMenu()
     }
 
     std::cout << "Podaj liczbę, którą chcesz dodać: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -177,7 +177,7 @@ template<typename T>
 void LinearContainerManager<T>::PushBackMenu()
 {
     std::cout << "Podaj liczbę, którą chcesz dodać na koniec: ";
-    auto number = Utils::getInput<typename T::DataType>(std::cin);
+    auto number = Utils::GetInput<typename T::DataType>(std::cin);
     if (!number.has_value())
     {
         std::cout << "Nieprawidłowa liczba\n";
@@ -197,7 +197,7 @@ template<typename T>
 void LinearContainerManager<T>::RemoveAtMenu()
 {
     std::cout << "Podaj pozycję, z której chcesz usunąć liczbę: ";
-    auto position = Utils::getInput<size_t>(std::cin);
+    auto position = Utils::GetInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -226,7 +226,7 @@ template<typename T>
 void LinearContainerManager<T>::AccessMenu()
 {
     std::cout << "Podaj pozycję, z której chcesz uzyskać liczbę: ";
-    auto position = Utils::getInput<size_t>(std::cin);
+    auto position = Utils::GetInput<size_t>(std::cin);
     if (!position.has_value())
     {
         std::cout << "Nieprawidłowa pozycja\n";
@@ -248,7 +248,7 @@ template<typename T>
 void LinearContainerManager<T>::GetTestContainerMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
-    auto filename = Utils::getInput<std::string>(std::cin);
+    auto filename = Utils::GetInput<std::string>(std::cin);
 
     if (!filename.has_value())
     {
@@ -258,7 +258,7 @@ void LinearContainerManager<T>::GetTestContainerMenu()
 
     std::ifstream fin(filename.value());
 
-    auto sizeOpt = Utils::getInput<size_t>(fin);
+    auto sizeOpt = Utils::GetInput<size_t>(fin);
 
     if (sizeOpt.has_value())
     {
@@ -268,7 +268,7 @@ void LinearContainerManager<T>::GetTestContainerMenu()
 
         for (size_t i = 0; i < size; i++)
         {
-            auto value = Utils::getInput<typename T::DataType>(fin);
+            auto value = Utils::GetInput<typename T::DataType>(fin);
             if (!value.has_value())
             {
                 std::cout << "Błąd odczytu danych\n";

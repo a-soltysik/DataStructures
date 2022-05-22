@@ -5,23 +5,59 @@
 namespace Utils
 {
 
+/**
+ * @tparam It
+ * @param it
+ * @return first previous iterator before it
+ */
 template<typename It>
 It Previous(It it);
 
+/**
+ * @tparam It
+ * @param it
+ * @return first next iterator after it
+ */
 template<typename It>
 It Next(It it);
 
+/**
+ * Sorts a range [first, last) with quicksort algorithms, using a custom comparator
+ * @tparam It
+ * @tparam Comparator
+ * @param first
+ * @param last
+ * @param comparator
+ */
 template<typename It, typename Comparator>
 void QuickSort(It first, It last, Comparator comparator);
 
+/**
+ * Sorts a range [first, last) with quicksort algorithms
+ * @tparam It
+ * @param first
+ * @param last
+ */
 template<typename It>
 void QuickSort(It first, It last);
 
+/**
+ * @tparam It
+ * @param first
+ * @param last
+ * @return minimal element in range [first, last)
+ */
 template<typename It>
 It MinElement(It first, It last);
 
+/**
+ * @tparam It
+ * @param first
+ * @param last
+ * @return maximal element in range [first, last)
+ */
 template<typename It>
-It Max(It first, It last);
+It MaxElement(It first, It last);
 
 /**
  * DEFINITIONS

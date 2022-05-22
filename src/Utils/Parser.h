@@ -3,43 +3,68 @@
 #include <optional>
 #include <charconv>
 #include <limits>
-#include <string>
 #include <algorithm>
-#include <stdexcept>
 #include <sstream>
 #include <iomanip>
 
 namespace Utils::Parser
 {
 
-template<typename T>
-std::string ToString(const T& value);
-
 /**
-*  Returns maximum length of decimal representation of the given type
-*/
-template<typename T>
-constexpr uint32_t MaxLengthOfType();
-
-template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
-std::optional<T> StringToNumber(const std::string& number);
-
-template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
-std::optional<T> StringToNumber(const std::string& number);
-
-template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
-std::string NumberToString(T number);
-
-template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
-std::string NumberToString(T number);
-
-template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
-std::string NumberToString(T number, int32_t precision);
-
-
-/**
- * DEFINITONS
+ * @tparam T
+ * @param value
+ * @return value converted to std::string
  */
+template<typename T>
+[[nodiscard]] std::string ToString(const T& value);
+
+/**
+ * @return maximum length of decimal representation of the given type
+ */
+template<typename T, std::enable_if_t<std::is_arithmetic_v<T>, bool> = true>
+[[nodiscard]] constexpr uint32_t MaxLengthOfType();
+
+/**
+ * @tparam T
+ * @param number
+ * @return integral number converted to std::string if conversion succeeds, otherwise std::nullopt
+ */
+template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+[[nodiscard]] std::optional<T> StringToNumber(const std::string& number);
+
+/**
+ * @tparam T
+ * @param number
+ * @return floating point number converted to std::string if conversion succeeds, otherwise std::nullopt
+ */
+template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
+[[nodiscard]] std::optional<T> StringToNumber(const std::string& number);
+
+/**
+ * @tparam T
+ * @param number
+ * @return decimal representation of integral number
+ */
+template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+[[nodiscard]] std::string NumberToString(T number);
+
+/**
+ * @tparam T
+ * @param number
+ * @return decimal representation of floating point number
+ */
+template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
+[[nodiscard]] std::string NumberToString(T number);
+
+/**
+ * @tparam T
+ * @param number
+ * @return decimal representation of floating number with given precision
+ */
+template<typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
+[[nodiscard]] std::string NumberToString(T number, int32_t precision);
+
+
 
 template<typename T>
 std::string ToString(const T& value)
@@ -61,7 +86,7 @@ std::string ToString(const T& value)
 }
 
 
-template<typename T>
+template<typename T, std::enable_if_t<std::is_arithmetic_v<T>, bool>>
 constexpr uint32_t MaxLengthOfType()
 {
     static_assert(std::is_arithmetic_v<T>);

@@ -29,20 +29,17 @@ constexpr char DOUBLE_VERTICAL_BAR_HORIZONTAL_BAR[] = "\xE2\x95\xAB";
 constexpr char HORIZONTAL_BAR_DOUBLE_UP[]           = "\xE2\x95\xA8";
 constexpr char DOUBLE_HORIZONTAL_BAR_VERTICAL_BAR[] = "\xE2\x95\xAA";
 
-void SetUtf8();
-
-[[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
-
-template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
-[[nodiscard]] T GetRandomNumber(T from, T to);
-
-template<typename T>
-[[nodiscard]] std::string PutInStringCenter(const T& object, size_t width, char space = ' ');
+template<typename Derived, typename Base>
+struct DerivedFrom
+{
+    static constexpr bool Value = std::is_base_of_v<Base, Derived> &&
+                                  std::is_convertible_v<const volatile Derived*, const volatile Base*>;
+};
 
 template<typename T>
 struct Less
 {
-    constexpr bool operator()(const T& lhs, const T& rhs) const noexcept
+    [[nodiscard]] constexpr bool operator()(const T& lhs, const T& rhs) const noexcept
     {
         return lhs < rhs;
     }
@@ -51,40 +48,71 @@ struct Less
 template<typename T>
 struct Greater
 {
-    constexpr bool operator()(const T& lhs, const T& rhs) const noexcept
+    [[nodiscard]] constexpr bool operator()(const T& lhs, const T& rhs) const noexcept
     {
         return lhs > rhs;
     }
 };
 
 /**
-*  Swaps two values (own implementation of std::swap)
-*/
+ * Enables console to utf-8 mode
+ */
+void SetUtf8();
+
+/**
+ * @param menu text to be printed
+ * @param min minimal value to retrieve
+ * @param max maximal value to retrieve
+ * @return a value given from user from range [min, max]
+ */
+[[nodiscard]] uint32_t GetChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max);
+
+/**
+ * @tparam T integral type of a number
+ * @param from minimal value
+ * @param to maximal value
+ * @return a pseudo-random number from range [min, max]
+ */
+template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+[[nodiscard]] T GetRandomNumber(T from, T to);
+
+/**
+ * @tparam T type of an object
+ * @param object an object to be printed
+ * @param width width of a string
+ * @param space chars among which object is to be written
+ * @return string with centered object
+ */
+template<typename T>
+[[nodiscard]] std::string PutInStringCenter(const T& object, size_t width, char space = ' ');
+
+/**
+ * Own implementation of std::swap
+ */
 template<typename T>
 constexpr void Swap(T& val1, T& val2) noexcept(std::is_nothrow_move_constructible_v<T> &&
                                                std::is_nothrow_move_assignable_v<T>);
 
 /**
-*  Retuns maximum of two values (own implementation of std::max)
-*/
+ * Own implementation of std::max
+ * @return maximum of two values
+ */
 template<typename T>
 [[nodiscard]] constexpr const T& Max(const T& val1, const T& val2) noexcept(noexcept(val1 > val2));
 
-template<typename T>
-[[nodiscard]] std::optional<T> getInput(std::istream& is, bool isEofAcceptable);
-
-template<typename Derived, typename Base>
-struct DerivedFrom
-{
-    static constexpr bool Value = std::is_base_of_v<Base, Derived> &&
-                                  std::is_convertible_v<const volatile Derived*, const volatile Base*>;
-};
 /**
- * DEFINITIONS
+ * @tparam T type of object to be retrieved
+ * @param is stream
+ * @return object T if input was successful otherwise, std::nullopt
  */
+template<typename T>
+[[nodiscard]] std::optional<T> GetInput(std::istream& is);
+
+template<typename T, std::enable_if_t<std::is_arithmetic_v<T>, bool> = true>
+[[nodiscard]] constexpr T Abs(T number) noexcept;
 
 template<typename T, std::enable_if_t<std::is_integral_v<T>, bool>>
-[[nodiscard]] T GetRandomNumber(T from, T to)
+T GetRandomNumber(T from, T to)
 {
     static std::random_device device;
     static std::mt19937 rng(device());
@@ -94,7 +122,7 @@ template<typename T, std::enable_if_t<std::is_integral_v<T>, bool>>
 }
 
 template<typename T>
-[[nodiscard]] std::string PutInStringCenter(const T& object, size_t width, char space)
+std::string PutInStringCenter(const T& object, size_t width, char space)
 {
     std::string objectStr = Parser::ToString(object);
     if (width <= objectStr.length())
@@ -120,6 +148,12 @@ template<typename T>
 constexpr const T& Max(const T& val1, const T& val2) noexcept(noexcept(val1 > val2))
 {
     return val1 > val2 ? val1 : val2;
+}
+
+template<typename T, std::enable_if_t<std::is_arithmetic_v<T>, bool>>
+[[nodiscard]] constexpr T Abs(T number) noexcept
+{
+    return number >= 0 ? number : -number;
 }
 
 template<typename T>

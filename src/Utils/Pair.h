@@ -20,10 +20,4 @@ namespace Utils
             return !(*this == rhs);
         }
     };
-
-    template<typename T1, typename T2>
-    Pair<T1, T2> MakePair(T1&& value1, T2&& value2)
-    {
-        return {std::forward<T1>(value1), std::forward<T2>(value2)};
-    }
 }

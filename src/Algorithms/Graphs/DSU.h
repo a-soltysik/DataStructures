@@ -6,7 +6,6 @@
 class DSU
 {
 public:
-    DSU() = default;
     explicit DSU(const DynamicArray<Graph::Vertex>& vertices);
 
     [[nodiscard]] Graph::Vertex Find(Graph::Vertex vertex);
@@ -18,6 +17,6 @@ private:
 
     static constexpr uint32_t NO_PARENT = UINT32_MAX;
 
-    Map<Graph::Vertex, Graph::Vertex> parentsMap;
-    Map<Graph::Vertex, uint32_t> ranksMap;
+    DynamicArray<Graph::Vertex> parents;
+    DynamicArray<uint32_t> ranks;
 };

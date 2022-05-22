@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Containers/DynamicArray.h"
-
-#include <functional>
+#include "Utils/Utils.h"
 
 class Graph
 {
 public:
+    template<typename T>
+    using isGraph = std::enable_if_t<Utils::DerivedFrom<T, Graph>::Value, bool>;
+
     struct Neighbour;
     using Vertex = uint32_t;
     using Weight = uint32_t;
@@ -32,7 +34,7 @@ public:
     virtual Vertex AddVertex() = 0;
 
     [[nodiscard]] virtual uint32_t GetOrder() const = 0;
-    [[nodiscard]] virtual uint64_t GetSize() const = 0;
+    [[nodiscard]] virtual size_t GetSize() const = 0;
     [[nodiscard]] virtual float GetDensity() const = 0;
     [[nodiscard]] virtual uint32_t GetNumberOfNeighboursOf(Vertex vertex) const = 0;
 

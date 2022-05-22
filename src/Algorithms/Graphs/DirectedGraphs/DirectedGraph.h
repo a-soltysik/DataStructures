@@ -3,11 +3,11 @@
 #include "Algorithms/Graphs/Graph.h"
 #include "Utils/Pair.h"
 
-#include <optional>
-
 class DirectedGraph : public Graph
 {
 public:
+    template<typename T>
+    using isDirectedGraph = std::enable_if_t<Utils::DerivedFrom<T, DirectedGraph>::Value, bool>;
 
     struct DirectedEdgeData;
     using DirectedEdge = Utils::Pair<Vertex, Vertex>;
@@ -21,8 +21,6 @@ public:
         [[nodiscard]] bool operator==(const DirectedEdgeData& rhs) const noexcept;
         [[nodiscard]] bool operator!=(const DirectedEdgeData& rhs) const noexcept;
     };
-
-    using Graph::Graph;
 
     virtual bool AddDirectedEdge(const DirectedEdgeData& edge) = 0;
     virtual bool RemoveDirectedEdge(DirectedEdge edge) = 0;

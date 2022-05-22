@@ -2,11 +2,12 @@
 
 #include "Algorithms/Graphs/Graph.h"
 
-#include <optional>
-
 class UndirectedGraph : public Graph
 {
 public:
+    template<typename T>
+    using isUndirectedGraph = std::enable_if_t<Utils::DerivedFrom<T, UndirectedGraph>::Value, bool>;
+
     struct Edge
     {
         Vertex first;
@@ -26,8 +27,6 @@ public:
     };
 
     using EdgePredicate = std::function<void(const EdgeData&)>;
-
-    using Graph::Graph;
 
     virtual bool AddEdge(const EdgeData& edge) = 0;
     virtual bool RemoveEdge(Edge edge) = 0;

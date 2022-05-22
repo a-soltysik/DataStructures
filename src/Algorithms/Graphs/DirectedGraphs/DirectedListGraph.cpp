@@ -11,8 +11,6 @@ Graph::Vertex DirectedListGraph::AddVertex()
 
     Vertex newVertex = GetOrder() - 1;
 
-    verticesMap.PushBack(--graph.end());
-
     return newVertex;
 }
 
@@ -33,7 +31,7 @@ bool DirectedListGraph::AddDirectedEdge(const DirectedEdgeData& edge)
         return false;
     }
 
-    verticesMap[edge.vertices.first]->PushBack({edge.vertices.second, edge.weight});
+    graph[edge.vertices.first].PushBack({edge.vertices.second, edge.weight});
 
     size++;
     return true;
@@ -46,14 +44,14 @@ bool DirectedListGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
         return false;
     }
 
-    auto& DirectedEdges1 = *verticesMap[directedEdge.first];
+    auto& edges = graph[directedEdge.first];
     bool found = false;
 
-    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    for (auto it = edges.begin(); it != edges.end(); it++)
     {
         if (it->vertex == directedEdge.second)
         {
-            DirectedEdges1.RemoveAt(it);
+            edges.RemoveAt(it);
             size--;
             found = true;
             break;
@@ -94,7 +92,7 @@ uint32_t DirectedListGraph::GetOrder() const noexcept
     return static_cast<uint32_t>(graph.Size());
 }
 
-uint64_t DirectedListGraph::GetSize() const noexcept
+size_t DirectedListGraph::GetSize() const noexcept
 {
     return size;
 }
@@ -106,7 +104,7 @@ uint32_t DirectedListGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
         return 0;
     }
 
-    return static_cast<uint32_t>(verticesMap[vertex]->Size());
+    return static_cast<uint32_t>(graph[vertex].Size());
 }
 
 bool DirectedListGraph::DoesExist(Vertex vertex) const
@@ -126,16 +124,14 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedListGraph::GetNeighboursOf
         return {};
     }
 
-    const auto& neighbours = *verticesMap[vertex];
+    const auto& neighbours = graph[vertex];
 
-    DynamicArray<Neighbour> neighboursVertices;
-    neighboursVertices.Resize(neighbours.Size());
+    DynamicArray<Neighbour> neighboursVertices(neighbours.Size());
 
     uint32_t i = 0;
     for (const auto& neighbour : neighbours)
     {
-        neighboursVertices[i] = neighbour;
-        i++;
+        neighboursVertices[i++] = neighbour;
     }
 
     return neighboursVertices;
@@ -143,8 +139,7 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedListGraph::GetNeighboursOf
 
 DynamicArray<Graph::Vertex> DirectedListGraph::GetVertices() const
 {
-    DynamicArray<Vertex> result;
-    result.Resize(GetOrder());
+    DynamicArray<Vertex> result(GetOrder());
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
@@ -156,17 +151,17 @@ DynamicArray<Graph::Vertex> DirectedListGraph::GetVertices() const
 
 DynamicArray<DirectedGraph::DirectedEdgeData> DirectedListGraph::GetDirectedEdges() const
 {
-    DynamicArray<DirectedEdgeData> result;
-    result.Resize(GetSize());
+    DynamicArray<DirectedEdgeData> result(GetSize());
 
-    uint64_t edgeCounter = 0;
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t i = 0;
+    size_t edgeCounter = 0;
+    for (const auto& neighbours : graph)
     {
-        for (const auto& neighbour : *verticesMap[i])
+        for (const auto& neighbour : neighbours)
         {
-            result[edgeCounter] = {{i, neighbour.vertex}, neighbour.weight};
-            edgeCounter++;
+            result[edgeCounter++] = {{i, neighbour.vertex}, neighbour.weight};
         }
+        i++;
     }
 
     return result;
@@ -179,7 +174,7 @@ bool DirectedListGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate pre
         return false;
     }
 
-    const auto& neighbours = *verticesMap[vertex];
+    const auto& neighbours = graph[vertex];
 
     for (const auto& neighbour : neighbours)
     {
@@ -199,12 +194,15 @@ void DirectedListGraph::ForEachVertex(VertexPredicate predicate) const
 
 void DirectedListGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) const
 {
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t i = 0;
+    for (const auto& neighbours : graph)
     {
-        for (const auto& neighbour : *verticesMap[i])
+        for (const auto& neighbour : neighbours)
         {
-            predicate({{i, neighbour.vertex}, neighbour.weight});
+            DirectedEdge edge = {i, neighbour.vertex};
+            predicate({edge, neighbour.weight});
         }
+        i++;
     }
 }
 
@@ -215,7 +213,7 @@ DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(DirectedEdg
         return nullptr;
     }
 
-    auto& neighbours = *verticesMap[directedEdge.first];
+    auto& neighbours = graph[directedEdge.first];
 
     for (auto& neighbour : neighbours)
     {
@@ -235,7 +233,7 @@ const DirectedListGraph::Neighbour* DirectedListGraph::GetNeighbourOfFirst(Direc
         return nullptr;
     }
 
-    const auto& neighbours = *verticesMap[DirectedEdge.first];
+    const auto& neighbours = graph[DirectedEdge.first];
 
     for (const auto& neighbour : neighbours)
     {

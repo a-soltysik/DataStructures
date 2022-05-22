@@ -6,8 +6,6 @@
 class DirectedListGraph : public DirectedGraph
 {
 public:
-    using DirectedGraph::DirectedGraph;
-
     Vertex AddVertex() override;
     bool AddDirectedEdge(const DirectedEdgeData& edge) override;
     bool RemoveDirectedEdge(DirectedEdge DirectedEdge) override;
@@ -36,6 +34,5 @@ private:
     [[nodiscard]] Neighbour* GetNeighbourOfFirst(DirectedEdge DirectedEdge);
 
     List<List<Neighbour>> graph;
-    DynamicArray<List<List<Neighbour>>::Iterator> verticesMap;
     uint64_t size = 0;
 };

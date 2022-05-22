@@ -4,7 +4,7 @@
 #include "Algorithms/ShortestPath/BellmanFord.h"
 #include "Algorithms/ShortestPath/Dijkstra.h"
 
-template<typename T, Generator::isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 class DirectedGraphManager : public GraphManager<T>
 {
 public:
@@ -14,7 +14,7 @@ public:
     void DijkstraMenu();
 };
 
-template<typename T, Generator::isDirectedGraph<T> isGraph>
+template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
 void DirectedGraphManager<T, isGraph>::Menu()
 {
     constexpr char MENU[] = "Wybierz operację:\n"
@@ -64,7 +64,7 @@ void DirectedGraphManager<T, isGraph>::Menu()
 }
 
 
-template<typename T, Generator::isDirectedGraph<T> isGraph>
+template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
 void DirectedGraphManager<T, isGraph>::AddDirectedEdgeMenu()
 {
     std::cout << "Podaj dwa wierzchołki i wagę krawędzi: ";
@@ -93,7 +93,7 @@ void DirectedGraphManager<T, isGraph>::AddDirectedEdgeMenu()
     }
 }
 
-template<typename T, Generator::isDirectedGraph<T> isGraph>
+template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
 void DirectedGraphManager<T, isGraph>::BellmanFordMenu()
 {
     std::cout << "Podaj wierzhołek początkowy: ";
@@ -123,7 +123,7 @@ void DirectedGraphManager<T, isGraph>::BellmanFordMenu()
     std::cout << result << "\n";
 }
 
-template<typename T, Generator::isDirectedGraph<T> isGraph>
+template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
 void DirectedGraphManager<T, isGraph>::DijkstraMenu()
 {
     std::cout << "Podaj wierzhołek początkowy: ";

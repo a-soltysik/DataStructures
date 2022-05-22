@@ -13,10 +13,10 @@ using Vertices      = DynamicArray<Vertex>;
 class DirectedListGraphTest : public testing::Test
 {
 public:
-    static bool CompareDirectedEdges(const DirectedEdges& DirectedEdges1, const DirectedEdges& DirectedEdges2)
+    static bool CompareDirectedEdges(const DirectedEdges& directedEdges1, const DirectedEdges& directedEdges2)
     {
-        auto size1 = DirectedEdges1.Size();
-        auto size2 = DirectedEdges2.Size();
+        auto size1 = directedEdges1.Size();
+        auto size2 = directedEdges2.Size();
 
         if (size1 != size2)
         {
@@ -25,11 +25,11 @@ public:
 
         size_t equalityCounter = 0;
 
-        for (const auto& DirectedEdge1 : DirectedEdges1)
+        for (const auto& directedEdge1 : directedEdges1)
         {
-            for (const auto& DirectedEdge2 : DirectedEdges2)
+            for (const auto& directedEdge2 : directedEdges2)
             {
-                if (DirectedEdge1 == DirectedEdge2)
+                if (directedEdge1 == directedEdge2)
                 {
                     equalityCounter++;
                 }

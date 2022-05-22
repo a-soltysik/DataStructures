@@ -15,7 +15,7 @@ public:
     bool SetWeight(Edge edge, Weight weight) override;
 
     [[nodiscard]] uint32_t GetOrder() const noexcept override;
-    [[nodiscard]] uint64_t GetSize() const noexcept override;
+    [[nodiscard]] size_t GetSize() const noexcept override;
     [[nodiscard]] uint32_t GetNumberOfNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Edge edge) const override;
@@ -35,6 +35,5 @@ private:
     [[nodiscard]] Neighbour* GetNeighbourOfFirst(Edge edge);
 
     List<List<Neighbour>> graph;
-    DynamicArray<List<List<Neighbour>>::Iterator> verticesMap;
     uint64_t size = 0;
 };

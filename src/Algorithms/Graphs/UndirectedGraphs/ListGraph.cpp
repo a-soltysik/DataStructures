@@ -38,34 +38,34 @@ bool ListGraph::AddEdge(const EdgeData& edge)
     return true;
 }
 
-bool ListGraph::RemoveEdge(UndirectedGraph::Edge edge)
+bool ListGraph::RemoveEdge(Edge edge)
 {
     if (!DoesExist(edge.first) || !DoesExist(edge.second))
     {
         return false;
     }
 
-    auto& DirectedEdges1 = graph[edge.first];
+    auto& edges1 = graph[edge.first];
     bool found = false;
 
-    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    for (auto it = edges1.begin(); it != edges1.end(); it++)
     {
         if (it->vertex == edge.second)
         {
-            DirectedEdges1.RemoveAt(it);
+            edges1.RemoveAt(it);
             size--;
             found = true;
             break;
         }
     }
 
-    auto& DirectedEdges2 = graph[edge.second];
+    auto& edges2 = graph[edge.second];
 
-    for (auto it = DirectedEdges1.begin(); it != DirectedEdges1.end(); it++)
+    for (auto it = edges2.begin(); it != edges2.end(); it++)
     {
         if (it->vertex == edge.first)
         {
-            DirectedEdges2.RemoveAt(it);
+            edges2.RemoveAt(it);
             found = true;
             break;
         }
@@ -112,12 +112,12 @@ uint32_t ListGraph::GetOrder() const noexcept
     return static_cast<uint32_t>(graph.Size());
 }
 
-uint64_t ListGraph::GetSize() const noexcept
+size_t ListGraph::GetSize() const noexcept
 {
     return size;
 }
 
-uint32_t ListGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) const
+uint32_t ListGraph::GetNumberOfNeighboursOf(Vertex vertex) const
 {
     if (!DoesExist(vertex))
     {
@@ -132,12 +132,9 @@ bool ListGraph::DoesExist(Vertex vertex) const
     return vertex < GetOrder();
 }
 
-bool ListGraph::DoesExist(UndirectedGraph::Edge edge) const
+bool ListGraph::DoesExist(Edge edge) const
 {
-    bool foundFirst = (GetNeighbourOfFirst({edge.first, edge.second}) != nullptr);
-    bool foundSecond = (GetNeighbourOfFirst({edge.second, edge.first}) != nullptr);
-
-    return foundFirst && foundSecond;
+    return GetNeighbourOfFirst({edge.first, edge.second}) != nullptr;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex vertex) const
@@ -149,14 +146,12 @@ std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex 
 
     const auto& neighbours = graph[vertex];
 
-    DynamicArray<Neighbour> neighboursVertices;
-    neighboursVertices.Resize(neighbours.Size());
+    DynamicArray<Neighbour> neighboursVertices(neighbours.Size());
 
     uint32_t i = 0;
     for (const auto& neighbour : neighbours)
     {
-        neighboursVertices[i] = neighbour;
-        i++;
+        neighboursVertices[i++] = neighbour;
     }
 
     return neighboursVertices;
@@ -164,8 +159,7 @@ std::optional<DynamicArray<Graph::Neighbour>> ListGraph::GetNeighboursOf(Vertex 
 
 DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
 {
-    DynamicArray<Vertex> result;
-    result.Resize(graph.Size());
+    DynamicArray<Vertex> result(GetOrder());
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
@@ -177,18 +171,21 @@ DynamicArray<Graph::Vertex> ListGraph::GetVertices() const
 
 DynamicArray<UndirectedGraph::EdgeData> ListGraph::GetEdges() const
 {
-    DynamicArray<EdgeData> result;
+    DynamicArray<EdgeData> result(GetSize());
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t i = 0;
+    size_t edgeCounter = 0;
+    for (const auto& neighbours : graph)
     {
-        for (const auto& neighbour : graph[i])
+        for (const auto& neighbour : neighbours)
         {
             Edge edge{i, neighbour.vertex};
             if (i > neighbour.vertex)
             {
-                result.PushBack({edge, neighbour.weight});
+                result[edgeCounter++] = {edge, neighbour.weight};
             }
         }
+        i++;
     }
 
     return result;
@@ -221,10 +218,10 @@ void ListGraph::ForEachVertex(Graph::VertexPredicate predicate) const
 
 void ListGraph::ForEachEdge(EdgePredicate predicate) const
 {
-
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t i = 0;
+    for (const auto& neighbours : graph)
     {
-        for (const auto& neighbour : graph[i])
+        for (const auto& neighbour : neighbours)
         {
             Edge edge{i, neighbour.vertex};
             if (i > neighbour.vertex)
@@ -232,6 +229,7 @@ void ListGraph::ForEachEdge(EdgePredicate predicate) const
                 predicate({edge, neighbour.weight});
             }
         }
+        i++;
     }
 }
 

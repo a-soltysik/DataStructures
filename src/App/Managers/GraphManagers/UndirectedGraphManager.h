@@ -4,7 +4,7 @@
 #include "Algorithms/MST/Kruskal.h"
 #include "Algorithms/MST/Prim.h"
 
-template<typename T, Generator::isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 class UndirectedGraphManager : public GraphManager<T>
 {
 public:
@@ -14,7 +14,7 @@ public:
     void PrimMenu();
 };
 
-template<typename T, Generator::isUndirectedGraph<T> isGraph>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
 void UndirectedGraphManager<T, isGraph>::Menu()
 {
     constexpr char MENU[] = "Wybierz operację:\n"
@@ -63,7 +63,7 @@ void UndirectedGraphManager<T, isGraph>::Menu()
     }
 }
 
-template<typename T, Generator::isUndirectedGraph<T> isGraph>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
 void UndirectedGraphManager<T, isGraph>::AddEdgeMenu()
 {
     std::cout << "Podaj dwa wierzchołki i wagę krawędzi: ";
@@ -92,7 +92,7 @@ void UndirectedGraphManager<T, isGraph>::AddEdgeMenu()
     }
 }
 
-template<typename T, Generator::isUndirectedGraph<T> isGraph>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
 void UndirectedGraphManager<T, isGraph>::KruskalMenu()
 {
     auto result = MST::Kruskal::FindMstOf(this->graph);
@@ -105,7 +105,7 @@ void UndirectedGraphManager<T, isGraph>::KruskalMenu()
     std::cout << result << "\n";
 }
 
-template<typename T, Generator::isUndirectedGraph<T> isGraph>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
 void UndirectedGraphManager<T, isGraph>::PrimMenu()
 {
     auto result = MST::Prim::FindMstOf(this->graph);

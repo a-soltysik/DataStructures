@@ -2,6 +2,8 @@
 
 DSU::DSU(const DynamicArray<Graph::Vertex>& vertices)
 {
+    parents.Resize(vertices.Size());
+    ranks.Resize(vertices.Size());
     for (const auto& vertex : vertices)
     {
         AddVertex(vertex);
@@ -10,13 +12,12 @@ DSU::DSU(const DynamicArray<Graph::Vertex>& vertices)
 
 Graph::Vertex DSU::Find(Graph::Vertex vertex)
 {
-    if (parentsMap.Find(vertex) == parentsMap.end())
+    if (parents.Size() <= vertex)
     {
-        AddVertex(vertex);
         return vertex;
     }
 
-    auto& parent = parentsMap[vertex];
+    auto& parent = parents[vertex];
     if (parent == NO_PARENT)
     {
         return vertex;
@@ -32,17 +33,17 @@ void DSU::Union(Graph::Vertex u, Graph::Vertex v)
 
     if (uRoot != vRoot)
     {
-        auto& uRootRank = ranksMap[uRoot];
-        auto& vRootRank = ranksMap[vRoot];
+        auto& uRootRank = ranks[uRoot];
+        auto& vRootRank = ranks[vRoot];
 
         if (uRootRank < vRootRank)
         {
-            parentsMap[uRoot] = vRoot;
+            parents[uRoot] = vRoot;
             vRootRank += uRootRank;
         }
         else
         {
-            parentsMap[vRoot] = uRoot;
+            parents[vRoot] = uRoot;
             uRootRank += vRootRank;
         }
     }
@@ -50,6 +51,6 @@ void DSU::Union(Graph::Vertex u, Graph::Vertex v)
 
 void DSU::AddVertex(Graph::Vertex vertex)
 {
-    parentsMap[vertex] = NO_PARENT;
-    ranksMap[vertex] = 1;
+    parents[vertex] = NO_PARENT;
+    ranks[vertex] = 1;
 }

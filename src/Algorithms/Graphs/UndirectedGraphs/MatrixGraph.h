@@ -5,8 +5,6 @@
 class MatrixGraph : public UndirectedGraph
 {
 public:
-    using UndirectedGraph::UndirectedGraph;
-
     Vertex AddVertex() override;
 
     bool AddEdge(const EdgeData& edge) override;
@@ -16,7 +14,7 @@ public:
     bool SetWeight(Edge edge, Weight weight) override;
 
     [[nodiscard]] uint32_t GetOrder() const noexcept override;
-    [[nodiscard]] uint64_t GetSize() const noexcept override;
+    [[nodiscard]] size_t GetSize() const noexcept override;
     [[nodiscard]] uint32_t GetNumberOfNeighboursOf(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Vertex vertex) const override;
     [[nodiscard]] bool DoesExist(Edge edge) const override;
@@ -32,10 +30,10 @@ public:
     [[nodiscard]] std::string ToString() const override;
 
 private:
-    [[nodiscard]] size_t GetColumnWidth() const;
+    [[nodiscard]] size_t CalculateColumnWidth() const;
     [[nodiscard]] static std::string RowSeparator(size_t columns, size_t columnWidth);
-    [[nodiscard]] static std::string RowEndSeparator(size_t columns, size_t columnWidth);
-    [[nodiscard]] static std::string RowBeginSeparator(size_t columns, size_t columnWidth);
+    [[nodiscard]] static std::string ClosingSeparator(size_t columns, size_t columnWidth);
+    [[nodiscard]] static std::string OpeningSeparator(size_t columns, size_t columnWidth);
 
     DynamicArray<DynamicArray<Weight>> graph;
     uint64_t size = 0;

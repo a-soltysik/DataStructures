@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-template<typename T, Generator::isGraph<T> = true>
+template<typename T, Graph::isGraph<T> = true>
 class GraphManager : public Manager
 {
 public:
@@ -19,7 +19,7 @@ protected:
     T graph;
 };
 
-template<typename T, Generator::isGraph<T> isGraph>
+template<typename T, Graph::isGraph<T> isGraph>
 void GraphManager<T, isGraph>::AddVertexMenu()
 {
     std::cout << "Dodawanie nowego wierzchołka...\n";
@@ -29,7 +29,7 @@ void GraphManager<T, isGraph>::AddVertexMenu()
     }
 }
 
-template<typename T, Generator::isGraph<T> isGraph>
+template<typename T, Graph::isGraph<T> isGraph>
 void GraphManager<T, isGraph>::SaveToFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
@@ -54,7 +54,7 @@ void GraphManager<T, isGraph>::SaveToFileMenu()
     }
 }
 
-template<typename T, Generator::isGraph<T> isGraph>
+template<typename T, Graph::isGraph<T> isGraph>
 void GraphManager<T, isGraph>::CreateFromFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
@@ -80,13 +80,13 @@ void GraphManager<T, isGraph>::CreateFromFileMenu()
     }
 }
 
-template<typename T, Generator::isGraph<T> isGraph>
+template<typename T, Graph::isGraph<T> isGraph>
 void GraphManager<T, isGraph>::PrintMenu()
 {
     std::cout << graph.ToString() << "\n";
 }
 
-template<typename T, Generator::isGraph<T> isGraph>
+template<typename T, Graph::isGraph<T> isGraph>
 void GraphManager<T, isGraph>::GenerateMenu()
 {
     std::cout << "Podaj liczbę wierzchołków: ";

@@ -11,53 +11,53 @@ namespace Generator
 
 [[nodiscard]] Utils::Pair<Graph::Vertex, Graph::Vertex> DrawEdge(const DynamicArray<Graph::Vertex>& vertices);
 
-template<typename T, isGraph<T> = true>
+template<typename T, Graph::isGraph<T> = true>
 [[nodiscard]] T GenerateGraph(uint32_t order);
 
 /**
  * DirectedGraph templates
  */
 
-template<typename T, isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size);
 
-template<typename T, isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size);
 
-template<typename T, isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
-template<typename T, isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] float GetMinimalDensity(uint32_t order);
 
-template<typename T, isDirectedGraph<T> = true>
+template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] uint64_t GetSize(const GraphConfiguration& configuration);
 
 /**
  * UndirectedGraph templates
  */
 
-template<typename T, isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size);
 
-template<typename T, isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size);
 
-template<typename T, isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
-template<typename T, isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] float GetMinimalDensity(uint32_t order);
 
-template<typename T, isUndirectedGraph<T> = true>
+template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] uint64_t GetSize(const GraphConfiguration& configuration);
 
 /**
  * Definitions
  */
 
-template<typename T, isGraph<T>>
-[[nodiscard]] bool validateGraphConfiguration(const GraphConfiguration& configuration)
+template<typename T, Graph::isGraph<T>>
+bool validateGraphConfiguration(const GraphConfiguration& configuration)
 {
     if (configuration.density > 1 || configuration.density < GetMinimalDensity<T>(configuration.order))
     {
@@ -80,7 +80,7 @@ template<typename T, isGraph<T>>
 
 
 
-template<typename T, isGraph<T>>
+template<typename T, Graph::isGraph<T>>
 std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
 {
     if (!validateGraphConfiguration<T>(configuration))
@@ -96,7 +96,7 @@ std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
     return GenerateDenseGraph<T>(configuration, GetSize<T>(configuration));
 }
 
-template<typename T, isGraph<T>>
+template<typename T, Graph::isGraph<T>>
 T GenerateGraph(uint32_t order)
 {
     T graph;
@@ -122,7 +122,7 @@ Utils::Pair<Graph::Vertex, Graph::Vertex> DrawEdge(const DynamicArray<Graph::Ver
     return {first, second};
 }
 
-template<typename T, isDirectedGraph<T>>
+template<typename T, DirectedGraph::isDirectedGraph<T>>
 T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
 {
     T graph = GenerateSpanningTree<T>(configuration);
@@ -140,7 +140,7 @@ T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
     return graph;
 }
 
-template<typename T, isDirectedGraph<T>>
+template<typename T, DirectedGraph::isDirectedGraph<T>>
 T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
 {
     T graph = GenerateGraph<T>(configuration.order);
@@ -176,7 +176,7 @@ T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
     return graph;
 }
 
-template<typename T, isDirectedGraph<T>>
+template<typename T, DirectedGraph::isDirectedGraph<T>>
 T GenerateSpanningTree(const GraphConfiguration& configuration)
 {
     T graph = GenerateGraph<T>(configuration.order);
@@ -192,19 +192,19 @@ T GenerateSpanningTree(const GraphConfiguration& configuration)
     return graph;
 }
 
-template<typename T, isDirectedGraph<T>>
+template<typename T, DirectedGraph::isDirectedGraph<T>>
 float GetMinimalDensity(uint32_t order)
 {
     return 1.0f / static_cast<float>(order);
 }
 
-template<typename T, isDirectedGraph<T>>
+template<typename T, DirectedGraph::isDirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
     return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1));
 }
 
-template<typename T, isUndirectedGraph<T>>
+template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
 {
     T graph = GenerateSpanningTree<T>(configuration);
@@ -222,7 +222,7 @@ T GenerateSparseGraph(const GraphConfiguration& configuration, size_t size)
     return graph;
 }
 
-template<typename T, isUndirectedGraph<T>>
+template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
 {
     T graph = GenerateGraph<T>(configuration.order);
@@ -258,7 +258,7 @@ T GenerateDenseGraph(const GraphConfiguration& configuration, size_t size)
     return graph;
 }
 
-template<typename T, isUndirectedGraph<T>>
+template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 T GenerateSpanningTree(const GraphConfiguration& configuration)
 {
     T graph = GenerateGraph<T>(configuration.order);
@@ -274,13 +274,13 @@ T GenerateSpanningTree(const GraphConfiguration& configuration)
     return graph;
 }
 
-template<typename T, isUndirectedGraph<T>>
+template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 float GetMinimalDensity(uint32_t order)
 {
     return 2.0f / static_cast<float>(order);
 }
 
-template<typename T, isUndirectedGraph<T>>
+template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
     return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1) / 2);

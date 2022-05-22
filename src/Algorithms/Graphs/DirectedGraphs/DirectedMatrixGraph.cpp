@@ -100,7 +100,7 @@ uint32_t DirectedMatrixGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) cons
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        if (graph[vertex][i] != INFINITY_WEIGHT)
         {
             number++;
         }
@@ -121,7 +121,7 @@ bool DirectedMatrixGraph::DoesExist(DirectedEdge directedEdge) const
     {
         return false;
     }
-    return graph[directedEdge.first][directedEdge.second] != Graph::INFINITY_WEIGHT;
+    return graph[directedEdge.first][directedEdge.second] != INFINITY_WEIGHT;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -135,18 +135,17 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        if (graph[vertex][i] != INFINITY_WEIGHT)
         {
             numberOfNeighbours++;
         }
     }
 
-    DynamicArray<Neighbour> result;
-    result.Resize(numberOfNeighbours);
+    DynamicArray<Neighbour> result(numberOfNeighbours);
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        if (graph[vertex][i] != INFINITY_WEIGHT)
         {
             result[numberOfNeighbours--] = {i, graph[vertex][i]};
         }
@@ -155,11 +154,9 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
     return result;
 }
 
-
 DynamicArray<Graph::Vertex> DirectedMatrixGraph::GetVertices() const
 {
-    DynamicArray<Vertex> result;
-    result.Resize(GetOrder());
+    DynamicArray<Vertex> result(GetOrder());
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
@@ -169,18 +166,16 @@ DynamicArray<Graph::Vertex> DirectedMatrixGraph::GetVertices() const
     return result;
 }
 
-
 DynamicArray<DirectedGraph::DirectedEdgeData> DirectedMatrixGraph::GetDirectedEdges() const
 {
-    DynamicArray<DirectedEdgeData> result;
-    result.Resize(GetSize());
+    DynamicArray<DirectedEdgeData> result(GetSize());
 
     uint64_t DirectedEdgeCounter = 0;
     for (Vertex i = 0; i < GetOrder(); i++)
     {
         for (Vertex j = 0; j < GetOrder(); j++)
         {
-            if (graph[i][j] != Graph::INFINITY_WEIGHT)
+            if (graph[i][j] != INFINITY_WEIGHT)
             {
                 result[DirectedEdgeCounter] = {{i, j}, graph[i][j]};
                 DirectedEdgeCounter++;
@@ -200,7 +195,7 @@ bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate p
 
     for (Vertex i = 0; i < GetOrder(); i++)
     {
-        if (graph[vertex][i] != Graph::INFINITY_WEIGHT)
+        if (graph[vertex][i] != INFINITY_WEIGHT)
         {
             predicate({i, graph[vertex][i]});
         }

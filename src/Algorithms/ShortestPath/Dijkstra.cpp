@@ -1,5 +1,4 @@
 #include "Algorithms/ShortestPath/Dijkstra.h"
-#include <iostream>
 
 namespace ShortestPath::Dijkstra
 {

@@ -2,8 +2,6 @@
 
 #include "Containers/DynamicArray.h"
 
-#include "Utils/Utils.h"
-
 template<typename T, typename C = Utils::Greater<T>>
 class Heap
 {

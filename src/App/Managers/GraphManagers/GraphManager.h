@@ -3,8 +3,6 @@
 #include "App/Managers/Manager.h"
 #include "Algorithms/Graphs/GraphGenerator.h"
 
-#include <iostream>
-
 template<typename T, Graph::isGraph<T> = true>
 class GraphManager : public Manager
 {

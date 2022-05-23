@@ -5,7 +5,6 @@
 #include "App/Benchmarks/AlgorithmBenchmarks/ShortestPathBenchmarks/DijkstraBenchmark.h"
 #include "Utils/Timer.h"
 
-#include <iostream>
 #include <filesystem>
 
 void AlgorithmBenchmarkManager::Menu()

@@ -2,8 +2,6 @@
 
 #include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
 
-#include <ostream>
-
 namespace ShortestPath
 {
 

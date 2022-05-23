@@ -1,6 +1,5 @@
 #include "App/Benchmarks/ContainerBenchmarks/HeapBenchmark.h"
 #include "Containers/Heap.h"
-#include "Utils/Utils.h"
 #include "Utils/Timer.h"
 #include "App/Settings.h"
 

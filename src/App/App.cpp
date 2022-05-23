@@ -21,8 +21,6 @@
 
 #include "Utils/Timer.h"
 
-#include <iostream>
-
 int32_t App::Run()
 {
     Utils::SetUtf8();

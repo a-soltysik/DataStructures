@@ -2,8 +2,6 @@
 
 #include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.h"
 
-#include <ostream>
-
 namespace MST
 {
 

@@ -1,6 +1,5 @@
 #include "App/Benchmarks/ContainerBenchmarks/DynamicArrayBenchmark.h"
 #include "Containers/DynamicArray.h"
-#include "Utils/Utils.h"
 #include "Utils/Timer.h"
 #include "App/Settings.h"
 

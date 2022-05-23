@@ -12,7 +12,7 @@ Graph::Vertex GetMinimalVertex(const DynamicArray<uint32_t>& priorities, const D
     uint32_t minimalPriority = INFINITY_PRIORITY;
     for (Graph::Vertex i = 0; i < priorities.Size(); i++)
     {
-        if (usedFlags[i] == false && priorities[i] < minimalPriority)
+        if (usedFlags[i] == false && priorities[i] <= minimalPriority)
         {
             minimalPriority = priorities[i];
             minimalVertex = i;
@@ -57,9 +57,9 @@ Result FindMstOf(const UndirectedGraph& graph)
     for (uint32_t i = 0; i < graph.GetOrder() - 1; i++)
     {
         auto vertex = GetMinimalVertex(priorities, usedFlags);
-        if (vertex == NO_VERTEX)
+        if (priorities[vertex] == INFINITY_PRIORITY)
         {
-            break;
+            return {{}, 0};
         }
         usedFlags[vertex] = true;
 

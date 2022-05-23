@@ -122,7 +122,7 @@ void GraphManager<T, isGraph>::GenerateMenu()
     }
 
     Generator::GraphConfiguration config = {*order, *density, *minWeight, *maxWeight};
-    if (!Generator::validateGraphConfiguration<T>({*order, *density, *minWeight, *maxWeight}))
+    if (!Generator::ValidateGraphConfiguration<T>(config))
     {
         std::cout << "Nieprawidłowe dane\n";
         return;

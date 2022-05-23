@@ -1,5 +1,4 @@
 #include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
-#include "Utils/Utils.h"
 
 Graph::Vertex DirectedMatrixGraph::AddVertex()
 {
@@ -8,14 +7,9 @@ Graph::Vertex DirectedMatrixGraph::AddVertex()
         throw std::runtime_error("Max number of vertices has been reached!");
     }
 
-    for (auto& row : graph)
-    {
-        row.PushBack(Graph::INFINITY_WEIGHT);
-    }
-
     Vertex newVertex = GetOrder() - 1;
 
-    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY_WEIGHT));
+    graph.PushBack(DynamicArray<DirectedWeight>(GetSize(), Graph::INFINITY_WEIGHT));
 
     return newVertex;
 }
@@ -37,7 +31,21 @@ bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
         return false;
     }
 
-    graph[edge.vertices.first][edge.vertices.second] = edge.weight;
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (i == edge.vertices.first)
+        {
+            graph[i].PushBack(edge.weight);
+        }
+        else if (i == edge.vertices.second)
+        {
+            graph[i].PushBack(-static_cast<DirectedWeight>(edge.weight));
+        }
+        else
+        {
+            graph[i].PushBack(INFINITY_WEIGHT);
+        }
+    }
 
     size++;
 
@@ -46,12 +54,32 @@ bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 
 bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
 {
-    if (!DoesExist(directedEdge))
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return false;
     }
 
-    graph[directedEdge.first][directedEdge.second] = INFINITY_WEIGHT;
+    size_t edgeToRemove = 0;
+    for (; edgeToRemove < graph[directedEdge.first].Size(); edgeToRemove++)
+    {
+        if (graph[directedEdge.first][edgeToRemove] > 0 &&
+            graph[directedEdge.first][edgeToRemove] == -graph[directedEdge.second][edgeToRemove] &&
+            graph[directedEdge.first][edgeToRemove] != INFINITY_WEIGHT)
+        {
+            break;
+        }
+    }
+
+    if (edgeToRemove == GetSize())
+    {
+        return false;
+    }
+
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        graph[i].RemoveAt(edgeToRemove);
+    }
 
     size--;
 
@@ -60,23 +88,54 @@ bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
 
 std::optional<Graph::Weight> DirectedMatrixGraph::GetWeight(DirectedEdge directedEdge) const
 {
-    if (!DoesExist(directedEdge))
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return {};
     }
-    return graph[directedEdge.first][directedEdge.second];
+
+    if (directedEdge.first == directedEdge.second)
+    {
+        return {};
+    }
+
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
+    {
+        if (graph[directedEdge.first][edgeNumber] > 0 &&
+            graph[directedEdge.first][edgeNumber] == -graph[directedEdge.second][edgeNumber] &&
+            graph[directedEdge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            return graph[directedEdge.first][edgeNumber];
+        }
+    }
+
+    return {};
 }
 
 bool DirectedMatrixGraph::SetWeight(DirectedEdge directedEdge, Weight weight)
 {
-    if (!DoesExist(directedEdge))
+    if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return false;
     }
 
-    graph[directedEdge.first][directedEdge.second] = weight;
+    if (directedEdge.first == directedEdge.second)
+    {
+        return false;
+    }
 
-    return true;
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
+    {
+        if (graph[directedEdge.first][edgeNumber] > 0 &&
+            graph[directedEdge.first][edgeNumber] == -graph[directedEdge.second][edgeNumber] &&
+            graph[directedEdge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            graph[directedEdge.first][edgeNumber] = weight;
+            graph[directedEdge.second][edgeNumber] = -static_cast<DirectedWeight>(weight);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 uint32_t DirectedMatrixGraph::GetOrder() const noexcept
@@ -98,9 +157,9 @@ uint32_t DirectedMatrixGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) cons
 
     uint32_t number = 0;
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] > 0 && graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
             number++;
         }
@@ -109,7 +168,6 @@ uint32_t DirectedMatrixGraph::GetNumberOfNeighboursOf(Graph::Vertex vertex) cons
     return number;
 }
 
-
 bool DirectedMatrixGraph::DoesExist(Vertex vertex) const
 {
     return vertex < GetOrder();
@@ -117,11 +175,26 @@ bool DirectedMatrixGraph::DoesExist(Vertex vertex) const
 
 bool DirectedMatrixGraph::DoesExist(DirectedEdge directedEdge) const
 {
+    if (directedEdge.first == directedEdge.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(directedEdge.first) || !DoesExist(directedEdge.second))
     {
         return false;
     }
-    return graph[directedEdge.first][directedEdge.second] != INFINITY_WEIGHT;
+
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
+    {
+        if (graph[directedEdge.first][edgeNumber] > 0 &&
+            graph[directedEdge.first][edgeNumber] == -graph[directedEdge.second][edgeNumber] &&
+            graph[directedEdge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -131,23 +204,24 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
         return {};
     }
 
-    uint32_t numberOfNeighbours = 0;
+    DynamicArray<Neighbour> result(GetNumberOfNeighboursOf(vertex));
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t neighbour = 0;
+    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] > 0 && graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
-            numberOfNeighbours++;
-        }
-    }
-
-    DynamicArray<Neighbour> result(numberOfNeighbours);
-
-    for (Vertex i = 0; i < GetOrder(); i++)
-    {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
-        {
-            result[numberOfNeighbours--] = {i, graph[vertex][i]};
+            for (Vertex i = 0; i < GetOrder(); i++)
+            {
+                if (i == vertex)
+                {
+                    continue;
+                }
+                if (graph[i][edgeNumber] < 0)
+                {
+                    result[neighbour++] = {i, static_cast<Weight>(-graph[i][edgeNumber])};
+                }
+            }
         }
     }
 
@@ -170,17 +244,25 @@ DynamicArray<DirectedGraph::DirectedEdgeData> DirectedMatrixGraph::GetDirectedEd
 {
     DynamicArray<DirectedEdgeData> result(GetSize());
 
-    uint64_t DirectedEdgeCounter = 0;
-    for (Vertex i = 0; i < GetOrder(); i++)
+    size_t edgeCounter = 0;
+    for (size_t edge = 0; edge < GetSize(); edge++)
     {
-        for (Vertex j = 0; j < GetOrder(); j++)
+        DirectedEdge currentEdge;
+        for (Vertex i = 0; i < GetOrder(); i++)
         {
-            if (graph[i][j] != INFINITY_WEIGHT)
+            if (graph[i][edge] != INFINITY_WEIGHT)
             {
-                result[DirectedEdgeCounter] = {{i, j}, graph[i][j]};
-                DirectedEdgeCounter++;
+                if (graph[i][edge] > 0)
+                {
+                    currentEdge.first = i;
+                }
+                else
+                {
+                    currentEdge.second = i;
+                }
             }
         }
+        result[edgeCounter++] = {currentEdge, static_cast<Weight>(Utils::Abs(graph[currentEdge.first][edge]))};
     }
 
     return result;
@@ -193,11 +275,21 @@ bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate p
         return false;
     }
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] > 0 && graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
-            predicate({i, graph[vertex][i]});
+            for (Vertex i = 0; i < GetOrder(); i++)
+            {
+                if (i == vertex)
+                {
+                    continue;
+                }
+                if (graph[i][edgeNumber] < 0)
+                {
+                    predicate({i, static_cast<Weight>(-graph[i][edgeNumber])});
+                }
+            }
         }
     }
 
@@ -214,15 +306,24 @@ void DirectedMatrixGraph::ForEachVertex(VertexPredicate predicate) const
 
 void DirectedMatrixGraph::ForEachDirectedEdge(DirectedEdgePredicate predicate) const
 {
-    for (Vertex i = 0; i < GetOrder(); i++)
+    for (size_t edge = 0; edge < GetSize(); edge++)
     {
-        for (Vertex j = 0; j < GetOrder(); j++)
+        DirectedEdge currentEdge;
+        for (Vertex i = 0; i < GetOrder(); i++)
         {
-            if (graph[i][j] != Graph::INFINITY_WEIGHT)
+            if (graph[i][edge] != INFINITY_WEIGHT)
             {
-                predicate({{i, j}, graph[i][j]});
+                if (graph[i][edge] > 0)
+                {
+                    currentEdge.first = i;
+                }
+                else
+                {
+                    currentEdge.second = i;
+                }
             }
         }
+        predicate({currentEdge, static_cast<Weight>(Utils::Abs(graph[currentEdge.first][edge]))});
     }
 }
 
@@ -230,11 +331,11 @@ std::string DirectedMatrixGraph::ToString() const
 {
     std::string result = "\n";
     auto columnWidth = GetColumnWidth();
-    auto separator = RowSeparator(GetOrder() + 1, columnWidth);
+    auto separator = RowSeparator(GetSize() + 1, columnWidth);
 
     for (uint32_t i = 0; i <= GetOrder(); i++)
     {
-        for (uint32_t j = 0; j <= GetOrder(); j++)
+        for (uint32_t j = 0; j <= GetSize(); j++)
         {
             if (i == 0)
             {
@@ -272,7 +373,7 @@ std::string DirectedMatrixGraph::ToString() const
         }
         if (i == 0)
         {
-            result += "\n" + RowBeginSeparator(GetOrder() + 1, columnWidth) + "\n";
+            result += "\n" + RowBeginSeparator(GetSize() + 1, columnWidth) + "\n";
         }
         else if (i != GetOrder())
         {
@@ -280,7 +381,7 @@ std::string DirectedMatrixGraph::ToString() const
         }
         else
         {
-            result += "\n" + RowEndSeparator(GetOrder() + 1, columnWidth);
+            result += "\n" + RowEndSeparator(GetSize() + 1, columnWidth);
         }
     }
     return result;
@@ -289,7 +390,7 @@ std::string DirectedMatrixGraph::ToString() const
 size_t DirectedMatrixGraph::GetColumnWidth() const
 {
     size_t columnWidth = 0;
-    for (uint32_t i = 0; i <= GetOrder(); i++)
+    for (uint32_t i = 0; i <= GetSize(); i++)
     {
         if (i == 0)
         {

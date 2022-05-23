@@ -7,14 +7,9 @@ Graph::Vertex MatrixGraph::AddVertex()
         throw std::runtime_error("Max number of vertices has been reached!");
     }
 
-    for (auto& row : graph)
-    {
-        row.PushBack(Graph::INFINITY_WEIGHT);
-    }
-
     Vertex newVertex = GetOrder() - 1;
 
-    graph.PushBack(DynamicArray<Weight>(GetOrder() + 1, Graph::INFINITY_WEIGHT));
+    graph.PushBack(DynamicArray<Weight>(GetSize(), Graph::INFINITY_WEIGHT));
 
     return newVertex;
 }
@@ -36,8 +31,17 @@ bool MatrixGraph::AddEdge(const EdgeData& edge)
         return false;
     }
 
-    graph[edge.vertices.first][edge.vertices.second] = edge.weight;
-    graph[edge.vertices.second][edge.vertices.first] = edge.weight;
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        if (i == edge.vertices.first || i == edge.vertices.second)
+        {
+            graph[i].PushBack(edge.weight);
+        }
+        else
+        {
+            graph[i].PushBack(INFINITY_WEIGHT);
+        }
+    }
 
     size++;
 
@@ -46,13 +50,29 @@ bool MatrixGraph::AddEdge(const EdgeData& edge)
 
 bool MatrixGraph::RemoveEdge(Edge edge)
 {
-    if (!DoesExist(edge))
+    if (!DoesExist(edge.first) || !DoesExist(edge.second))
     {
         return false;
     }
 
-    graph[edge.first][edge.second] = INFINITY_WEIGHT;
-    graph[edge.second][edge.first] = INFINITY_WEIGHT;
+    size_t edgeToRemove = 0;
+    for (; edgeToRemove < GetSize(); edgeToRemove++)
+    {
+        if (graph[edge.first][edgeToRemove] == graph[edge.second][edgeToRemove] && graph[edge.first][edgeToRemove] != INFINITY_WEIGHT)
+        {
+            break;
+        }
+    }
+
+    if (edgeToRemove == GetSize())
+    {
+        return false;
+    }
+
+    for (Vertex i = 0; i < GetOrder(); i++)
+    {
+        graph[i].RemoveAt(edgeToRemove);
+    }
 
     size--;
 
@@ -61,24 +81,50 @@ bool MatrixGraph::RemoveEdge(Edge edge)
 
 std::optional<Graph::Weight> MatrixGraph::GetWeight(Edge edge) const
 {
-    if (!DoesExist(edge))
+    if (!DoesExist(edge.first) || !DoesExist(edge.second))
     {
         return {};
     }
-    return graph[edge.first][edge.second];
+
+    if (edge.first == edge.second)
+    {
+        return {};
+    }
+
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
+    {
+        if (graph[edge.first][edgeNumber] == graph[edge.second][edgeNumber] && graph[edge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            return graph[edge.first][edgeNumber];
+        }
+    }
+
+    return {};
 }
 
 bool MatrixGraph::SetWeight(Edge edge, Weight weight)
 {
-    if (!DoesExist(edge))
+    if (!DoesExist(edge.first) || !DoesExist(edge.second))
     {
         return false;
     }
 
-    graph[edge.first][edge.second] = weight;
-    graph[edge.second][edge.first] = weight;
+    if (edge.first == edge.second)
+    {
+        return false;
+    }
 
-    return true;
+    for (size_t edgeNumber = 0; edgeNumber < graph[edge.first].Size(); edgeNumber++)
+    {
+        if (graph[edge.first][edgeNumber] == graph[edge.second][edgeNumber] && graph[edge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            graph[edge.first][edgeNumber] = weight;
+            graph[edge.second][edgeNumber] = weight;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 uint32_t MatrixGraph::GetOrder() const noexcept
@@ -100,9 +146,9 @@ uint32_t MatrixGraph::GetNumberOfNeighboursOf(Vertex vertex) const
 
     uint32_t number = 0;
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
             number++;
         }
@@ -118,11 +164,24 @@ bool MatrixGraph::DoesExist(Vertex vertex) const
 
 bool MatrixGraph::DoesExist(Edge edge) const
 {
+    if (edge.first == edge.second)
+    {
+        return false;
+    }
+
     if (!DoesExist(edge.first) || !DoesExist(edge.second))
     {
         return false;
     }
-    return graph[edge.first][edge.second] != INFINITY_WEIGHT;
+
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
+    {
+        if (graph[edge.first][edgeNumber] == graph[edge.second][edgeNumber] && graph[edge.first][edgeNumber] != INFINITY_WEIGHT)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Vertex vertex) const
@@ -132,29 +191,29 @@ std::optional<DynamicArray<Graph::Neighbour>> MatrixGraph::GetNeighboursOf(Verte
         return {};
     }
 
-    uint32_t numberOfNeighbours = 0;
+    DynamicArray<Neighbour> result(GetNumberOfNeighboursOf(vertex));
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    uint32_t neighbour = 0;
+    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
-            numberOfNeighbours++;
-        }
-    }
-
-    DynamicArray<Neighbour> result(numberOfNeighbours);
-
-    for (Vertex i = 0; i < GetOrder(); i++)
-    {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
-        {
-            result[numberOfNeighbours--] = {i, graph[vertex][i]};
+            for (Vertex i = 0; i < GetOrder(); i++)
+            {
+                if (i == vertex)
+                {
+                    continue;
+                }
+                if (graph[i][edgeNumber] != INFINITY_WEIGHT)
+                {
+                    result[neighbour++] = {i, graph[i][edgeNumber]};
+                }
+            }
         }
     }
 
     return result;
 }
-
 
 DynamicArray<Graph::Vertex> MatrixGraph::GetVertices() const
 {
@@ -168,23 +227,31 @@ DynamicArray<Graph::Vertex> MatrixGraph::GetVertices() const
     return result;
 }
 
-
 DynamicArray<UndirectedGraph::EdgeData> MatrixGraph::GetEdges() const
 {
     DynamicArray<EdgeData> result(GetSize());
 
     size_t edgeCounter = 0;
-    for (uint32_t i = 1; i < GetOrder(); i++)
+    for (size_t edge = 0; edge < GetSize(); edge++)
     {
-        for (uint32_t j = 0; j < i; j++)
+        Edge currentEdge = {MAX_SIZE, MAX_SIZE};
+        for (Vertex i = 0; i < GetOrder(); i++)
         {
-            if (graph[i][j] != INFINITY_WEIGHT)
+            if (graph[i][edge] != INFINITY_WEIGHT)
             {
-
-                result[edgeCounter++] = {{i, j}, graph[i][j]};
+                if (currentEdge.first == MAX_SIZE)
+                {
+                    currentEdge.first = i;
+                }
+                else
+                {
+                    currentEdge.second = i;
+                }
             }
         }
+        result[edgeCounter++] = {currentEdge, graph[currentEdge.first][edge]};
     }
+
     return result;
 }
 
@@ -196,11 +263,21 @@ bool MatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate predicate
         return false;
     }
 
-    for (Vertex i = 0; i < GetOrder(); i++)
+    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
     {
-        if (graph[vertex][i] != INFINITY_WEIGHT)
+        if (graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
-            predicate({i, graph[vertex][i]});
+            for (Vertex i = 0; i < GetOrder(); i++)
+            {
+                if (i == vertex)
+                {
+                    continue;
+                }
+                if (graph[i][edgeNumber] != INFINITY_WEIGHT)
+                {
+                    predicate({i, graph[i][edgeNumber]});
+                }
+            }
         }
     }
 
@@ -217,15 +294,24 @@ void MatrixGraph::ForEachVertex(VertexPredicate predicate) const
 
 void MatrixGraph::ForEachEdge(EdgePredicate predicate) const
 {
-    for (uint32_t i = 1; i < GetOrder(); i++)
+    for (size_t edge = 0; edge < GetSize(); edge++)
     {
-        for (uint32_t j = 0; j < i; j++)
+        Edge currentEdge = {MAX_SIZE, MAX_SIZE};
+        for (Vertex i = 0; i < GetOrder(); i++)
         {
-            if (graph[i][j] != INFINITY_WEIGHT)
+            if (graph[i][edge] != INFINITY_WEIGHT)
             {
-                predicate({{i, j}, graph[i][j]});
+                if (currentEdge.first == MAX_SIZE)
+                {
+                    currentEdge.first = i;
+                }
+                else
+                {
+                    currentEdge.second = i;
+                }
             }
         }
+        predicate({currentEdge, graph[currentEdge.first][edge]});
     }
 }
 
@@ -233,11 +319,11 @@ std::string MatrixGraph::ToString() const
 {
     std::string result = "\n";
     auto columnWidth = CalculateColumnWidth();
-    auto separator = RowSeparator(GetOrder() + 1, columnWidth);
+    auto separator = RowSeparator(GetSize() + 1, columnWidth);
 
     for (uint32_t i = 0; i <= GetOrder(); i++)
     {
-        for (uint32_t j = 0; j <= GetOrder(); j++)
+        for (uint32_t j = 0; j <= GetSize(); j++)
         {
             if (i == 0)
             {
@@ -275,7 +361,7 @@ std::string MatrixGraph::ToString() const
         }
         if (i == 0)
         {
-            result += "\n" + OpeningSeparator(GetOrder() + 1, columnWidth) + "\n";
+            result += "\n" + OpeningSeparator(GetSize() + 1, columnWidth) + "\n";
         }
         else if (i != GetOrder())
         {
@@ -283,7 +369,7 @@ std::string MatrixGraph::ToString() const
         }
         else
         {
-            result += "\n" + ClosingSeparator(GetOrder() + 1, columnWidth);
+            result += "\n" + ClosingSeparator(GetSize() + 1, columnWidth);
         }
     }
     return result;
@@ -292,7 +378,7 @@ std::string MatrixGraph::ToString() const
 size_t MatrixGraph::CalculateColumnWidth() const
 {
     size_t columnWidth = 0;
-    for (uint32_t i = 0; i <= GetOrder(); i++)
+    for (uint32_t i = 0; i <= GetSize(); i++)
     {
         if (i == 0)
         {

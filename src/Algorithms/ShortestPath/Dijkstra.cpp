@@ -13,7 +13,7 @@ Graph::Vertex GetMinimalVertex(const DynamicArray<size_t>& distances, const Dyna
     size_t minimalDistance = INFINITY_DISTANCE;
     for (Graph::Vertex i = 0; i < distances.Size(); i++)
     {
-        if (usedFlags[i] == false && distances[i] < minimalDistance)
+        if (usedFlags[i] == false && distances[i] <= minimalDistance)
         {
             minimalDistance = distances[i];
             minimalVertex = i;
@@ -55,7 +55,7 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
     for (uint32_t i = 0; i < graph.GetOrder(); i++)
     {
         auto vertex = GetMinimalVertex(distances, usedFlags);
-        if (vertex == NO_VERTEX)
+        if (distances[vertex] == INFINITY_DISTANCE)
         {
             break;
         }

@@ -29,11 +29,13 @@ public:
     [[nodiscard]] std::string ToString() const override;
 
 private:
+    using DirectedWeight = int64_t;
+
     [[nodiscard]] size_t GetColumnWidth() const;
     [[nodiscard]] static std::string RowSeparator(size_t columns, size_t columnWidth);
     [[nodiscard]] static std::string RowEndSeparator(size_t columns, size_t columnWidth);
     [[nodiscard]] static std::string RowBeginSeparator(size_t columns, size_t columnWidth);
 
-    DynamicArray<DynamicArray<Weight>> graph;
+    DynamicArray<DynamicArray<DirectedWeight>> graph;
     uint64_t size = 0;
 };

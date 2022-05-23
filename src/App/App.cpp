@@ -87,9 +87,9 @@ void App::GraphMenu()
 {
     constexpr char CONTAINER_MENU[] = "Wybierz opcję:\n"
                                       "1. Graf nieskierowany (lista sąsiedztwa)\n"
-                                      "2. Graf nieskierowany (macierz sąsiedztwa)\n"
-                                      "3. Graf skierowany (lista sąsiedztwa)\n"
-                                      "4. Graf skierowany (macierz sąsiedztwa)\n"
+                                      "2. Graf nieskierowany (macierz incydencji)\n"
+                                      "3. Graf skierowany    (lista sąsiedztwa)\n"
+                                      "4. Graf skierowany    (macierz incydencji)\n"
                                       "5. Benchmarki\n"
                                       "6. Powrót\n"
                                       "> ";
@@ -123,7 +123,7 @@ void App::MainMenu()
 {
     constexpr char MAIN_MENU[] = "Wybierz tryb:\n"
                                  "1. Test kontenerów\n"
-                                 "2. Tryb grafów\n"
+                                 "2. Test grafów\n"
                                  "3. Wyjście\n"
                                  "> ";
 

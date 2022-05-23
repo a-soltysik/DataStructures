@@ -28,6 +28,9 @@ Utils::Pair<Graph::Vertex, Graph::Vertex> DrawEdge(const DynamicArray<Graph::Ver
 template<typename T>
 T GenerateGraph(uint32_t order, float density)
 {
+    static_assert(AlgorithmSettings::Validate<DirectedListGraph>());
+    static_assert(AlgorithmSettings::Validate<DirectedMatrixGraph>());
+
     return Generator::GenerateConnectedGraph<T>({order,
                                                  density,
                                                  AlgorithmSettings::MIN_WEIGHT,
@@ -40,7 +43,7 @@ std::string RunBenchmark()
 
     for (const auto& order: AlgorithmSettings::GRAPH_ORDERS)
     {
-        for (const auto& density : AlgorithmSettings::GraphDensities)
+        for (const auto& density : AlgorithmSettings::GRAPH_DENSITIES)
         {
             auto[directedListGraphTime, directedMatrixGraphTime] = TestCase(order, density);
             result.append("Order: " + Utils::Parser::NumberToString(order) +

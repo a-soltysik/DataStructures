@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Algorithms/Graphs/Graph.h"
-
+#include "Algorithms/Graphs/GraphGenerator.h"
 #include <array>
 
 struct ContainerSettings
@@ -33,8 +33,24 @@ struct AlgorithmSettings
                                                              100,
                                                              200};
 
-    static constexpr std::array<float, 4> GraphDensities = {0.25f,
-                                                            0.50f,
-                                                            0.75f,
-                                                            0.99f};
+    static constexpr std::array<float, 4> GRAPH_DENSITIES = {0.25f,
+                                                             0.50f,
+                                                             0.75f,
+                                                             0.99f};
+    template<typename T, Graph::isGraph<T> = true>
+    [[nodiscard]] static constexpr bool Validate()
+    {
+        for (uint32_t i : GRAPH_ORDERS)
+        {
+            for (float j : GRAPH_DENSITIES)
+            {
+                if (!Generator::ValidateGraphConfiguration<T>({i, j, MIN_WEIGHT, MAX_WEIGHT}))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 };

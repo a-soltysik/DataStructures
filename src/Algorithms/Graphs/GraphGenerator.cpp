@@ -28,9 +28,6 @@ template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
 template<typename T, DirectedGraph::isDirectedGraph<T> = true>
-[[nodiscard]] float GetMinimalDensity(uint32_t order);
-
-template<typename T, DirectedGraph::isDirectedGraph<T> = true>
 [[nodiscard]] uint64_t GetSize(const GraphConfiguration& configuration);
 
 /**
@@ -47,43 +44,18 @@ template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] T GenerateSpanningTree(const GraphConfiguration& configuration);
 
 template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
-[[nodiscard]] float GetMinimalDensity(uint32_t order);
-
-template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
 [[nodiscard]] uint64_t GetSize(const GraphConfiguration& configuration);
 
 /**
  * Definitions
  */
 
-template<typename T, Graph::isGraph<T>>
-bool validateGraphConfiguration(const GraphConfiguration& configuration)
-{
-    if (configuration.density > 1 || configuration.density < GetMinimalDensity<T>(configuration.order))
-    {
-        return false;
-    }
-    if (configuration.order == Graph::MAX_SIZE)
-    {
-        return false;
-    }
-    if (configuration.minimalWeight == Graph::INFINITY_WEIGHT || configuration.maximumWeight == Graph::INFINITY_WEIGHT)
-    {
-        return false;
-    }
-    if (configuration.minimalWeight > configuration.maximumWeight)
-    {
-        return false;
-    }
-    return true;
-}
-
 
 
 template<typename T, Graph::isGraph<T>>
 std::optional<T> GenerateConnectedGraph(const GraphConfiguration& configuration)
 {
-    if (!validateGraphConfiguration<T>(configuration))
+    if (!ValidateGraphConfiguration<T>(configuration))
     {
         return {};
     }
@@ -193,12 +165,6 @@ T GenerateSpanningTree(const GraphConfiguration& configuration)
 }
 
 template<typename T, DirectedGraph::isDirectedGraph<T>>
-float GetMinimalDensity(uint32_t order)
-{
-    return 1.0f / static_cast<float>(order);
-}
-
-template<typename T, DirectedGraph::isDirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
     return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1));
@@ -275,28 +241,22 @@ T GenerateSpanningTree(const GraphConfiguration& configuration)
 }
 
 template<typename T, UndirectedGraph::isUndirectedGraph<T>>
-float GetMinimalDensity(uint32_t order)
-{
-    return 2.0f / static_cast<float>(order);
-}
-
-template<typename T, UndirectedGraph::isUndirectedGraph<T>>
 uint64_t GetSize(const GraphConfiguration& configuration)
 {
     return std::llround(configuration.density * static_cast<float>(configuration.order) * static_cast<float>(configuration.order - 1) / 2);
 }
 
 template
-bool validateGraphConfiguration<DirectedListGraph>(const GraphConfiguration& configuration);
+bool ValidateGraphConfiguration<DirectedListGraph>(const GraphConfiguration& configuration);
 
 template
-bool validateGraphConfiguration<DirectedMatrixGraph>(const GraphConfiguration& configuration);
+bool ValidateGraphConfiguration<DirectedMatrixGraph>(const GraphConfiguration& configuration);
 
 template
-bool validateGraphConfiguration<ListGraph>(const GraphConfiguration& configuration);
+bool ValidateGraphConfiguration<ListGraph>(const GraphConfiguration& configuration);
 
 template
-bool validateGraphConfiguration<MatrixGraph>(const GraphConfiguration& configuration);
+bool ValidateGraphConfiguration<MatrixGraph>(const GraphConfiguration& configuration);
 
 template
 std::optional<DirectedListGraph>GenerateConnectedGraph<DirectedListGraph, true>(const GraphConfiguration& configuration);

@@ -1,7 +1,7 @@
 #include "App/Managers/GraphManagers/AlgorithmBenchmarkManager.h"
 #include "App/Benchmarks/AlgorithmBenchmarks/MSTBenchmarks/KruskalBenchmark.h"
 #include "App/Benchmarks/AlgorithmBenchmarks/MSTBenchmarks/PrimBenchmark.h"
-#include "App/Benchmarks/AlgorithmBenchmarks/ShortestPathBenchmarks/BellmanFord.h"
+#include "App/Benchmarks/AlgorithmBenchmarks/ShortestPathBenchmarks/BellmanFordBenchmark.h"
 #include "App/Benchmarks/AlgorithmBenchmarks/ShortestPathBenchmarks/DijkstraBenchmark.h"
 #include "Utils/Timer.h"
 

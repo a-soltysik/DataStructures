@@ -26,6 +26,9 @@ int64_t ConcreteGraphTest(uint32_t order, float density);
 template<typename T>
 T GenerateGraph(uint32_t order, float density)
 {
+    static_assert(AlgorithmSettings::Validate<ListGraph>());
+    static_assert(AlgorithmSettings::Validate<MatrixGraph>());
+
     return Generator::GenerateConnectedGraph<T>({order,
                                                  density,
                                                  AlgorithmSettings::MIN_WEIGHT,
@@ -38,7 +41,7 @@ std::string RunBenchmark()
 
     for (const auto& order: AlgorithmSettings::GRAPH_ORDERS)
     {
-        for (const auto& density : AlgorithmSettings::GraphDensities)
+        for (const auto& density : AlgorithmSettings::GRAPH_DENSITIES)
         {
             auto[listGraphTime, matrixGraphTime] = TestCase(order, density);
             result.append("Order: " + Utils::Parser::NumberToString(order) +

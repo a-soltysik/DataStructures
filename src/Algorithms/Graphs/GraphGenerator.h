@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
-#include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.h"
+#include "DirectedGraphs/DirectedGraph.h"
+#include "UndirectedGraphs/UndirectedGraph.h"
 
 namespace Generator
 {

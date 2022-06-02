@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Algorithms/MST/Result.h"
+#include "Result.h"
 
 namespace MST::Kruskal
 {

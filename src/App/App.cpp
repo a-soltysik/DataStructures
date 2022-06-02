@@ -6,18 +6,18 @@
 #include "Containers/Heap.h"
 #include "Containers/AvlTree.h"
 
-#include "App/Managers/ContainerManagers/LinearContainerManager.h"
-#include "App/Managers/ContainerManagers/TreeContainerManager.h"
-#include "App/Managers/ContainerManagers/ContainerBenchmarkManager.h"
-#include "App/Managers/GraphManagers/AlgorithmBenchmarkManager.h"
+#include "Managers/ContainerManagers/LinearContainerManager.h"
+#include "Managers/ContainerManagers/TreeContainerManager.h"
+#include "Managers/ContainerManagers/ContainerBenchmarkManager.h"
+#include "Managers/GraphManagers/AlgorithmBenchmarkManager.h"
 
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 #include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
 #include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
 #include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
 
-#include "App/Managers/GraphManagers/UndirectedGraphManager.h"
-#include "App/Managers/GraphManagers/DirectedGraphManager.h"
+#include "Managers/GraphManagers/UndirectedGraphManager.h"
+#include "Managers/GraphManagers/DirectedGraphManager.h"
 
 #include "Utils/Timer.h"
 

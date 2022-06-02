@@ -1,4 +1,4 @@
-#include "App/Managers/ContainerManagers/ContainerBenchmarkManager.h"
+#include "ContainerBenchmarkManager.h"
 
 #include "App/Benchmarks/ContainerBenchmarks/DynamicArrayBenchmark.h"
 #include "App/Benchmarks/ContainerBenchmarks/ListBenchmark.h"

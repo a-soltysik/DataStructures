@@ -1,4 +1,4 @@
-#include "Algorithms/MST/Prim.h"
+#include "Prim.h"
 
 namespace MST::Prim
 {

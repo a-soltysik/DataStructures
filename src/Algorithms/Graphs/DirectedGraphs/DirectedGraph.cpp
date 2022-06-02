@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
+#include "DirectedGraph.h"
 
 float DirectedGraph::GetDensity() const noexcept
 {

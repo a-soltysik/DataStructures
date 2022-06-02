@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Containers/RedBlackTree.h"
+#include "RedBlackTree.h"
 #include "Utils/Pair.h"
 
 template<typename T>

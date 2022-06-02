@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.h"
+#include "UndirectedGraph.h"
 
 bool UndirectedGraph::Edge::operator==(Edge rhs) const noexcept
 {

@@ -1,4 +1,4 @@
-#include "Algorithms/ShortestPath/Result.h"
+#include "Result.h"
 
 std::ostream& operator<<(std::ostream& os, const ShortestPath::Result& result)
 {

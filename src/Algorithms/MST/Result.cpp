@@ -1,4 +1,4 @@
-#include "Algorithms/MST/Result.h"
+#include "Result.h"
 
 std::ostream& operator<<(std::ostream& os, const MST::Result& result)
 {

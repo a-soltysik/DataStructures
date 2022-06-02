@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Managers/Manager.h"
+#include "Managers/Manager.h"
 
 #include <memory>
 

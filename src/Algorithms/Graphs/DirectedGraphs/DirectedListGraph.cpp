@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
+#include "DirectedListGraph.h"
 
 Graph::Vertex DirectedListGraph::AddVertex()
 {

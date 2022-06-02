@@ -1,8 +1,8 @@
-#include "Algorithms/Graphs/GraphGenerator.h"
-#include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
-#include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
-#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
-#include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
+#include "GraphGenerator.h"
+#include "DirectedGraphs/DirectedListGraph.h"
+#include "DirectedGraphs/DirectedMatrixGraph.h"
+#include "UndirectedGraphs/ListGraph.h"
+#include "UndirectedGraphs/MatrixGraph.h"
 
 #include <cmath>
 

@@ -1,4 +1,4 @@
-#include "Algorithms/ShortestPath/Dijkstra.h"
+#include "Dijkstra.h"
 
 namespace ShortestPath::Dijkstra
 {

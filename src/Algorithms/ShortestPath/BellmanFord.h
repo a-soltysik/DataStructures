@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Algorithms/ShortestPath/Result.h"
+#include "Result.h"
 #include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
 
 namespace ShortestPath::BellmanFord

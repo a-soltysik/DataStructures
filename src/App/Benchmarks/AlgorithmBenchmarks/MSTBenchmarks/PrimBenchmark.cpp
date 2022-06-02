@@ -1,4 +1,4 @@
-#include "App/Benchmarks/AlgorithmBenchmarks/MSTBenchmarks/PrimBenchmark.h"
+#include "PrimBenchmark.h"
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 #include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
 #include "Algorithms/Graphs/GraphGenerator.h"

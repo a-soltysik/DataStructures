@@ -1,6 +1,6 @@
-#include "Algorithms/MST/Kruskal.h"
-#include "Utils/Algorithms.h"
+#include "Kruskal.h"
 #include "DSU.h"
+#include "Utils/Algorithms.h"
 
 namespace MST::Kruskal
 {

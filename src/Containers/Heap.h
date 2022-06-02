@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Containers/DynamicArray.h"
+#include "DynamicArray.h"
 
 template<typename T, typename C = Utils::Greater<T>>
 class Heap

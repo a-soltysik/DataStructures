@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Algorithms/Graphs/DirectedGraphs/DirectedGraph.h"
+#include "DirectedGraph.h"
 
 class DirectedMatrixGraph : public DirectedGraph
 {

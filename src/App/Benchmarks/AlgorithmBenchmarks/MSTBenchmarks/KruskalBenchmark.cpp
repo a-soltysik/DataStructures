@@ -1,4 +1,4 @@
-#include "App/Benchmarks/AlgorithmBenchmarks/MSTBenchmarks/KruskalBenchmark.h"
+#include "KruskalBenchmark.h"
 #include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
 #include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
 #include "Algorithms/Graphs/GraphGenerator.h"

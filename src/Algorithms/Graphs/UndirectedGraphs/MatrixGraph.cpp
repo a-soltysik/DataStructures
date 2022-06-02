@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/UndirectedGraphs/MatrixGraph.h"
+#include "MatrixGraph.h"
 
 Graph::Vertex MatrixGraph::AddVertex()
 {

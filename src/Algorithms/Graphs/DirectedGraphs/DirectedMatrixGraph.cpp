@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
+#include "DirectedMatrixGraph.h"
 
 Graph::Vertex DirectedMatrixGraph::AddVertex()
 {

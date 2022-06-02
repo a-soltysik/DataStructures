@@ -1,4 +1,4 @@
-#include "Algorithms/ShortestPath/BellmanFord.h"
+#include "BellmanFord.h"
 
 namespace ShortestPath::BellmanFord
 {

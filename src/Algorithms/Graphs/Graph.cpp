@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/Graph.h"
+#include "Graph.h"
 
 std::ostream& operator<<(std::ostream& os, const Graph& graph)
 {

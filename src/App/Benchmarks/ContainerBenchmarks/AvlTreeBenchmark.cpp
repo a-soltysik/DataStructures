@@ -1,4 +1,4 @@
-#include "App/Benchmarks/ContainerBenchmarks/AvlTreeBenchmark.h"
+#include "AvlTreeBenchmark.h"
 #include "Containers/AvlTree.h"
 #include "Utils/Timer.h"
 #include "App/Settings.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "App/Managers/ContainerManagers/ContainerManager.h"
+#include "ContainerManager.h"
 
 template<typename T>
 class TreeContainerManager : public ContainerManager<T>

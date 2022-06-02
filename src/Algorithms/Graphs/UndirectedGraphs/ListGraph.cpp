@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/UndirectedGraphs/ListGraph.h"
+#include "ListGraph.h"
 
 Graph::Vertex ListGraph::AddVertex()
 {

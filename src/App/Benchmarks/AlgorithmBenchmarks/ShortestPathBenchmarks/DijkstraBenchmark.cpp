@@ -1,4 +1,4 @@
-#include "App/Benchmarks/AlgorithmBenchmarks/ShortestPathBenchmarks/DijkstraBenchmark.h"
+#include "DijkstraBenchmark.h"
 #include "Algorithms/Graphs/DirectedGraphs/DirectedListGraph.h"
 #include "Algorithms/Graphs/DirectedGraphs/DirectedMatrixGraph.h"
 #include "Algorithms/Graphs/GraphGenerator.h"

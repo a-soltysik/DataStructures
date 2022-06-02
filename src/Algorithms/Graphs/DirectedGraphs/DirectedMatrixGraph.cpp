@@ -1,5 +1,33 @@
 #include "DirectedMatrixGraph.h"
 
+DirectedMatrixGraph& DirectedMatrixGraph::operator=(const DirectedGraph& rhs)
+{
+    Clear();
+    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
+    {
+        AddVertex();
+    }
+
+    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
+        AddDirectedEdge(edge);
+    });
+    return *this;
+}
+
+DirectedMatrixGraph& DirectedMatrixGraph::operator=(DirectedGraph&& rhs)
+{
+    Clear();
+    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
+    {
+        AddVertex();
+    }
+
+    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
+        AddDirectedEdge(edge);
+    });
+    return *this;
+}
+
 Graph::Vertex DirectedMatrixGraph::AddVertex()
 {
     if (GetOrder() == MAX_SIZE)
@@ -13,6 +41,13 @@ Graph::Vertex DirectedMatrixGraph::AddVertex()
 
     return newVertex;
 }
+
+void DirectedMatrixGraph::Clear()
+{
+    graph.Clear();
+    size = 0;
+}
+
 
 bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
 {
@@ -383,7 +418,7 @@ std::string DirectedMatrixGraph::ToString() const
         }
         if (i == 0)
         {
-            result += "\n" + RowBeginSeparator(GetSize() + 1, columnWidth) + "\n";
+            result += "\n" + OpeningSeparator(GetSize() + 1, columnWidth) + "\n";
         }
         else if (i != GetOrder())
         {
@@ -391,7 +426,7 @@ std::string DirectedMatrixGraph::ToString() const
         }
         else
         {
-            result += "\n" + RowEndSeparator(GetSize() + 1, columnWidth);
+            result += "\n" + ClosingSeparator(GetSize() + 1, columnWidth);
         }
     }
     return result;
@@ -464,7 +499,7 @@ std::string DirectedMatrixGraph::RowSeparator(size_t columns, size_t columnWidth
     return result;
 }
 
-std::string DirectedMatrixGraph::RowEndSeparator(size_t columns, size_t columnWidth)
+std::string DirectedMatrixGraph::ClosingSeparator(size_t columns, size_t columnWidth)
 {
     std::string result;
     for (uint32_t i = 0; i < columns; i++)
@@ -489,7 +524,7 @@ std::string DirectedMatrixGraph::RowEndSeparator(size_t columns, size_t columnWi
     return result;
 }
 
-std::string DirectedMatrixGraph::RowBeginSeparator(size_t columns, size_t columnWidth)
+std::string DirectedMatrixGraph::OpeningSeparator(size_t columns, size_t columnWidth)
 {
     std::string result;
     for (uint32_t i = 0; i < columns; i++)

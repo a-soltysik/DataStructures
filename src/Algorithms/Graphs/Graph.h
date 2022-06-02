@@ -32,6 +32,8 @@ public:
     Graph& operator=(Graph&&) = default;
     virtual ~Graph() = default;
 
+    virtual void Clear() = 0;
+
     virtual Vertex AddVertex() = 0;
 
     [[nodiscard]] virtual uint32_t GetOrder() const = 0;

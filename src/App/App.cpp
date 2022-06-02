@@ -84,31 +84,23 @@ void App::ContainerMenu()
 void App::GraphMenu()
 {
     constexpr char CONTAINER_MENU[] = "Wybierz opcję:\n"
-                                      "1. Graf nieskierowany (lista sąsiedztwa)\n"
-                                      "2. Graf nieskierowany (macierz incydencji)\n"
-                                      "3. Graf skierowany    (lista sąsiedztwa)\n"
-                                      "4. Graf skierowany    (macierz incydencji)\n"
-                                      "5. Benchmarki\n"
-                                      "6. Powrót\n"
+                                      "1. Graf nieskierowany\n"
+                                      "2. Graf skierowany\n"
+                                      "3. Benchmarki\n"
+                                      "4. Powrót\n"
                                       "> ";
 
-    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 6);
+    auto choice = Utils::GetChoiceFromMenu(CONTAINER_MENU, 1, 4);
 
     switch (choice)
     {
     case 1:
-        manager = std::make_unique<UndirectedGraphManager<ListGraph>>();
+        manager = std::make_unique<UndirectedGraphManager<ListGraph, MatrixGraph>>();
         break;
     case 2:
-        manager = std::make_unique<UndirectedGraphManager<MatrixGraph>>();
+        manager = std::make_unique<DirectedGraphManager<DirectedListGraph, DirectedMatrixGraph>>();
         break;
     case 3:
-        manager = std::make_unique<DirectedGraphManager<DirectedListGraph>>();
-        break;
-    case 4:
-        manager = std::make_unique<DirectedGraphManager<DirectedMatrixGraph>>();
-        break;
-    case 5:
         manager = std::make_unique<AlgorithmBenchmarkManager>();
         break;
     default:

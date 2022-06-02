@@ -43,6 +43,11 @@ Result GetMst(const UndirectedGraph& graph, const DynamicArray<Graph::Vertex>& p
 
 Result FindMstOf(const UndirectedGraph& graph)
 {
+    if (graph.GetSize() < 1)
+    {
+        return {{}, 0};
+    }
+
     DynamicArray<uint32_t> priorities(graph.GetOrder());
     DynamicArray<Graph::Vertex> parents(graph.GetOrder());
     DynamicArray<bool> usedFlags(graph.GetOrder(), false);

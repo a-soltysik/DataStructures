@@ -38,6 +38,11 @@ DynamicArray<Graph::Vertex> GetShortestPath(const DynamicArray<Graph::Vertex>& p
 
 Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::Vertex to)
 {
+    if (!graph.DoesExist(from) || !graph.DoesExist(to))
+    {
+        return {{}, 0};
+    }
+
     Result result;
 
     DynamicArray<size_t> distances(graph.GetOrder());

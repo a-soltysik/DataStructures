@@ -22,6 +22,8 @@ public:
         [[nodiscard]] bool operator!=(const DirectedEdgeData& rhs) const noexcept;
     };
 
+    using Graph::DoesExist;
+
     virtual bool AddDirectedEdge(const DirectedEdgeData& edge) = 0;
     virtual bool RemoveDirectedEdge(DirectedEdge edge) = 0;
 

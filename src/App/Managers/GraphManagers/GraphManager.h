@@ -3,7 +3,10 @@
 #include "App/Managers/Manager.h"
 #include "Algorithms/Graphs/GraphGenerator.h"
 
-template<typename T, Graph::isGraph<T> = true>
+template<typename T,
+         typename U,
+         Graph::isGraph<T> = true,
+         Graph::isGraph<U> = true>
 class GraphManager : public Manager
 {
 public:
@@ -14,21 +17,22 @@ public:
     void PrintMenu();
 
 protected:
-    T graph;
+    T listGraph;
+    U matrixGraph;
 };
 
-template<typename T, Graph::isGraph<T> isGraph>
-void GraphManager<T, isGraph>::AddVertexMenu()
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::AddVertexMenu()
 {
     std::cout << "Dodawanie nowego wierzchołka...\n";
-    if (!graph.AddVertex())
+    if (!listGraph.AddVertex() || !matrixGraph.AddVertex())
     {
         std::cout << "Nie udało się dodać wierzchołka\n";
     }
 }
 
-template<typename T, Graph::isGraph<T> isGraph>
-void GraphManager<T, isGraph>::SaveToFileMenu()
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::SaveToFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
     auto filename = Utils::GetInput<std::string>(std::cin);
@@ -40,7 +44,7 @@ void GraphManager<T, isGraph>::SaveToFileMenu()
     }
 
     std::ofstream fout(filename.value());
-    fout << graph << "\n";
+    fout << listGraph << "\n";
 
     if (!fout.fail())
     {
@@ -52,8 +56,8 @@ void GraphManager<T, isGraph>::SaveToFileMenu()
     }
 }
 
-template<typename T, Graph::isGraph<T> isGraph>
-void GraphManager<T, isGraph>::CreateFromFileMenu()
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::CreateFromFileMenu()
 {
     std::cout << "Podaj nazwę pliku: ";
     auto filename = Utils::GetInput<std::string>(std::cin);
@@ -65,27 +69,47 @@ void GraphManager<T, isGraph>::CreateFromFileMenu()
     }
 
     std::ifstream fin(filename.value());
-    auto newContainer = Utils::GetInput<T>(fin);
+    auto newListGraph = Utils::GetInput<T>(fin);
+    fin.close();
 
-    if (newContainer.has_value())
+    fin.open(filename.value());
+    auto newMatrixGraph = Utils::GetInput<U>(fin);
+    fin.close();
+
+    if (newListGraph.has_value())
     {
-        std::cout << "Odczytano kontener z pliku\n";
-        graph = newContainer.value();
+        std::cout << "Odczytano listę sąsiedztwa z pliku\n";
     }
     else
     {
-        std::cout << "Nie udało się odczytać kontenera z pliku\n";
+        std::cout << "Nie udało się odczytać listy sąsiedztwa z pliku. Cofanie zmian\n";
+        return;
     }
+    if (newMatrixGraph.has_value())
+    {
+        std::cout << "Odczytano macierz incydencji z pliku\n";
+    }
+    else
+    {
+        std::cout << "Nie udało się odczytać macierzy incydencji z pliku. Cofanie zmian\n";
+        return;
+    }
+
+    listGraph   = *newListGraph;
+    matrixGraph = *newMatrixGraph;
 }
 
-template<typename T, Graph::isGraph<T> isGraph>
-void GraphManager<T, isGraph>::PrintMenu()
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::PrintMenu()
 {
-    std::cout << graph.ToString() << "\n";
+    std::cout << "Lista sąsiedztwa:\n";
+    std::cout << listGraph.ToString() << "\n";
+    std::cout << "\nMacierz incydencji:\n";
+    std::cout << matrixGraph.ToString() << "\n";
 }
 
-template<typename T, Graph::isGraph<T> isGraph>
-void GraphManager<T, isGraph>::GenerateMenu()
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::GenerateMenu()
 {
     std::cout << "Podaj liczbę wierzchołków: ";
     auto order = Utils::GetInput<Graph::Vertex>(std::cin);
@@ -95,8 +119,8 @@ void GraphManager<T, isGraph>::GenerateMenu()
         return;
     }
 
-    std::cout << "Podaj gęstość (ułamek dziesiętny): ";
-    auto density = Utils::GetInput<float>(std::cin);
+    std::cout << "Podaj gęstość w procentach: ";
+    auto density = Utils::GetInput<uint32_t>(std::cin);
     if (!density.has_value())
     {
         std::cout << "Nieprawidłowa gęstość\n";
@@ -119,11 +143,12 @@ void GraphManager<T, isGraph>::GenerateMenu()
         return;
     }
 
-    Generator::GraphConfiguration config = {*order, *density, *minWeight, *maxWeight};
+    Generator::GraphConfiguration config = {*order, static_cast<float>(*density) / 100.0f, *minWeight, *maxWeight};
     if (!Generator::ValidateGraphConfiguration<T>(config))
     {
         std::cout << "Nieprawidłowe dane\n";
         return;
     }
-    graph = *Generator::GenerateConnectedGraph<T>(config);
+    listGraph   = *Generator::GenerateConnectedGraph<T>(config);
+    matrixGraph = listGraph;
 }

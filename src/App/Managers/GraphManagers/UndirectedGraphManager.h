@@ -4,8 +4,11 @@
 #include "Algorithms/MST/Kruskal.h"
 #include "Algorithms/MST/Prim.h"
 
-template<typename T, UndirectedGraph::isUndirectedGraph<T> = true>
-class UndirectedGraphManager : public GraphManager<T>
+template<typename T,
+         typename U,
+         UndirectedGraph::isUndirectedGraph<T> = true,
+         UndirectedGraph::isUndirectedGraph<U> = true>
+class UndirectedGraphManager : public GraphManager<T, U>
 {
 public:
     void Menu() override;
@@ -14,8 +17,11 @@ public:
     void PrimMenu();
 };
 
-template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
-void UndirectedGraphManager<T, isGraph>::Menu()
+template<typename T,
+         typename U,
+         UndirectedGraph::isUndirectedGraph<T> isGraphT,
+         UndirectedGraph::isUndirectedGraph<U> isGraphU>
+void UndirectedGraphManager<T, U, isGraphT, isGraphU>::Menu()
 {
     constexpr char MENU[] = "Wybierz operację:\n"
                             "1. Dodaj wierzchołek\n"
@@ -63,8 +69,11 @@ void UndirectedGraphManager<T, isGraph>::Menu()
     }
 }
 
-template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
-void UndirectedGraphManager<T, isGraph>::AddEdgeMenu()
+template<typename T,
+         typename U,
+         UndirectedGraph::isUndirectedGraph<T> isGraphT,
+         UndirectedGraph::isUndirectedGraph<U> isGraphU>
+void UndirectedGraphManager<T, U, isGraphT, isGraphU>::AddEdgeMenu()
 {
     std::cout << "Podaj dwa wierzchołki i wagę krawędzi: ";
     auto vertex1 = Utils::GetInput<Graph::Vertex>(std::cin);
@@ -76,44 +85,81 @@ void UndirectedGraphManager<T, isGraph>::AddEdgeMenu()
         std::cout << "Niepoprawne dane\n";
         return;
     }
-    if (!this->graph.DoesExist(*vertex1) || !this->graph.DoesExist(*vertex2))
+    if (*weight < 1 || *weight == Graph::INFINITY_WEIGHT)
+    {
+        std::cout << "Nieprawidłowa waga\n";
+        return;
+    }
+    if (!this->listGraph.DoesExist(*vertex1)   || !this->listGraph.DoesExist(*vertex2) ||
+        !this->matrixGraph.DoesExist(*vertex1) || !this->matrixGraph.DoesExist(*vertex2))
     {
         std::cout << "Co najmniej jeden z wierzchołków nie istnieje\n";
         return;
     }
-    if (this->graph.DoesExist({*vertex1, *vertex2}))
+    if (this->listGraph.DoesExist({*vertex1, *vertex2}) ||
+        this->matrixGraph.DoesExist({*vertex1, *vertex2}))
     {
         std::cout << "Podana krawędź już istnieje\n";
         return;
     }
-    if (!this->graph.AddEdge({{*vertex1, *vertex2}, *weight}))
+    if (!this->listGraph.AddEdge({{*vertex1, *vertex2}, *weight}))
     {
-        std::cout << "Nie udało się dodać krawędzi\n";
+        std::cout << "Nie udało się dodać krawędzi do listy sąsiedztwa. Cofanie zmian\n";
+        return;
+    }
+    if (!this->matrixGraph.AddEdge({{*vertex1, *vertex2}, *weight}))
+    {
+        std::cout << "Nie udało się dodać krawędzi do macierzy incydencji. Cofanie zmian\n";
+        this->listGraph.RemoveEdge({*vertex1, *vertex2});
     }
 }
 
-template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
-void UndirectedGraphManager<T, isGraph>::KruskalMenu()
+template<typename T,
+         typename U,
+         UndirectedGraph::isUndirectedGraph<T> isGraphT,
+         UndirectedGraph::isUndirectedGraph<U> isGraphU>
+void UndirectedGraphManager<T, U, isGraphT, isGraphU>::KruskalMenu()
 {
-    auto result = MST::Kruskal::FindMstOf(this->graph);
+    auto result = MST::Kruskal::FindMstOf(this->listGraph);
 
     if (result.edges.Size() == 0)
     {
-        std::cout << "Minimalne drzewo rozpinające nie istnieje\n";
+        std::cout << "Minimalne drzewo rozpinające dla listy sąsiedztwa nie istnieje\n";
         return;
     }
-    std::cout << result << "\n";
+    std::cout << "Minimalne drzewo rozpinające dla listy sąsiedztwa:\n" << result << "\n";
+
+    result = MST::Kruskal::FindMstOf(this->matrixGraph);
+
+    if (result.edges.Size() == 0)
+    {
+        std::cout << "Minimalne drzewo rozpinające dla macierzy incydencji nie istnieje\n";
+        return;
+    }
+    std::cout << "Minimalne drzewo rozpinając dla macierzy incydencji:\n" << result << "\n";
 }
 
-template<typename T, UndirectedGraph::isUndirectedGraph<T> isGraph>
-void UndirectedGraphManager<T, isGraph>::PrimMenu()
+template<typename T,
+         typename U,
+         UndirectedGraph::isUndirectedGraph<T> isGraphT,
+         UndirectedGraph::isUndirectedGraph<U> isGraphU>
+void UndirectedGraphManager<T, U, isGraphT, isGraphU>::PrimMenu()
 {
-    auto result = MST::Prim::FindMstOf(this->graph);
+    auto result = MST::Prim::FindMstOf(this->listGraph);
 
     if (result.edges.Size() == 0)
     {
-        std::cout << "Minimalne drzewo rozpinające nie istnieje\n";
+        std::cout << "Minimalne drzewo rozpinające dla listy sąsiedztwa nie istnieje\n";
         return;
     }
-    std::cout << result << "\n";
+    std::cout << "Minimalne drzewo rozpinające dla listy sąsiedztwa:\n" << result << "\n";
+
+    result = MST::Prim::FindMstOf(this->matrixGraph);
+
+    if (result.edges.Size() == 0)
+    {
+        std::cout << "Minimalne drzewo rozpinające dla macierzy incydencji nie istnieje\n";
+        return;
+    }
+    std::cout << "Minimalne drzewo rozpinając dla macierzy incydencji:\n" << result << "\n";
 }

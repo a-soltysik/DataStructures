@@ -4,8 +4,11 @@
 #include "Algorithms/ShortestPath/BellmanFord.h"
 #include "Algorithms/ShortestPath/Dijkstra.h"
 
-template<typename T, DirectedGraph::isDirectedGraph<T> = true>
-class DirectedGraphManager : public GraphManager<T>
+template<typename T,
+         typename U,
+         DirectedGraph::isDirectedGraph<T> = true,
+         DirectedGraph::isDirectedGraph<U> = true>
+class DirectedGraphManager : public GraphManager<T, U>
 {
 public:
     void Menu() override;
@@ -14,8 +17,11 @@ public:
     void DijkstraMenu();
 };
 
-template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
-void DirectedGraphManager<T, isGraph>::Menu()
+template<typename T,
+         typename U,
+         DirectedGraph::isDirectedGraph<T> isGraphT,
+         DirectedGraph::isDirectedGraph<U> isGraphU>
+void DirectedGraphManager<T, U, isGraphT, isGraphU>::Menu()
 {
     constexpr char MENU[] = "Wybierz operację:\n"
                             "1. Dodaj wierzchołek\n"
@@ -64,37 +70,56 @@ void DirectedGraphManager<T, isGraph>::Menu()
 }
 
 
-template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
-void DirectedGraphManager<T, isGraph>::AddDirectedEdgeMenu()
+template<typename T,
+         typename U,
+         DirectedGraph::isDirectedGraph<T> isGraphT,
+         DirectedGraph::isDirectedGraph<U> isGraphU>
+void DirectedGraphManager<T, U, isGraphT, isGraphU>::AddDirectedEdgeMenu()
 {
     std::cout << "Podaj dwa wierzchołki i wagę krawędzi: ";
     auto vertex1 = Utils::GetInput<Graph::Vertex>(std::cin);
     auto vertex2 = Utils::GetInput<Graph::Vertex>(std::cin);
-    auto weight = Utils::GetInput<Graph::Vertex>(std::cin);
+    auto weight  = Utils::GetInput<Graph::Vertex>(std::cin);
 
     if (!vertex1.has_value() || !vertex2.has_value() || !weight.has_value())
     {
         std::cout << "Niepoprawne dane\n";
         return;
     }
-    if (!this->graph.DoesExist(*vertex1) || !this->graph.DoesExist(*vertex2))
+    if (*weight < 1 || *weight == Graph::INFINITY_WEIGHT)
+    {
+        std::cout << "Nieprawidłowa waga\n";
+        return;
+    }
+    if (!this->listGraph.DoesExist(*vertex1)   || !this->listGraph.DoesExist(*vertex2) ||
+        !this->matrixGraph.DoesExist(*vertex1) || !this->matrixGraph.DoesExist(*vertex2))
     {
         std::cout << "Co najmniej jeden z wierzchołków nie istnieje\n";
         return;
     }
-    if (this->graph.DoesExist({*vertex1, *vertex2}))
+    if (this->listGraph.DoesExist({*vertex1, *vertex2}) ||
+        this->matrixGraph.DoesExist({*vertex1, *vertex2}))
     {
         std::cout << "Podana krawędź już istnieje\n";
         return;
     }
-    if (!this->graph.AddDirectedEdge({{*vertex1, *vertex2}, *weight}))
+    if (!this->listGraph.AddDirectedEdge({{*vertex1, *vertex2}, *weight}))
     {
-        std::cout << "Nie udało się dodać krawędzi\n";
+        std::cout << "Nie udało się dodać krawędzi do listy sąsiedztwa. Cofanie zmian\n";
+        return;
+    }
+    if (!this->matrixGraph.AddDirectedEdge({{*vertex1, *vertex2}, *weight}))
+    {
+        std::cout << "Nie udało się dodać krawędzi do macierzy incydencji. Cofanie zmian\n";
+        this->listGraph.RemoveDirectedEdge({*vertex1, *vertex2});
     }
 }
 
-template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
-void DirectedGraphManager<T, isGraph>::BellmanFordMenu()
+template<typename T,
+         typename U,
+         DirectedGraph::isDirectedGraph<T> isGraphT,
+         DirectedGraph::isDirectedGraph<U> isGraphU>
+void DirectedGraphManager<T, U, isGraphT, isGraphU>::BellmanFordMenu()
 {
     std::cout << "Podaj wierzhołek początkowy: ";
     auto from = Utils::GetInput<Graph::Vertex>(std::cin);
@@ -107,24 +132,30 @@ void DirectedGraphManager<T, isGraph>::BellmanFordMenu()
         return;
     }
 
-    if (!this->graph.DoesExist(*from) || !this->graph.DoesExist(*to))
-    {
-        std::cout << "Podane wierzchołki nie istnieją\n";
-        return;
-    }
-
-    auto result = ShortestPath::BellmanFord::FindShortestPath(this->graph, *from, *to);
+    auto result = ShortestPath::BellmanFord::FindShortestPath(this->listGraph, *from, *to);
 
     if (result.path.Size() == 0)
     {
-        std::cout << "Minimalne drzewo rozpinające nie istnieje\n";
+        std::cout << "Najkrótsza ścieżka dla listy sąsiedztwa nie istnieje\n";
         return;
     }
-    std::cout << result << "\n";
+    std::cout << "Najkrótsza ścieżka dla listy sąsiedztwa:\n" << result << "\n";
+
+    result = ShortestPath::BellmanFord::FindShortestPath(this->matrixGraph, *from, *to);
+
+    if (result.path.Size() == 0)
+    {
+        std::cout << "Najkrótsza ścieżka dla macierzy incydencji nie istnieje\n";
+        return;
+    }
+    std::cout << "Najkrótsza ścieżka dla macierzy incydencji:\n" << result << "\n";
 }
 
-template<typename T, DirectedGraph::isDirectedGraph<T> isGraph>
-void DirectedGraphManager<T, isGraph>::DijkstraMenu()
+template<typename T,
+         typename U,
+         DirectedGraph::isDirectedGraph<T> isGraphT,
+         DirectedGraph::isDirectedGraph<U> isGraphU>
+void DirectedGraphManager<T, U, isGraphT, isGraphU>::DijkstraMenu()
 {
     std::cout << "Podaj wierzhołek początkowy: ";
     auto from = Utils::GetInput<Graph::Vertex>(std::cin);
@@ -137,18 +168,21 @@ void DirectedGraphManager<T, isGraph>::DijkstraMenu()
         return;
     }
 
-    if (!this->graph.DoesExist(*from) || !this->graph.DoesExist(*to))
-    {
-        std::cout << "Podane wierzchołki nie istnieją\n";
-        return;
-    }
-
-    auto result = ShortestPath::Dijkstra::FindShortestPath(this->graph, *from, *to);
+    auto result = ShortestPath::Dijkstra::FindShortestPath(this->listGraph, *from, *to);
 
     if (result.path.Size() == 0)
     {
-        std::cout << "Minimalne drzewo rozpinające nie istnieje\n";
+        std::cout << "Najkrótsza ścieżka dla listy sąsiedztwa nie istnieje\n";
         return;
     }
-    std::cout << result << "\n";
+    std::cout << "Najkrótsza ścieżka dla listy sąsiedztwa:\n" << result << "\n";
+
+    result = ShortestPath::Dijkstra::FindShortestPath(this->matrixGraph, *from, *to);
+
+    if (result.path.Size() == 0)
+    {
+        std::cout << "Najkrótsza ścieżka dla macierzy incydencji nie istnieje\n";
+        return;
+    }
+    std::cout << "Najkrótsza ścieżka dla macierzy incydencji:\n" << result << "\n";
 }

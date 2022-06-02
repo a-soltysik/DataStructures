@@ -27,6 +27,7 @@ public:
     };
 
     using EdgePredicate = std::function<void(const EdgeData&)>;
+    using Graph::DoesExist;
 
     virtual bool AddEdge(const EdgeData& edge) = 0;
     virtual bool RemoveEdge(Edge edge) = 0;

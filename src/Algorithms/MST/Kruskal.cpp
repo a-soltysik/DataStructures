@@ -10,6 +10,11 @@ void SortEdgesByWeight(DynamicArray<UndirectedGraph::EdgeData>& edges);
 
 Result FindMstOf(const UndirectedGraph& graph)
 {
+    if (graph.GetSize() < 1)
+    {
+        return {{}, 0};
+    }
+
     auto vertices = graph.GetVertices();
     auto edges = graph.GetEdges();
     UndirectedGraph::Vertex numberOfEdges = 0;

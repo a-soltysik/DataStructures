@@ -8,6 +8,7 @@ class UndirectedGraphMock : public UndirectedGraph
 {
 public:
     MOCK_METHOD(Vertex, AddVertex, (), (override));
+    MOCK_METHOD(void, Clear, (), (override));
     MOCK_METHOD(bool, AddEdge, (const EdgeData&), (override));
     MOCK_METHOD(bool, RemoveEdge, (Edge), (override));
     MOCK_METHOD(std::optional<Weight>, GetWeight, (Edge), (const, override));

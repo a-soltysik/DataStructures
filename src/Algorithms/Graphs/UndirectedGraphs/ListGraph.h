@@ -6,7 +6,12 @@
 class ListGraph : public UndirectedGraph
 {
 public:
+    ListGraph& operator=(const UndirectedGraph& rhs);
+    ListGraph& operator=(UndirectedGraph&& rhs);
+
     Vertex AddVertex() override;
+
+    void Clear() override;
 
     bool AddEdge(const EdgeData& edge) override;
     bool RemoveEdge(Edge edge) override;

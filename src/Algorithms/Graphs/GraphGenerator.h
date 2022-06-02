@@ -47,6 +47,10 @@ constexpr bool ValidateGraphConfiguration(const GraphConfiguration& configuratio
     {
         return false;
     }
+    if (configuration.minimalWeight < 1)
+    {
+        return false;
+    }
     return true;
 }
 

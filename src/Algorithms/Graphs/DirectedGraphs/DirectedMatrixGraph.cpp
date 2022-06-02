@@ -31,6 +31,11 @@ bool DirectedMatrixGraph::AddDirectedEdge(const DirectedEdgeData& edge)
         return false;
     }
 
+    if (edge.weight == 0)
+    {
+        return false;
+    }
+
     for (Vertex i = 0; i < GetOrder(); i++)
     {
         if (i == edge.vertices.first)
@@ -60,7 +65,7 @@ bool DirectedMatrixGraph::RemoveDirectedEdge(DirectedEdge directedEdge)
     }
 
     size_t edgeToRemove = 0;
-    for (; edgeToRemove < graph[directedEdge.first].Size(); edgeToRemove++)
+    for (; edgeToRemove < GetSize(); edgeToRemove++)
     {
         if (graph[directedEdge.first][edgeToRemove] > 0 &&
             graph[directedEdge.first][edgeToRemove] == -graph[directedEdge.second][edgeToRemove] &&
@@ -119,6 +124,11 @@ bool DirectedMatrixGraph::SetWeight(DirectedEdge directedEdge, Weight weight)
     }
 
     if (directedEdge.first == directedEdge.second)
+    {
+        return false;
+    }
+
+    if (weight == 0)
     {
         return false;
     }
@@ -207,7 +217,7 @@ std::optional<DynamicArray<Graph::Neighbour>> DirectedMatrixGraph::GetNeighbours
     DynamicArray<Neighbour> result(GetNumberOfNeighboursOf(vertex));
 
     uint32_t neighbour = 0;
-    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
     {
         if (graph[vertex][edgeNumber] > 0 && graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {
@@ -275,7 +285,7 @@ bool DirectedMatrixGraph::ForEachNeighbourOf(Vertex vertex, NeighbourPredicate p
         return false;
     }
 
-    for (size_t edgeNumber = 0; edgeNumber < graph[vertex].Size(); edgeNumber++)
+    for (size_t edgeNumber = 0; edgeNumber < GetSize(); edgeNumber++)
     {
         if (graph[vertex][edgeNumber] > 0 && graph[vertex][edgeNumber] != INFINITY_WEIGHT)
         {

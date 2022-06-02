@@ -2,6 +2,8 @@
 
 #include "Containers/DynamicArray.h"
 
+#include <functional>
+
 class Graph
 {
 public:

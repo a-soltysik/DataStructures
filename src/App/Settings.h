@@ -23,8 +23,8 @@ struct ContainerSettings
 
 struct AlgorithmSettings
 {
-    static constexpr Graph::Weight MAX_WEIGHT = 0;
-    static constexpr Graph::Weight MIN_WEIGHT = 0;
+    static constexpr Graph::Weight MAX_WEIGHT = 100'000;
+    static constexpr Graph::Weight MIN_WEIGHT = 1;
 
     inline static uint32_t NUMBER_OF_TESTS = 5u;
 
@@ -52,5 +52,4 @@ struct AlgorithmSettings
         }
         return true;
     }
-
 };

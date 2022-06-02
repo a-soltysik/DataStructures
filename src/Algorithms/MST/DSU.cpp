@@ -1,4 +1,4 @@
-#include "Algorithms/Graphs/DSU.h"
+#include "DSU.h"
 
 DSU::DSU(const DynamicArray<Graph::Vertex>& vertices)
 {

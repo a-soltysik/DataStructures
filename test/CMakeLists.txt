@@ -19,8 +19,8 @@ set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/UndirectedGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/ListGraph.cpp
     ${DS_SRC_DIR}/Algorithms/Graphs/UndirectedGraphs/MatrixGraph.cpp
-    ${DS_SRC_DIR}/Algorithms/Graphs/DSU.cpp
 
+    ${DS_SRC_DIR}/Algorithms/MST/DSU.cpp
     ${DS_SRC_DIR}/Algorithms/MST/Kruskal.cpp
     ${DS_SRC_DIR}/Algorithms/MST/Prim.cpp
     )
@@ -46,11 +46,18 @@ set(DS_TEST_SRC_LIST
     ${DS_TEST_SRC_DIR}/Algorithms/MST/PrimTest.cpp
     )
 
+set(PCH_FILES
+    ${DS_SRC_DIR}/Utils/Utils.h
+    ${DS_SRC_DIR}/Utils/Parser.h
+    )
+
 add_executable(${DS_TEST_TARGET} ${DS_TEST_SRC_LIST})
 
 target_include_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_DIR} ${DS_SRC_DIR} ${DS_TEST_MOCK_DIR})
 target_link_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_MOCK_DIR})
 target_link_libraries(${DS_TEST_TARGET} PRIVATE gtest gtest_main gmock_main)
+target_precompile_headers(${DS_TEST_TARGET} PRIVATE ${PCH_FILES})
+
 
 
 enable_testing()

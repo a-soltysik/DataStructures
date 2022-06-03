@@ -121,9 +121,9 @@ template<typename T,
          DirectedGraph::isDirectedGraph<U> isGraphU>
 void DirectedGraphManager<T, U, isGraphT, isGraphU>::BellmanFordMenu()
 {
-    std::cout << "Podaj wierzhołek początkowy: ";
+    std::cout << "Podaj wierzchołek początkowy: ";
     auto from = Utils::GetInput<Graph::Vertex>(std::cin);
-    std::cout << "Podaj wierzhołek końcowy: ";
+    std::cout << "Podaj wierzchołek końcowy: ";
     auto to = Utils::GetInput<Graph::Vertex>(std::cin);
 
     if (!from.has_value() || !to.has_value())
@@ -157,9 +157,9 @@ template<typename T,
          DirectedGraph::isDirectedGraph<U> isGraphU>
 void DirectedGraphManager<T, U, isGraphT, isGraphU>::DijkstraMenu()
 {
-    std::cout << "Podaj wierzhołek początkowy: ";
+    std::cout << "Podaj wierzchołek początkowy: ";
     auto from = Utils::GetInput<Graph::Vertex>(std::cin);
-    std::cout << "Podaj wierzhołek końcowy: ";
+    std::cout << "Podaj wierzchołek końcowy: ";
     auto to = Utils::GetInput<Graph::Vertex>(std::cin);
 
     if (!from.has_value() || !to.has_value())

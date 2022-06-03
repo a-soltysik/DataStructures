@@ -1,33 +1,5 @@
 #include "ListGraph.h"
 
-ListGraph& ListGraph::operator=(const UndirectedGraph& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachEdge([this](const EdgeData& edge) {
-        AddEdge(edge);
-    });
-    return *this;
-}
-
-ListGraph& ListGraph::operator=(UndirectedGraph&& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachEdge([this](const EdgeData& edge) {
-        AddEdge(edge);
-    });
-    return *this;
-}
-
 Graph::Vertex ListGraph::AddVertex()
 {
     if (GetOrder() == MAX_SIZE)

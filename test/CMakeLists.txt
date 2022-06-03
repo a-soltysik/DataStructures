@@ -23,6 +23,8 @@ set(DS_TEST_SRC_LIST
     ${DS_SRC_DIR}/Algorithms/MST/DSU.cpp
     ${DS_SRC_DIR}/Algorithms/MST/Kruskal.cpp
     ${DS_SRC_DIR}/Algorithms/MST/Prim.cpp
+    ${DS_SRC_DIR}/Algorithms/ShortestPath/BellmanFord.cpp
+    ${DS_SRC_DIR}/Algorithms/ShortestPath/Dijkstra.cpp
     )
 
 set(DS_TEST_SRC_LIST
@@ -44,6 +46,8 @@ set(DS_TEST_SRC_LIST
 
     ${DS_TEST_SRC_DIR}/Algorithms/MST/KruskalTest.cpp
     ${DS_TEST_SRC_DIR}/Algorithms/MST/PrimTest.cpp
+    ${DS_TEST_SRC_DIR}/Algorithms/ShortestPath/BellmanFordTest.cpp
+    ${DS_TEST_SRC_DIR}/Algorithms/ShortestPath/DijkstraTest.cpp
     )
 
 set(PCH_FILES

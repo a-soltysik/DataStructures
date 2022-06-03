@@ -6,9 +6,6 @@
 class DirectedListGraph : public DirectedGraph
 {
 public:
-    DirectedListGraph& operator=(const DirectedGraph& rhs);
-    DirectedListGraph& operator=(DirectedGraph&& rhs);
-
     Vertex AddVertex() override;
     void Clear() override;
 

@@ -36,6 +36,7 @@ TEST(KruskalTest, MstExists)
     EXPECT_CALL(graph, GetVertices).WillOnce(Return(vertices));
     EXPECT_CALL(graph, GetEdges).WillOnce(Return(edges));
     EXPECT_CALL(graph, GetOrder).WillRepeatedly(Return(vertices.Size()));
+    EXPECT_CALL(graph, GetSize).WillRepeatedly(Return(edges.Size()));
 
     auto result = MST::Kruskal::FindMstOf(graph);
     EXPECT_EQ(result.edges.Size(), 9);
@@ -73,6 +74,7 @@ TEST(KruskalTest, MstDoesNotExists)
     EXPECT_CALL(graph, GetVertices).WillOnce(Return(vertices));
     EXPECT_CALL(graph, GetEdges).WillOnce(Return(edges));
     EXPECT_CALL(graph, GetOrder).WillRepeatedly(Return(vertices.Size()));
+    EXPECT_CALL(graph, GetSize).WillRepeatedly(Return(edges.Size()));
 
     auto result = MST::Kruskal::FindMstOf(graph);
     EXPECT_EQ(result.edges.Size(), 0);

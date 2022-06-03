@@ -2,6 +2,8 @@
 
 #include "App/Managers/Manager.h"
 #include "Algorithms/Graphs/GraphGenerator.h"
+#include "Algorithms/Graphs/DirectedGraphs/DirectedGraphConverter.h"
+#include "Algorithms/Graphs/UndirectedGraphs/UndirectedGraphConverter.h"
 
 template<typename T,
          typename U,
@@ -17,6 +19,7 @@ public:
     void PrintMenu();
 
 protected:
+    void CopyListToMatrix();
     T listGraph;
     U matrixGraph;
 };
@@ -149,6 +152,19 @@ void GraphManager<T, U, isGraphT, isGraphU>::GenerateMenu()
         std::cout << "Nieprawidłowe dane\n";
         return;
     }
-    listGraph   = *Generator::GenerateConnectedGraph<T>(config);
-    matrixGraph = listGraph;
+    listGraph = *Generator::GenerateConnectedGraph<T>(config);
+    CopyListToMatrix();
+}
+
+template<typename T, typename U, Graph::isGraph<T> isGraphT, Graph::isGraph<U> isGraphU>
+void GraphManager<T, U, isGraphT, isGraphU>::CopyListToMatrix()
+{
+    if constexpr (Utils::DerivedFrom<T, UndirectedGraph>::Value)
+    {
+        matrixGraph = UndirectedGraphConverter::convert<decltype(matrixGraph)>(listGraph);
+    }
+    else
+    {
+        matrixGraph = DirectedGraphConverter::convert<decltype(matrixGraph)>(listGraph);
+    }
 }

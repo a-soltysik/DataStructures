@@ -6,9 +6,6 @@
 class ListGraph : public UndirectedGraph
 {
 public:
-    ListGraph& operator=(const UndirectedGraph& rhs);
-    ListGraph& operator=(UndirectedGraph&& rhs);
-
     Vertex AddVertex() override;
 
     void Clear() override;

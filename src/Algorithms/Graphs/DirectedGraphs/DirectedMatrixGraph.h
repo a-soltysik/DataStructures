@@ -5,9 +5,6 @@
 class DirectedMatrixGraph : public DirectedGraph
 {
 public:
-    DirectedMatrixGraph& operator=(const DirectedGraph& rhs);
-    DirectedMatrixGraph& operator=(DirectedGraph&& rhs);
-
     Vertex AddVertex() override;
     void Clear() override;
     bool AddDirectedEdge(const DirectedEdgeData& edge) override;

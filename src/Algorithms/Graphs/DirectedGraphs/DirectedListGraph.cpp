@@ -1,33 +1,5 @@
 #include "DirectedListGraph.h"
 
-DirectedListGraph& DirectedListGraph::operator=(const DirectedGraph& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
-        AddDirectedEdge(edge);
-    });
-    return *this;
-}
-
-DirectedListGraph& DirectedListGraph::operator=(DirectedGraph&& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
-        AddDirectedEdge(edge);
-    });
-    return *this;
-}
-
 Graph::Vertex DirectedListGraph::AddVertex()
 {
     if (GetOrder() == MAX_SIZE)

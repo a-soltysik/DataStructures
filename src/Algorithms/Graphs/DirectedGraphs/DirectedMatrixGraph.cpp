@@ -1,33 +1,5 @@
 #include "DirectedMatrixGraph.h"
 
-DirectedMatrixGraph& DirectedMatrixGraph::operator=(const DirectedGraph& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
-        AddDirectedEdge(edge);
-    });
-    return *this;
-}
-
-DirectedMatrixGraph& DirectedMatrixGraph::operator=(DirectedGraph&& rhs)
-{
-    Clear();
-    for (uint32_t i = 0; i < rhs.GetOrder(); i++)
-    {
-        AddVertex();
-    }
-
-    rhs.ForEachDirectedEdge([this](const DirectedEdgeData& edge) {
-        AddDirectedEdge(edge);
-    });
-    return *this;
-}
-
 Graph::Vertex DirectedMatrixGraph::AddVertex()
 {
     if (GetOrder() == MAX_SIZE)

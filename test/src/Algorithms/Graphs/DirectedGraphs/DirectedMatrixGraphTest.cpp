@@ -112,10 +112,7 @@ TEST_F(DirectedMatrixGraphTest, AddDirectedEdgeTest)
     graph.AddDirectedEdge({{0, 1}, 1});
     graph.AddDirectedEdge({{4, 0}, 2});
     graph.AddDirectedEdge({{3, 1}, 3});
-    graph.AddDirectedEdge({{1, 0}, 4});
-    graph.AddDirectedEdge({ {1, 3}, 5 });
-    graph.RemoveDirectedEdge({ 1, 3 });
-    ASSERT_EQ(graph.GetNumberOfNeighboursOf(1), 1);
+    graph.AddDirectedEdge({{1, 3}, 4});
 
     ASSERT_EQ(graph.GetSize(), 4);
 

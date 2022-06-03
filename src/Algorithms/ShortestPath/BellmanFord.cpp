@@ -56,6 +56,10 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
     bool fail = false;
 
     graph.ForEachDirectedEdge([&distances, &fail](const DirectedGraph::DirectedEdgeData& edge) {
+        if (distances[edge.vertices.first] == INFINITY_DISTANCE)
+        {
+            return;
+        }
         if (distances[edge.vertices.second] > distances[edge.vertices.first] + edge.weight)
         {
             fail = true;

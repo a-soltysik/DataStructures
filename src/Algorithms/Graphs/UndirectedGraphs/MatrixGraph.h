@@ -5,9 +5,6 @@
 class MatrixGraph : public UndirectedGraph
 {
 public:
-    MatrixGraph& operator=(const UndirectedGraph& rhs);
-    MatrixGraph& operator=(UndirectedGraph&& rhs);
-
     Vertex AddVertex() override;
     void Clear() override;
 

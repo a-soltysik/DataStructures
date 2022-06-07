@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace RedBlackTreeBenchmark
 {
     std::string RunBenchmark();

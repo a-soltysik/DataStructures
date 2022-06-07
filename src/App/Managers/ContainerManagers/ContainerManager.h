@@ -1,6 +1,7 @@
 #pragma once
 
 #include "App/Managers/Manager.h"
+#include <iostream>
 
 template<typename T>
 class ContainerManager : public Manager

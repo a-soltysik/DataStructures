@@ -60,9 +60,6 @@ add_executable(${DS_TEST_TARGET} ${DS_TEST_SRC_LIST})
 target_include_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_DIR} ${DS_SRC_DIR} ${DS_TEST_MOCK_DIR})
 target_link_directories(${DS_TEST_TARGET} PRIVATE ${DS_TEST_MOCK_DIR})
 target_link_libraries(${DS_TEST_TARGET} PRIVATE gtest gtest_main gmock_main)
-target_precompile_headers(${DS_TEST_TARGET} PRIVATE ${PCH_FILES})
-
-
 
 enable_testing()
 add_test(NAME ${DS_TEST_TARGET} COMMAND ${DS_TEST_TARGET})

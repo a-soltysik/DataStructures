@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/Utils.h"
+
 template<typename T, typename C>
 struct AvlTreeIterator;
 

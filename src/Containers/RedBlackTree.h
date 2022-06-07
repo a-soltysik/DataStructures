@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/Utils.h"
+
 template<typename K, typename V, typename C>
 class Map;
 

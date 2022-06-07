@@ -9,6 +9,7 @@
 #include "Utils/Timer.h"
 
 #include <filesystem>
+#include <iostream>
 
 void ContainerBenchmarkManager::Menu()
 {

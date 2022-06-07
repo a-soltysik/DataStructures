@@ -6,6 +6,7 @@
 #include "Utils/Timer.h"
 
 #include <filesystem>
+#include <iostream>
 
 void AlgorithmBenchmarkManager::Menu()
 {

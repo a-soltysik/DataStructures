@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace HeapBenchmark
 {
     std::string RunBenchmark();

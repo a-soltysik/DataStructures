@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
 
-message("${CMAKE_VERSION}")
-
 project(DataStructures)
 
 set(DS_TARGET "DataStructures")
@@ -13,7 +11,7 @@ set(DS_SRC_BIN_DIR ${CMAKE_BINARY_DIR}/src)
 set(CMAKE_CXX_STANDARD 17)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(COMPILER_REL_CXX_FLAGS "/O2 /MT")
+    set(COMPILER_REL_CXX_FLAGS "/O2 /MD")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpessimizing-move -Wredundant-move -pedantic -Wconversion")
     set(COMPILER_REL_CXX_FLAGS "-O3 -static")

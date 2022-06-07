@@ -10,4 +10,3 @@ set(PCH_FILES
 
 add_executable(${DS_TARGET} ${DS_SRC_LIST})
 target_include_directories(${DS_TARGET} PRIVATE ${DS_SRC_DIR})
-target_precompile_headers(${DS_TARGET} PRIVATE ${PCH_FILES})

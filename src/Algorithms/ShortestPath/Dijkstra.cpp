@@ -3,13 +3,13 @@
 namespace ShortestPath::Dijkstra
 {
 
-constexpr size_t INFINITY_DISTANCE = UINT64_MAX;
+constexpr uint64_t INFINITY_DISTANCE = UINT64_MAX;
 constexpr Graph::Vertex NO_VERTEX = UINT32_MAX;
 
-Graph::Vertex GetMinimalVertex(const DynamicArray<size_t>& distances, const DynamicArray<bool>& usedFlags)
+Graph::Vertex GetMinimalVertex(const DynamicArray<uint64_t>& distances, const DynamicArray<bool>& usedFlags)
 {
     Graph::Vertex minimalVertex = NO_VERTEX;
-    size_t minimalDistance = INFINITY_DISTANCE;
+    uint64_t minimalDistance = INFINITY_DISTANCE;
     for (Graph::Vertex i = 0; i < distances.Size(); i++)
     {
         if (usedFlags[i] == false && distances[i] <= minimalDistance)
@@ -45,7 +45,7 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
 
     Result result;
 
-    DynamicArray<size_t> distances(graph.GetOrder());
+    DynamicArray<uint64_t> distances(graph.GetOrder());
     DynamicArray<Graph::Vertex> parents(graph.GetOrder());
     DynamicArray<bool> usedFlags(graph.GetOrder(), false);
 
@@ -66,9 +66,9 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
         usedFlags[vertex] = true;
 
         graph.ForEachNeighbourOf(vertex, [&distances, &parents, vertex](Graph::Neighbour neighbour) {
-            if (distances[neighbour.vertex] > distances[vertex] + neighbour.weight)
+            if (distances[neighbour.vertex] > Utils::SaturatingAdd<uint64_t>(distances[vertex], neighbour.weight))
             {
-                distances[neighbour.vertex] = distances[vertex] + neighbour.weight;
+                distances[neighbour.vertex] = Utils::SaturatingAdd<uint64_t>(distances[vertex], neighbour.weight);
                 parents[neighbour.vertex] = vertex;
             }
         });

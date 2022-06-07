@@ -77,6 +77,15 @@ template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
 [[nodiscard]] T GetRandomNumber(T from, T to);
 
 /**
+ * @tparam T unsigned integral type of numbers
+ * @param x first number to add
+ * @param y second number to add
+ * @return x + y if it is smaller than maximum of the type, otherwise maximum of the type
+ */
+template<typename T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool> = true>
+[[nodiscard]] T SaturatingAdd(T x, T y);
+
+/**
  * @tparam T type of an object
  * @param object an object to be printed
  * @param width width of a string
@@ -119,6 +128,15 @@ T GetRandomNumber(T from, T to)
 
     std::uniform_int_distribution<T> distribution(from, to);
     return distribution(rng);
+}
+
+template<typename T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>>
+T SaturatingAdd(T x, T y)
+{
+    T result = x + y;
+    result |= -(result < x);
+
+    return result;
 }
 
 template<typename T>

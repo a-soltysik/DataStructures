@@ -3,7 +3,7 @@
 namespace ShortestPath::BellmanFord
 {
 
-constexpr size_t INFINITY_DISTANCE = UINT64_MAX;
+constexpr uint64_t INFINITY_DISTANCE = UINT64_MAX;
 constexpr Graph::Vertex NO_VERTEX = UINT32_MAX;
 
 DynamicArray<Graph::Vertex> GetShortestPath(const DynamicArray<Graph::Vertex>& parents,
@@ -28,7 +28,7 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
     }
     Result result;
 
-    DynamicArray<size_t> distances(graph.GetOrder());
+    DynamicArray<uint64_t> distances(graph.GetOrder());
     DynamicArray<Graph::Vertex> parents(graph.GetOrder());
 
     graph.ForEachVertex([&distances, &parents](Graph::Vertex vertex){
@@ -41,13 +41,9 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
     for (uint32_t i = 0; i < graph.GetOrder() - 1; i++)
     {
         graph.ForEachDirectedEdge([&distances, &parents](const DirectedGraph::DirectedEdgeData& edge) {
-            if (distances[edge.vertices.first] == INFINITY_DISTANCE)
+            if (distances[edge.vertices.second] > Utils::SaturatingAdd<uint64_t>(distances[edge.vertices.first], edge.weight))
             {
-                return;
-            }
-            if (distances[edge.vertices.second] > distances[edge.vertices.first] + edge.weight)
-            {
-                distances[edge.vertices.second] = distances[edge.vertices.first] + edge.weight;
+                distances[edge.vertices.second] = Utils::SaturatingAdd<uint64_t>(distances[edge.vertices.first], edge.weight);
                 parents[edge.vertices.second] = edge.vertices.first;
             }
         });
@@ -56,11 +52,7 @@ Result FindShortestPath(const DirectedGraph& graph, Graph::Vertex from, Graph::V
     bool fail = false;
 
     graph.ForEachDirectedEdge([&distances, &fail](const DirectedGraph::DirectedEdgeData& edge) {
-        if (distances[edge.vertices.first] == INFINITY_DISTANCE)
-        {
-            return;
-        }
-        if (distances[edge.vertices.second] > distances[edge.vertices.first] + edge.weight)
+        if (distances[edge.vertices.second] > Utils::SaturatingAdd<uint64_t>(distances[edge.vertices.first], edge.weight))
         {
             fail = true;
         }
